@@ -79,6 +79,16 @@
       "phone": "9876543217",
       "profileImage": "https://i.pravatar.cc/150?img=24",
       "createdAt": "2025-03-05T09:00:00.000Z"
+    },
+    {
+      "id": "9",
+      "name": "Admin User",
+      "email": "admin@eventify.com",
+      "password": "Admin@123",
+      "role": "admin",
+      "phone": "9876543218",
+      "profileImage": "https://i.pravatar.cc/150?img=50",
+      "createdAt": "2024-09-01T08:00:00.000Z"
     }
   ],
 
@@ -396,6 +406,73 @@
       "bookingDate": "2026-06-25T15:40:00.000Z",
       "status": "confirmed",
       "qrCode": "QR-EVT1-USR2-H7I8J9"
+    }
+  ],
+
+  "reviews": [
+    {
+      "id": "1",
+      "eventId": "4",
+      "userId": "6",
+      "rating": 5,
+      "comment": "Absolutely loved the modern take on Romeo & Juliet. The lead actors were phenomenal and the stage design was stunning.",
+      "createdAt": "2025-12-06T10:30:00.000Z"
+    },
+    {
+      "id": "2",
+      "eventId": "4",
+      "userId": "2",
+      "rating": 4,
+      "comment": "Great performance overall, though the second act felt a bit slow. Worth watching for the visuals alone.",
+      "createdAt": "2025-12-07T18:00:00.000Z"
+    },
+    {
+      "id": "3",
+      "eventId": "3",
+      "userId": "5",
+      "rating": 5,
+      "comment": "Well organized marathon with great crowd support and hydration stations every couple of kilometers.",
+      "createdAt": "2025-12-12T09:15:00.000Z"
+    },
+    {
+      "id": "4",
+      "eventId": "1",
+      "userId": "1",
+      "rating": 4,
+      "comment": "Amazing lineup and production quality, but the entry lines were way too long for VIP ticket holders.",
+      "createdAt": "2026-06-05T20:00:00.000Z"
+    },
+    {
+      "id": "5",
+      "eventId": "1",
+      "userId": "2",
+      "rating": 3,
+      "comment": "Good music but the venue felt overcrowded and food prices were on the higher side.",
+      "createdAt": "2026-06-06T11:20:00.000Z"
+    },
+    {
+      "id": "6",
+      "eventId": "5",
+      "userId": "8",
+      "rating": 5,
+      "comment": "So many food options to try! My family had a great time, will definitely come back next year.",
+      "createdAt": "2026-06-11T19:40:00.000Z"
+    },
+    {
+      "id": "7",
+      "eventId": "5",
+      "userId": "1",
+      "rating": 4,
+      "comment": "Loved the variety of stalls, though it got a bit too crowded by evening.",
+      "createdAt": "2026-06-23T14:10:00.000Z"
+    },
+    {
+      "id": "8",
+      "eventId": "2",
+      "userId": "2",
+      "rating": 5,
+      "comment": "Incredible networking opportunities and the panel discussions were genuinely insightful.",
+      "createdAt": "2026-06-04T09:00:00.000Z"
     }
   ]
 }
