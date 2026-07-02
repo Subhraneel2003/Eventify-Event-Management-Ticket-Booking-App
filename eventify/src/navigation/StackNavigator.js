@@ -4,13 +4,13 @@ import { useSelector } from "react-redux";
 import SplashScreen from "../screens/Auth/SplashScreen";
 import LoginScreen from "../screens/Auth/LoginScreen";
 import SignupScreen from "../screens/Auth/SignupScreen";
-import TabNavigator from "./TabNavigator";
+import DrawerNavigator from "./DrawerNavigator";
+import EventDetailScreen from "../screens/EventDetails/EventDetailScreen";
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
   const { token, loading } = useSelector((state) => state.auth);
-
   if (loading) {
     // checking in AsyncStorage for token
     return (
@@ -22,8 +22,10 @@ const StackNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {token ? (
-        <Stack.Screen name="MainApp" component={TabNavigator} />
+      {token ? (<>
+        <Stack.Screen name="MainApp" component={DrawerNavigator} />
+        <Stack.Screen name="Event Details" component={EventDetailScreen}/>
+        </>
       ) : (
         <>
           <Stack.Screen name="Login" component={LoginScreen} />
