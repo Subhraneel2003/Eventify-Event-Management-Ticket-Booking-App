@@ -1,9 +1,30 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { ThemeContext } from '../../context/ThemeContext';
+import { useDispatch } from 'react-redux';
+import { clearAuthData, getAuthData } from '../../services/storageService';
+import { completeAuthCheck, login, logout } from '../../store/slices/authSlice';
+import { isTokenValid } from '../../utils/tokenManager';
 
 const SplashScreen = () => {
   const { colors } = useContext(ThemeContext);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { token, user } = await getAuthData();
+
+      if (!token || !user || !isTokenValid(token)) {
+        await clearAuthData();
+        dispatch(logout());
+        return;
+      }
+
+      dispatch(login({ user, token }));
+    };
+
+    checkAuth();
+  }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
