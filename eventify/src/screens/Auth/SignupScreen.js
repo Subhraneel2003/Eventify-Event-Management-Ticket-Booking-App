@@ -126,6 +126,15 @@ const SignupScreen = ({ navigation }) => {
                   loading={isSubmitting}
                   style={styles.signupButton}
                 />
+
+                <TouchableOpacity
+                  style={styles.footerRow}
+                  onPress={() => navigation.navigate('Login')}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.footerText}>Already have an account? </Text>
+                  <Text style={styles.footerLink}>Login</Text>
+                </TouchableOpacity>
               </View>
             )}
           </Formik>
@@ -178,6 +187,21 @@ const styles = StyleSheet.create({
   },
   signupButton: {
     marginTop: 4,
+  },
+  footerRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  footerText: {
+    fontSize: 14,
+    color: lightColors.textSecondary || '#888',
+  },
+  footerLink: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: lightColors.primary,
   },
 });
 
