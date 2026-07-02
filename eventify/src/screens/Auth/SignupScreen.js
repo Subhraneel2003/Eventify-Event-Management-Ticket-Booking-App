@@ -8,6 +8,7 @@ import {
   Platform,
   Alert,
   TouchableOpacity,
+  useWindowDimensions,
 } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { Formik } from 'formik';
@@ -15,9 +16,12 @@ import { signupValidationSchema } from '../../validations/signupValidation';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { ThemeContext } from '../../context/ThemeContext';
+import axios from 'axios';
+import { API_BASE_URL } from '../../utils/constants';
 
 const SignupScreen = ({ navigation }) => {
   const { colors } = useContext(ThemeContext);
+  const { height } = useWindowDimensions();
 
   const initialValues = {
     name: '',
@@ -27,20 +31,46 @@ const SignupScreen = ({ navigation }) => {
     isOrganizer: false,
   };
 
-  const handleSignup = (values) => {
-    // TODO: connect to auth
-    console.log('Signup values:', values);
-    Alert.alert('Success', 'Account created successfully!');
+  const handleSignup = async (values, { setSubmitting }) => {
+    try {
+      const existingUser = await axios.get(
+        `${API_BASE_URL}/users?email=${values.email}`
+      );
+
+      if (existingUser.data.length > 0) {
+        Alert.alert('Error', 'User already exists');
+        return;
+      }
+
+      const user = {
+        ...values,
+        role: !values.isOrganizer ? 'user' : 'organizer',
+        profileImage: '',
+        createdAt: new Date().toISOString(),
+      };
+
+      await axios.post(`${API_BASE_URL}/users`, user);
+      navigation.navigate('Login');
+    } catch (error) {
+      Alert.alert(
+        'Signup Failed',
+        'An error occurred during signup. Please try again.'
+      );
+      console.log('Error during signup', error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <KeyboardAvoidingView
       style={[styles.flex, { backgroundColor: colors.background }]}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
     >
       <ScrollView
         style={[styles.flex, { backgroundColor: colors.background }]}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { minHeight: height }]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >

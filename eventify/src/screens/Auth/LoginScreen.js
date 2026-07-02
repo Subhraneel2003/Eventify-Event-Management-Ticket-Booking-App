@@ -8,35 +8,67 @@ import {
   Platform,
   Alert,
   TouchableOpacity,
+  useWindowDimensions,
 } from 'react-native';
 import { Formik } from 'formik';
 import { loginValidationSchema } from '../../validations/loginValidation';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { ThemeContext } from '../../context/ThemeContext';
+import axios from 'axios';
+import { API_BASE_URL } from '../../utils/constants';
+import { generateToken } from '../../utils/tokenManager';
+import { useDispatch } from 'react-redux';
+import { login } from '../../store/slices/authSlice';
 
 const LoginScreen = ({ navigation }) => {
   const { colors } = useContext(ThemeContext);
+  const { height } = useWindowDimensions();
+
+  const dispatch = useDispatch();
 
   const initialValues = {
     email: '',
     password: '',
   };
 
-  const handleLogin = (values) => {
-    // TODO: connect to auth
-    console.log('Login values:', values);
-    Alert.alert('Success', 'Logged in successfully!');
+  const handleLogin = async (values, { setSubmitting }) => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/users?email=${values.email}&password=${values.password}`
+      );
+      const user = response.data[0];
+
+      if (!user) {
+        Alert.alert('Error', 'Invalid Credentials');
+        return;
+      }
+
+      const token = generateToken(user.id);
+      console.log('Token', token);
+      dispatch(login({ user, token }));
+
+      // TODO: call AsyncStorage
+    } catch (error) {
+      Alert.alert(
+        'Login Failed',
+        'An error occurred during login. Please try again.'
+      );
+      console.log('Error during login', error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <KeyboardAvoidingView
       style={[styles.flex, { backgroundColor: colors.background }]}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
     >
       <ScrollView
         style={[styles.flex, { backgroundColor: colors.background }]}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { minHeight: height }]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
