@@ -6,7 +6,7 @@ import bookingReducer from "./slices/bookingSlice";
 const store = configureStore({
   reducer: {
     auth: authReducer,
-    event: eventReducer,
+    events: eventReducer,
     booking: bookingReducer,
   },
 });
