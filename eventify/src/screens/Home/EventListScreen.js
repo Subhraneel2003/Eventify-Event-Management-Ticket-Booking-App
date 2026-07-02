@@ -6,6 +6,8 @@ import { fetchEvents, filterByCategory, searchEvents } from '../../api/eventServ
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemeContext } from '../../context/ThemeContext'
 import EventCard from '../../components/EventCard'
+import { fetchCategories } from '../../api/categoryService'
+import { Ionicons } from '@expo/vector-icons';
 
 export default function EventListScreen({ navigation }) {
     const dispatch = useDispatch()
@@ -13,10 +15,19 @@ export default function EventListScreen({ navigation }) {
     const { colors } = useContext(ThemeContext)
     const [search, setSearch] = useState("")
     const [category, setCategory] = useState("ALL")
-    const CATEGORIES = ["Music", "Technology", "Sports", "Arts & Theatre", "Food & Drink", "Business", "Comedy", "Workshops"]
+    const [categories, setCategories] = useState([])
+    const [categoryMenuVisible, setCategoryMenuVisible] = useState(false)
+
+    const categoryItems = [{ id: 'ALL', name: 'ALL' }, ...categories]
+
+    useEffect(() => {
+        loadCategories()
+    }, [])
+
     useFocusEffect(React.useCallback(() => {
         loadEvents()
     }, []))
+
     const loadEvents = async () => {
         try {
             dispatch(setLoading(true))
@@ -30,16 +41,25 @@ export default function EventListScreen({ navigation }) {
             dispatch(setLoading(false))
         }
     }
+    const loadCategories = async () => {
+        try {
+            const data = await fetchCategories()
+            setCategories(data)
+        }
+        catch (err) {
+            console.error('Failed to load categories:', err.message);
+        }
+    }
     const handleSearch = async (query) => {
         setSearch(query)
-        if (query.trim === "") {
+        if (query.trim() === "") {
             dispatch(setFilteredEvents(events))
             return
         }
         try {
             dispatch(setLoading(true))
             const data = await searchEvents(query)
-            dispatch(setFilteredEvents(events))
+            dispatch(setFilteredEvents(data))
         } catch (err) {
             dispatch(setError(err.message))
         }
@@ -49,14 +69,15 @@ export default function EventListScreen({ navigation }) {
     }
     const handleCategory = async (cat) => {
         setCategory(cat)
-        if (cat.trim === "ALL") {
+        setCategoryMenuVisible(false)
+        if (cat.trim() === "ALL") {
             dispatch(setFilteredEvents(events))
             return
         }
         try {
             dispatch(setLoading(true))
             const data = await filterByCategory(cat)
-            dispatch(setFilteredEvents(events))
+            dispatch(setFilteredEvents(data))
         } catch (err) {
             dispatch(setError(err.message))
         }
@@ -66,7 +87,7 @@ export default function EventListScreen({ navigation }) {
     }
     if (loading) {
         return (
-            <View style={[styles.centred], { backgroundColor: colors.background }}>
+            <View style={[styles.centered], { backgroundColor: colors.background }}>
                 <ActivityIndicator size="large" color={colors.primary} />
             </View>
         )
@@ -88,19 +109,38 @@ export default function EventListScreen({ navigation }) {
                 color: colors.text,
                 borderColor: colors.border
             }]} placeholder='Search...' value={search} onChangeText={handleSearch} />
-            <View style={styles.pillRow}>
-                {
-                    CATEGORIES.map((cat) => (
-                        <TouchableOpacity key={cat} onPress={() => handleCategory(cat)} style={[styles.pill, { backgroundColor: category === cat ? colors.primary : colors.surface }]}>
-                            <Text style={{ color: category === cat ? '#fff' : colors.textSecondary, fontSize: 12 }}>{cat}</Text>
-                        </TouchableOpacity>
-                    ))
 
-                }
+            <View style={styles.dropdownWrapper}>
+                <TouchableOpacity
+                    style={[styles.dropdownButton, {
+                        backgroundColor: colors.surface,
+                        borderColor: colors.border,
+                    }]}
+                    onPress={() => setCategoryMenuVisible(prev => !prev)}>
+                    <Text style={[styles.dropdownButtonText, { color: colors.text }]}>Category: {category}</Text>
+                    <Text style={[styles.dropdownButtonIcon, { color: colors.textSecondary }]}><Ionicons name="chevron-down" size={18} color={colors.textSecondary} /></Text>
+                </TouchableOpacity>
+                {categoryMenuVisible && (
+                    <View style={[styles.dropdownMenu, {
+                        backgroundColor: colors.surface,
+                        borderColor: colors.border,
+                    }]}> 
+                        {categoryItems.map((item) => (
+                            <TouchableOpacity
+                                key={item.id}
+                                onPress={() => handleCategory(item.name)}
+                                style={[styles.dropdownItem, category === item.name && styles.dropdownItemActive]}>
+                                <Text style={[styles.dropdownItemText, {
+                                    color: category === item.name ? '#fff' : colors.text,
+                                }]}>{item.name}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                )}
             </View>
             <FlatList data={filteredEvents} keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <EventCard events={item} onPress={() => navigation.navigate("Event Details", { eventId: item.id })} />
+                    <EventCard event={item} onPress={() => navigation.navigate("Event Details", { eventId: item.id })} />
                 )}
                 ListEmptyComponent={
                     <Text style={{ color: colors.textSecondary, textAlign: 'center', marginTop: 40 }}>
@@ -129,16 +169,43 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         fontSize: 14,
     },
-    pillRow: {
-        flexDirection: 'row',
-        gap: 8,
+    dropdownWrapper: {
         marginBottom: 16,
     },
-    pill: {
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 999,
-        borderWidth: 0.5,
+    dropdownButton: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderRadius: 14,
+        borderWidth: 1,
+        paddingVertical: 14,
+        paddingHorizontal: 16,
+    },
+    dropdownButtonText: {
+        fontSize: 14,
+        fontWeight: '500',
+    },
+    dropdownButtonIcon: {
+        fontSize: 16,
+        marginLeft: 10,
+    },
+    dropdownMenu: {
+        marginTop: 8,
+        borderRadius: 14,
+        borderWidth: 1,
+        overflow: 'hidden',
+    },
+    dropdownItem: {
+        paddingVertical: 14,
+        paddingHorizontal: 16,
+        backgroundColor: '#fff',
+    },
+    dropdownItemActive: {
+        backgroundColor: '#6F4BFF',
+    },
+    dropdownItemText: {
+        fontSize: 14,
+        fontWeight: '500',
     },
     card: {
         borderRadius: 12,
