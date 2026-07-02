@@ -33,18 +33,23 @@ const SignupScreen = ({ navigation }) => {
 
   const handleSignup = async (values, { setSubmitting }) => {
     try {
-      const existingUser = await axios.get(
-        `${API_BASE_URL}/users?email=${values.email}`
-      );
+      const email = values.email.trim().toLowerCase();
+      const existingUser = await axios.get(`${API_BASE_URL}/users`, {
+        params: { email },
+      });
 
       if (existingUser.data.length > 0) {
         Alert.alert('Error', 'User already exists');
         return;
       }
 
+      const { isOrganizer, phoneNumber, ...userDetails } = values;
+
       const user = {
-        ...values,
-        role: !values.isOrganizer ? 'user' : 'organizer',
+        ...userDetails,
+        email,
+        role: !isOrganizer ? 'user' : 'organizer',
+        phone: phoneNumber,
         profileImage: '',
         createdAt: new Date().toISOString(),
       };
@@ -113,6 +118,8 @@ const SignupScreen = ({ navigation }) => {
                   error={errors.email}
                   touched={touched.email}
                   keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
                 />
 
                 <Input

@@ -20,6 +20,7 @@ import { API_BASE_URL } from '../../utils/constants';
 import { generateToken } from '../../utils/tokenManager';
 import { useDispatch } from 'react-redux';
 import { login } from '../../store/slices/authSlice';
+import { saveAuthData } from '../../services/storageService';
 
 const LoginScreen = ({ navigation }) => {
   const { colors } = useContext(ThemeContext);
@@ -34,9 +35,10 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async (values, { setSubmitting }) => {
     try {
-      const response = await axios.get(
-        `${API_BASE_URL}/users?email=${values.email}&password=${values.password}`
-      );
+      const email = values.email.trim().toLowerCase();
+      const response = await axios.get(`${API_BASE_URL}/users`, {
+        params: { email },
+      });
       const user = response.data[0];
 
       if (!user) {
@@ -44,11 +46,18 @@ const LoginScreen = ({ navigation }) => {
         return;
       }
 
+      const isPasswordValid = user.password === values.password;
+
+      if (!isPasswordValid) {
+        Alert.alert('Error', 'Invalid Credentials');
+        return;
+      }
+
       const token = generateToken(user.id);
-      console.log('Token', token);
       dispatch(login({ user, token }));
 
-      // TODO: call AsyncStorage
+      // save to AsyncStorage
+      await saveAuthData(user, token);
     } catch (error) {
       Alert.alert(
         'Login Failed',
@@ -99,6 +108,8 @@ const LoginScreen = ({ navigation }) => {
                   error={errors.email}
                   touched={touched.email}
                   keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
                 />
 
                 <Input

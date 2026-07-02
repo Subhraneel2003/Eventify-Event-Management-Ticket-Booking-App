@@ -1,5 +1,5 @@
-import jwtEncode from "jwt-encode";
-import { jwtDecode } from "jwt-decode";
+import jwtEncode from 'jwt-encode';
+import { jwtDecode } from 'jwt-decode';
 
 export const generateToken = (id) => {
   const secret = process.env.EXPO_PUBLIC_JWT_SECRET;
@@ -15,16 +15,18 @@ export const generateToken = (id) => {
   return token;
 };
 
-export const verifyToken = (token) => {
+export const isTokenValid = (token) => {
+  if (!token) return false;
+
   try {
     const decodedToken = jwtDecode(token);
 
-    if (decodedToken.exp && decodedToken.exp * 1000 < Date.now()) {
-      return null;
+    if (!decodedToken?.exp || decodedToken.exp * 1000 < Date.now()) {
+      return false;
     }
 
-    return decodedToken;
+    return true;
   } catch (err) {
-    return null;
+    return false;
   }
 };
