@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -8,33 +8,33 @@ import {
   Platform,
   Alert,
   TouchableOpacity,
-} from 'react-native';
-import Checkbox from 'expo-checkbox';
-import { Formik } from 'formik';
-import { signupValidationSchema } from '../../validations/signupValidation';
-import Input from '../../components/Input';
-import Button from '../../components/Button';
-import { lightColors } from '../../styles/colors';
+} from "react-native";
+import Checkbox from "expo-checkbox";
+import { Formik } from "formik";
+import { signupValidationSchema } from "../../validations/signupValidation";
+import Input from "../../components/Input";
+import Button from "../../components/Button";
+import { lightColors } from "../../styles/colors";
 
 const SignupScreen = ({ navigation }) => {
   const initialValues = {
-    name: '',
-    email: '',
-    password: '',
-    phoneNumber: '',
+    name: "",
+    email: "",
+    password: "",
+    phoneNumber: "",
     isOrganizer: false,
   };
 
   const handleSignup = (values) => {
     // TODO: connect to auth
-    console.log('Signup values:', values);
-    Alert.alert('Success', 'Account created successfully!');
+    console.log("Signup values:", values);
+    Alert.alert("Success", "Account created successfully!");
   };
 
   return (
     <KeyboardAvoidingView
       style={styles.flex}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <ScrollView
         style={styles.flex}
@@ -65,8 +65,8 @@ const SignupScreen = ({ navigation }) => {
                   label="Name"
                   placeholder="Enter your name"
                   value={values.name}
-                  onChangeText={handleChange('name')}
-                  onBlur={handleBlur('name')}
+                  onChangeText={handleChange("name")}
+                  onBlur={handleBlur("name")}
                   error={errors.name}
                   touched={touched.name}
                   autoCapitalize="words"
@@ -76,8 +76,8 @@ const SignupScreen = ({ navigation }) => {
                   label="Email"
                   placeholder="Enter your email"
                   value={values.email}
-                  onChangeText={handleChange('email')}
-                  onBlur={handleBlur('email')}
+                  onChangeText={handleChange("email")}
+                  onBlur={handleBlur("email")}
                   error={errors.email}
                   touched={touched.email}
                   keyboardType="email-address"
@@ -87,8 +87,8 @@ const SignupScreen = ({ navigation }) => {
                   label="Password"
                   placeholder="Enter your password"
                   value={values.password}
-                  onChangeText={handleChange('password')}
-                  onBlur={handleBlur('password')}
+                  onChangeText={handleChange("password")}
+                  onBlur={handleBlur("password")}
                   error={errors.password}
                   touched={touched.password}
                   secureTextEntry
@@ -98,8 +98,8 @@ const SignupScreen = ({ navigation }) => {
                   label="Phone Number"
                   placeholder="Enter your phone number"
                   value={values.phoneNumber}
-                  onChangeText={handleChange('phoneNumber')}
-                  onBlur={handleBlur('phoneNumber')}
+                  onChangeText={handleChange("phoneNumber")}
+                  onBlur={handleBlur("phoneNumber")}
                   error={errors.phoneNumber}
                   touched={touched.phoneNumber}
                   keyboardType="phone-pad"
@@ -108,11 +108,13 @@ const SignupScreen = ({ navigation }) => {
                 <TouchableOpacity
                   style={styles.checkboxRow}
                   activeOpacity={0.8}
-                  onPress={() => setFieldValue('isOrganizer', !values.isOrganizer)}
+                  onPress={() =>
+                    setFieldValue("isOrganizer", !values.isOrganizer)
+                  }
                 >
                   <Checkbox
                     value={values.isOrganizer}
-                    onValueChange={(val) => setFieldValue('isOrganizer', val)}
+                    onValueChange={(val) => setFieldValue("isOrganizer", val)}
                     color={values.isOrganizer ? lightColors.primary : undefined}
                   />
                   <Text style={styles.checkboxLabel}>Be an Organizer</Text>
@@ -142,13 +144,13 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: 20,
     paddingVertical: 40,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   heading: {
     fontSize: 32,
-    fontWeight: '700',
+    fontWeight: "700",
     color: lightColors.text,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 24,
     letterSpacing: 0.5,
   },
@@ -156,21 +158,21 @@ const styles = StyleSheet.create({
     backgroundColor: lightColors.surface,
     borderRadius: 20,
     padding: 24,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
     shadowRadius: 12,
     elevation: 4,
   },
   checkboxRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 24,
     marginTop: 4,
   },
   checkboxLabel: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     color: lightColors.text,
     marginLeft: 10,
   },

@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
-import { lightColors } from '../styles/colors';
+import React from "react";
+import { View, Text, TextInput, StyleSheet } from "react-native";
+import { lightColors } from "../styles/colors";
 
 const Input = ({
   label,
@@ -9,7 +9,7 @@ const Input = ({
   onBlur,
   placeholder,
   secureTextEntry = false,
-  keyboardType = 'default',
+  keyboardType = "default",
   error,
   touched,
   ...rest
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     color: lightColors.text,
     marginBottom: 6,
   },
