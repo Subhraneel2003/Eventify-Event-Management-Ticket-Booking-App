@@ -6,6 +6,7 @@ import { fetchEvents, filterByCategory, searchEvents } from '../../api/eventServ
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemeContext } from '../../context/ThemeContext'
 import EventCard from '../../components/EventCard'
+import { fetchCategories } from '../../api/categoryService'
 
 export default function EventListScreen({ navigation }) {
     const dispatch = useDispatch()
@@ -13,9 +14,10 @@ export default function EventListScreen({ navigation }) {
     const { colors } = useContext(ThemeContext)
     const [search, setSearch] = useState("")
     const [category, setCategory] = useState("ALL")
-    const CATEGORIES = ["Music", "Technology", "Sports", "Arts & Theatre", "Food & Drink", "Business", "Comedy", "Workshops"]
+    const [categories, setCategories]=useState([])
     useFocusEffect(React.useCallback(() => {
         loadEvents()
+        loadCategories()
     }, []))
     const loadEvents = async () => {
         try {
@@ -28,6 +30,15 @@ export default function EventListScreen({ navigation }) {
         }
         finally {
             dispatch(setLoading(false))
+        }
+    }
+    const loadCategories=async()=>{
+        try{
+            const data= await fetchCategories()
+            setCategories(data)
+        }
+        catch(err){
+            console.error('Failed to load categories:', err.message);
         }
     }
     const handleSearch = async (query) => {
@@ -90,9 +101,9 @@ export default function EventListScreen({ navigation }) {
             }]} placeholder='Search...' value={search} onChangeText={handleSearch} />
             <View style={styles.pillRow}>
                 {
-                    CATEGORIES.map((cat) => (
-                        <TouchableOpacity key={cat} onPress={() => handleCategory(cat)} style={[styles.pill, { backgroundColor: category === cat ? colors.primary : colors.surface }]}>
-                            <Text style={{ color: category === cat ? '#fff' : colors.textSecondary, fontSize: 12 }}>{cat}</Text>
+                    categories.map((cat) => (
+                        <TouchableOpacity key={cat.id} onPress={() => handleCategory(cat.name)} style={[styles.pill, { backgroundColor: category === cat.name ? colors.primary : colors.surface }]}>
+                            <Text style={{ color: category === cat.name ? '#fff' : colors.textSecondary, fontSize: 12 }}>{cat.name}</Text>
                         </TouchableOpacity>
                     ))
 
