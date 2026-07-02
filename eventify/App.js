@@ -1,14 +1,17 @@
 import { Provider } from "react-redux";
-import store from "./src/store/store";
+import { ThemeProvider } from "./src/context/ThemeContext";
 import { NavigationContainer } from "@react-navigation/native";
 import StackNavigator from "./src/navigation/StackNavigator";
+import store from "./src/store/store";
 
 export default function App() {
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <StackNavigator />
-      </NavigationContainer>
+      <ThemeProvider>
+        <NavigationContainer>
+          <StackNavigator />
+        </NavigationContainer>
+      </ThemeProvider>
     </Provider>
   );
 }
