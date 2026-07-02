@@ -22,7 +22,7 @@ const eventSlice=createSlice({
             state.loading=action.payload
         },
         setError(state, action){
-            state.loading=action.payload
+            state.error=action.payload
         }
     }
 })

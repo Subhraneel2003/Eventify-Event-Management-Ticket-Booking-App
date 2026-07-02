@@ -23,7 +23,7 @@ export const fetchEvents = async () => {
     const res = await api.get('/events');
     return res.data;
   } catch (err) {
-    handleError(err, 'fetchEvents');
+    throw handleError(err, 'fetchEvents');
   }
 };
 
@@ -32,7 +32,7 @@ export const fetchEventById = async (id) => {
     const res = await api.get(`/events/${id}`);
     return res.data;
   } catch (err) {
-    handleError(err, 'fetchEventById');
+    throw handleError(err, 'fetchEventById');
   }
 };
 
@@ -41,7 +41,7 @@ export const searchEvents = async (query) => {
     const res = await api.get('/events', { params: { q: query } });
     return res.data;
   } catch (err) {
-    handleError(err, 'searchEvents');
+    throw handleError(err, 'searchEvents');
   }
 };
 
@@ -50,7 +50,7 @@ export const filterByCategory = async (category) => {
     const res = await api.get('/events', { params: { category } });
     return res.data;
   } catch (err) {
-    handleError(err, 'filterByCategory');
+    throw handleError(err, 'filterByCategory');
   }
 };
 
@@ -59,6 +59,6 @@ export const filterByDate = async (date) => {
     const res = await api.get('/events', { params: { date } });
     return res.data;
   } catch (err) {
-    handleError(err, 'filterByDate');
+    throw handleError(err, 'filterByDate');
   }
 };
