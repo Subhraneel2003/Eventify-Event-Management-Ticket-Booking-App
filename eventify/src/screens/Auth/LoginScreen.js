@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Text,
@@ -8,39 +8,73 @@ import {
   Platform,
   Alert,
   TouchableOpacity,
+  useWindowDimensions,
 } from 'react-native';
 import { Formik } from 'formik';
 import { loginValidationSchema } from '../../validations/loginValidation';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import { lightColors } from '../../styles/colors';
+import { ThemeContext } from '../../context/ThemeContext';
+import axios from 'axios';
+import { API_BASE_URL } from '../../utils/constants';
+import { generateToken } from '../../utils/tokenManager';
+import { useDispatch } from 'react-redux';
+import { login } from '../../store/slices/authSlice';
 
 const LoginScreen = ({ navigation }) => {
+  const { colors } = useContext(ThemeContext);
+  const { height } = useWindowDimensions();
+
+  const dispatch = useDispatch();
+
   const initialValues = {
     email: '',
     password: '',
   };
 
-  const handleLogin = (values) => {
-    // TODO: connect to auth
-    console.log('Login values:', values);
-    Alert.alert('Success', 'Logged in successfully!');
+  const handleLogin = async (values, { setSubmitting }) => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/users?email=${values.email}&password=${values.password}`
+      );
+      const user = response.data[0];
+
+      if (!user) {
+        Alert.alert('Error', 'Invalid Credentials');
+        return;
+      }
+
+      const token = generateToken(user.id);
+      console.log('Token', token);
+      dispatch(login({ user, token }));
+
+      // TODO: call AsyncStorage
+    } catch (error) {
+      Alert.alert(
+        'Login Failed',
+        'An error occurred during login. Please try again.'
+      );
+      console.log('Error during login', error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <KeyboardAvoidingView
-      style={styles.flex}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      style={[styles.flex, { backgroundColor: colors.background }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
     >
       <ScrollView
-        style={styles.flex}
-        contentContainerStyle={styles.scrollContent}
+        style={[styles.flex, { backgroundColor: colors.background }]}
+        contentContainerStyle={[styles.scrollContent, { minHeight: height }]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.heading}>Login</Text>
+        <Text style={[styles.heading, { color: colors.text }]}>Login</Text>
 
-        <View style={styles.card}>
+        <View style={[styles.card, { backgroundColor: colors.surface }]}>
           <Formik
             initialValues={initialValues}
             validationSchema={loginValidationSchema}
@@ -90,8 +124,14 @@ const LoginScreen = ({ navigation }) => {
                   onPress={() => navigation.navigate('Signup')}
                   activeOpacity={0.7}
                 >
-                  <Text style={styles.footerText}>Don't have an account? </Text>
-                  <Text style={styles.footerLink}>Sign Up</Text>
+                  <Text
+                    style={[styles.footerText, { color: colors.textSecondary }]}
+                  >
+                    Don't have an account?{' '}
+                  </Text>
+                  <Text style={[styles.footerLink, { color: colors.primary }]}>
+                    Sign Up
+                  </Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -105,7 +145,6 @@ const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   flex: {
     flex: 1,
-    backgroundColor: lightColors.background,
   },
   scrollContent: {
     flexGrow: 1,
@@ -116,13 +155,11 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 32,
     fontWeight: '700',
-    color: lightColors.text,
     textAlign: 'center',
     marginBottom: 24,
     letterSpacing: 0.5,
   },
   card: {
-    backgroundColor: lightColors.surface,
     borderRadius: 20,
     padding: 24,
     shadowColor: '#000',
@@ -142,12 +179,10 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 14,
-    color: lightColors.textSecondary || '#888',
   },
   footerLink: {
     fontSize: 14,
     fontWeight: '600',
-    color: lightColors.primary,
   },
 });
 

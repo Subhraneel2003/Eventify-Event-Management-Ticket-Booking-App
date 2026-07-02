@@ -1,26 +1,27 @@
-import jwt from "jsonwebtoken";
+import jwtEncode from "jwt-encode";
+import { jwtDecode } from "jwt-decode";
 
 export const generateToken = (id) => {
   const secret = process.env.EXPO_PUBLIC_JWT_SECRET;
 
-  const token = jwt.sign(
-    {
-      id,
-    },
-    secret,
-    {
-      expiresIn: "1h",
-    },
-  );
+  const payload = {
+    id,
+    iat: Math.floor(Date.now() / 1000),
+    exp: Math.floor(Date.now() / 1000) + 3600, // 1 hour
+  };
+
+  const token = jwtEncode(payload, secret);
 
   return token;
 };
 
 export const verifyToken = (token) => {
-  const secret = process.env.EXPO_PUBLIC_JWT_SECRET;
-
   try {
-    const decodedToken = jwt.verify(token, secret);
+    const decodedToken = jwtDecode(token);
+
+    if (decodedToken.exp && decodedToken.exp * 1000 < Date.now()) {
+      return null;
+    }
 
     return decodedToken;
   } catch (err) {
