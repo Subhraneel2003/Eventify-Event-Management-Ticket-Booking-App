@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import { Formik } from 'formik';
 import { loginValidationSchema } from '../../validations/loginValidation';
@@ -83,6 +84,15 @@ const LoginScreen = ({ navigation }) => {
                   loading={isSubmitting}
                   style={styles.loginButton}
                 />
+
+                <TouchableOpacity
+                  style={styles.footerRow}
+                  onPress={() => navigation.navigate('Signup')}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.footerText}>Don't have an account? </Text>
+                  <Text style={styles.footerLink}>Sign Up</Text>
+                </TouchableOpacity>
               </View>
             )}
           </Formik>
@@ -123,6 +133,21 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     marginTop: 8,
+  },
+  footerRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  footerText: {
+    fontSize: 14,
+    color: lightColors.textSecondary || '#888',
+  },
+  footerLink: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: lightColors.primary,
   },
 });
 
