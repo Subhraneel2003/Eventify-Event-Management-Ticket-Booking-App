@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Text,
@@ -13,9 +13,11 @@ import { Formik } from 'formik';
 import { loginValidationSchema } from '../../validations/loginValidation';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import { lightColors } from '../../styles/colors';
+import { ThemeContext } from '../../context/ThemeContext';
 
 const LoginScreen = ({ navigation }) => {
+  const { colors } = useContext(ThemeContext);
+
   const initialValues = {
     email: '',
     password: '',
@@ -29,18 +31,18 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView
-      style={styles.flex}
+      style={[styles.flex, { backgroundColor: colors.background }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView
-        style={styles.flex}
+        style={[styles.flex, { backgroundColor: colors.background }]}
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.heading}>Login</Text>
+        <Text style={[styles.heading, { color: colors.text }]}>Login</Text>
 
-        <View style={styles.card}>
+        <View style={[styles.card, { backgroundColor: colors.surface }]}>
           <Formik
             initialValues={initialValues}
             validationSchema={loginValidationSchema}
@@ -90,8 +92,14 @@ const LoginScreen = ({ navigation }) => {
                   onPress={() => navigation.navigate('Signup')}
                   activeOpacity={0.7}
                 >
-                  <Text style={styles.footerText}>Don't have an account? </Text>
-                  <Text style={styles.footerLink}>Sign Up</Text>
+                  <Text
+                    style={[styles.footerText, { color: colors.textSecondary }]}
+                  >
+                    Don't have an account?{' '}
+                  </Text>
+                  <Text style={[styles.footerLink, { color: colors.primary }]}>
+                    Sign Up
+                  </Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -105,7 +113,6 @@ const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   flex: {
     flex: 1,
-    backgroundColor: lightColors.background,
   },
   scrollContent: {
     flexGrow: 1,
@@ -116,13 +123,11 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 32,
     fontWeight: '700',
-    color: lightColors.text,
     textAlign: 'center',
     marginBottom: 24,
     letterSpacing: 0.5,
   },
   card: {
-    backgroundColor: lightColors.surface,
     borderRadius: 20,
     padding: 24,
     shadowColor: '#000',
@@ -142,12 +147,10 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 14,
-    color: lightColors.textSecondary || '#888',
   },
   footerLink: {
     fontSize: 14,
     fontWeight: '600',
-    color: lightColors.primary,
   },
 });
 
