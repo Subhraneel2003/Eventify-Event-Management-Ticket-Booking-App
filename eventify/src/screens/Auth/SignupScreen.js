@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from 'react';
 import {
   View,
   Text,
@@ -8,43 +8,80 @@ import {
   Platform,
   Alert,
   TouchableOpacity,
-} from "react-native";
-import Checkbox from "expo-checkbox";
-import { Formik } from "formik";
-import { signupValidationSchema } from "../../validations/signupValidation";
-import Input from "../../components/Input";
-import Button from "../../components/Button";
-import { lightColors } from "../../styles/colors";
+  useWindowDimensions,
+} from 'react-native';
+import Checkbox from 'expo-checkbox';
+import { Formik } from 'formik';
+import { signupValidationSchema } from '../../validations/signupValidation';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
+import { ThemeContext } from '../../context/ThemeContext';
+import axios from 'axios';
+import { API_BASE_URL } from '../../utils/constants';
 
 const SignupScreen = ({ navigation }) => {
+  const { colors } = useContext(ThemeContext);
+  const { height } = useWindowDimensions();
+
   const initialValues = {
-    name: "",
-    email: "",
-    password: "",
-    phoneNumber: "",
+    name: '',
+    email: '',
+    password: '',
+    phoneNumber: '',
     isOrganizer: false,
   };
 
-  const handleSignup = (values) => {
-    // TODO: connect to auth
-    console.log("Signup values:", values);
-    Alert.alert("Success", "Account created successfully!");
+  const handleSignup = async (values, { setSubmitting }) => {
+    try {
+      const email = values.email.trim().toLowerCase();
+      const existingUser = await axios.get(`${API_BASE_URL}/users`, {
+        params: { email },
+      });
+
+      if (existingUser.data.length > 0) {
+        Alert.alert('Error', 'User already exists');
+        return;
+      }
+
+      const { isOrganizer, phoneNumber, ...userDetails } = values;
+
+      const user = {
+        ...userDetails,
+        email,
+        role: !isOrganizer ? 'user' : 'organizer',
+        phone: phoneNumber,
+        profileImage: '',
+        createdAt: new Date().toISOString(),
+      };
+
+      await axios.post(`${API_BASE_URL}/users`, user);
+      navigation.navigate('Login');
+    } catch (error) {
+      Alert.alert(
+        'Signup Failed',
+        'An error occurred during signup. Please try again.'
+      );
+      console.log('Error during signup', error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <KeyboardAvoidingView
-      style={styles.flex}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      style={[styles.flex, { backgroundColor: colors.background }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
     >
       <ScrollView
-        style={styles.flex}
-        contentContainerStyle={styles.scrollContent}
+        style={[styles.flex, { backgroundColor: colors.background }]}
+        contentContainerStyle={[styles.scrollContent, { minHeight: height }]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.heading}>Sign Up</Text>
+        <Text style={[styles.heading, { color: colors.text }]}>Sign Up</Text>
 
-        <View style={styles.card}>
+        <View style={[styles.card, { backgroundColor: colors.surface }]}>
           <Formik
             initialValues={initialValues}
             validationSchema={signupValidationSchema}
@@ -65,8 +102,8 @@ const SignupScreen = ({ navigation }) => {
                   label="Name"
                   placeholder="Enter your name"
                   value={values.name}
-                  onChangeText={handleChange("name")}
-                  onBlur={handleBlur("name")}
+                  onChangeText={handleChange('name')}
+                  onBlur={handleBlur('name')}
                   error={errors.name}
                   touched={touched.name}
                   autoCapitalize="words"
@@ -76,19 +113,21 @@ const SignupScreen = ({ navigation }) => {
                   label="Email"
                   placeholder="Enter your email"
                   value={values.email}
-                  onChangeText={handleChange("email")}
-                  onBlur={handleBlur("email")}
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
                   error={errors.email}
                   touched={touched.email}
                   keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
                 />
 
                 <Input
                   label="Password"
                   placeholder="Enter your password"
                   value={values.password}
-                  onChangeText={handleChange("password")}
-                  onBlur={handleBlur("password")}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
                   error={errors.password}
                   touched={touched.password}
                   secureTextEntry
@@ -98,8 +137,8 @@ const SignupScreen = ({ navigation }) => {
                   label="Phone Number"
                   placeholder="Enter your phone number"
                   value={values.phoneNumber}
-                  onChangeText={handleChange("phoneNumber")}
-                  onBlur={handleBlur("phoneNumber")}
+                  onChangeText={handleChange('phoneNumber')}
+                  onBlur={handleBlur('phoneNumber')}
                   error={errors.phoneNumber}
                   touched={touched.phoneNumber}
                   keyboardType="phone-pad"
@@ -109,15 +148,17 @@ const SignupScreen = ({ navigation }) => {
                   style={styles.checkboxRow}
                   activeOpacity={0.8}
                   onPress={() =>
-                    setFieldValue("isOrganizer", !values.isOrganizer)
+                    setFieldValue('isOrganizer', !values.isOrganizer)
                   }
                 >
                   <Checkbox
                     value={values.isOrganizer}
-                    onValueChange={(val) => setFieldValue("isOrganizer", val)}
-                    color={values.isOrganizer ? lightColors.primary : undefined}
+                    onValueChange={(val) => setFieldValue('isOrganizer', val)}
+                    color={values.isOrganizer ? colors.primary : undefined}
                   />
-                  <Text style={styles.checkboxLabel}>Be an Organizer</Text>
+                  <Text style={[styles.checkboxLabel, { color: colors.text }]}>
+                    Be an Organizer
+                  </Text>
                 </TouchableOpacity>
 
                 <Button
@@ -132,8 +173,14 @@ const SignupScreen = ({ navigation }) => {
                   onPress={() => navigation.navigate('Login')}
                   activeOpacity={0.7}
                 >
-                  <Text style={styles.footerText}>Already have an account? </Text>
-                  <Text style={styles.footerLink}>Login</Text>
+                  <Text
+                    style={[styles.footerText, { color: colors.textSecondary }]}
+                  >
+                    Already have an account?{' '}
+                  </Text>
+                  <Text style={[styles.footerLink, { color: colors.primary }]}>
+                    Login
+                  </Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -147,42 +194,38 @@ const SignupScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   flex: {
     flex: 1,
-    backgroundColor: lightColors.background,
   },
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 20,
     paddingVertical: 40,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   heading: {
     fontSize: 32,
-    fontWeight: "700",
-    color: lightColors.text,
-    textAlign: "center",
+    fontWeight: '700',
+    textAlign: 'center',
     marginBottom: 24,
     letterSpacing: 0.5,
   },
   card: {
-    backgroundColor: lightColors.surface,
     borderRadius: 20,
     padding: 24,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
     shadowRadius: 12,
     elevation: 4,
   },
   checkboxRow: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 24,
     marginTop: 4,
   },
   checkboxLabel: {
     fontSize: 14,
-    fontWeight: "500",
-    color: lightColors.text,
+    fontWeight: '500',
     marginLeft: 10,
   },
   signupButton: {
@@ -196,12 +239,10 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 14,
-    color: lightColors.textSecondary || '#888',
   },
   footerLink: {
     fontSize: 14,
     fontWeight: '600',
-    color: lightColors.primary,
   },
 });
 
