@@ -1,18 +1,18 @@
-import React from 'react';
+import React from "react";
 import {
   TouchableOpacity,
   Text,
   StyleSheet,
   ActivityIndicator,
-} from 'react-native';
-import { lightColors } from '../styles/colors';
+} from "react-native";
+import { lightColors } from "../styles/colors";
 
 const Button = ({
   title,
   onPress,
   loading = false,
   disabled = false,
-  variant = 'filled', // 'filled' | 'outline'
+  variant = "filled", // 'filled' | 'outline'
   style,
   textStyle,
   ...rest
@@ -23,7 +23,7 @@ const Button = ({
     <TouchableOpacity
       style={[
         styles.button,
-        variant === 'outline' && styles.outlineButton,
+        variant === "outline" && styles.outlineButton,
         isDisabled && styles.disabledButton,
         style,
       ]}
@@ -34,13 +34,13 @@ const Button = ({
     >
       {loading ? (
         <ActivityIndicator
-          color={variant === 'outline' ? lightColors.primary : '#FFFFFF'}
+          color={variant === "outline" ? lightColors.primary : "#FFFFFF"}
         />
       ) : (
         <Text
           style={[
             styles.buttonText,
-            variant === 'outline' && styles.outlineButtonText,
+            variant === "outline" && styles.outlineButtonText,
             textStyle,
           ]}
         >
@@ -56,12 +56,12 @@ const styles = StyleSheet.create({
     height: 52,
     borderRadius: 14,
     backgroundColor: lightColors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 24,
   },
   outlineButton: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     borderWidth: 1.5,
     borderColor: lightColors.primary,
   },
@@ -70,8 +70,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: '700',
-    color: '#FFFFFF',
+    fontWeight: "700",
+    color: "#FFFFFF",
   },
   outlineButtonText: {
     color: lightColors.primary,
