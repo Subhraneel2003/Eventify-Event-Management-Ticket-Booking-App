@@ -50,3 +50,26 @@ export const filterByDate = async (date) => {
     throw handleError(err, 'filterByDate');
   }
 };
+
+export const updateEventSeats = async (id, ticketCount, status) => {
+  try {
+    const event = await fetchEventById(id);
+    const availableSeats = event.availableSeats ?? 0;
+
+    let updatedSeats = availableSeats;
+    if (status === 'confirmed') {
+      updatedSeats = Math.max(0, availableSeats - ticketCount);
+    } else if (status === 'cancelled') {
+      updatedSeats = availableSeats + ticketCount;
+    } else {
+      return event;
+    }
+
+    const res = await api.patch(`/events/${id}`, {
+      availableSeats: updatedSeats,
+    });
+    return res.data;
+  } catch (err) {
+    throw handleError(err, 'updateEventSeats');
+  }
+};

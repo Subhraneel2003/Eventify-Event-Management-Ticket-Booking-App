@@ -6,14 +6,26 @@ import {
   ActivityIndicator,
   StyleSheet,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { fetchEventById } from '../../api/eventService';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchEventById, updateEventSeats } from '../../api/eventService';
 import { ThemeContext } from '../../context/ThemeContext';
+import {
+  addBooking,
+  setSelectedBooking,
+} from '../../store/slices/bookingSlice';
+import axios from 'axios';
+import * as Crypto from 'expo-crypto';
+import { API_BASE_URL } from '../../utils/constants';
 
 export default function BookingScreen({ navigation, route }) {
   const { eventId } = route.params;
   const { colors } = useContext(ThemeContext);
+  const dispatch = useDispatch();
+
+  const { user } = useSelector((state) => state.auth);
 
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -72,13 +84,39 @@ export default function BookingScreen({ navigation, route }) {
     }
   };
 
-  const handleConfirm = () => {
-    // TODO: do an api call
-    navigation.navigate('BookingDetails', {
-      eventId: event.id,
-      ticketCount,
-      totalPrice,
-    });
+  const handleConfirm = async () => {
+    try {
+      const booking = {
+        userId: user.id,
+        eventId: event.id,
+        ticketCount,
+        totalAmount: totalPrice,
+        bookingDate: new Date().toISOString(),
+        status: 'confirmed',
+        qrCode: '',
+      };
+
+      const response = await axios.post(`${API_BASE_URL}/bookings`, booking);
+      const createdBooking = response.data;
+
+      const updatedBooking = await axios.patch(
+        `${API_BASE_URL}/bookings/${createdBooking.id}`,
+        {
+          qrCode: Crypto.randomUUID(),
+        }
+      );
+
+      await updateEventSeats(event.id, ticketCount, 'confirmed');
+
+      const bookingWithQRCode = updatedBooking.data;
+      dispatch(addBooking(bookingWithQRCode));
+      dispatch(setSelectedBooking(bookingWithQRCode));
+
+      navigation.navigate('BookingDetails');
+    } catch (error) {
+      Alert.alert('Error', 'An error occured while Booking');
+      console.log('Error occurred in booking', error);
+    }
   };
 
   return (

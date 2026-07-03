@@ -7,6 +7,8 @@ import SignupScreen from "../screens/Auth/SignupScreen";
 import DrawerNavigator from "./DrawerNavigator";
 import EventDetailScreen from "../screens/EventDetails/EventDetailScreen";
 import BookingScreen from "../screens/Bookings/BookingScreen";
+import BookingDetailsScreen from "../screens/Bookings/BookingDetailsScreen";
+import AddReviewScreen from "../screens/EventDetails/AddReviewScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +29,8 @@ const StackNavigator = () => {
         <Stack.Screen name="MainApp" component={DrawerNavigator} />
         <Stack.Screen name="Event Details" component={EventDetailScreen}/>
         <Stack.Screen name="Booking" component={BookingScreen}/>
+        <Stack.Screen name="BookingDetails" component={BookingDetailsScreen}/>
+        <Stack.Screen name="AddReview" component={AddReviewScreen}/>
         </>
       ) : (
         <>

@@ -42,6 +42,7 @@ export const {
   setLoading,
   setBookings,
   addBooking,
+  cancelBooking,
   validateBooking,
   setSelectedBooking,
   clearBookings,
