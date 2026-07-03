@@ -19,6 +19,7 @@ import {
 import axios from 'axios';
 import * as Crypto from 'expo-crypto';
 import { API_BASE_URL } from '../../utils/constants';
+import { saveBookings } from '../../services/storageService';
 
 export default function BookingScreen({ navigation, route }) {
   const { eventId } = route.params;
@@ -26,6 +27,7 @@ export default function BookingScreen({ navigation, route }) {
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
+  const { bookings } = useSelector((state) => state.bookings);
 
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -111,6 +113,8 @@ export default function BookingScreen({ navigation, route }) {
       const bookingWithQRCode = updatedBooking.data;
       dispatch(addBooking(bookingWithQRCode));
       dispatch(setSelectedBooking(bookingWithQRCode));
+
+      await saveBookings(bookings);
 
       navigation.navigate('BookingDetails');
     } catch (error) {
