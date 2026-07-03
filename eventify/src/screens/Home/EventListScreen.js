@@ -9,6 +9,7 @@ import EventCard from '../../components/EventCard'
 import { fetchCategories } from '../../api/categoryService'
 import { Ionicons } from '@expo/vector-icons';
 import { useDebounce } from '../../hooks/useDebounce'
+import { useDebounce } from '../../hooks/useDebounce'
 
 export default function EventListScreen({ navigation }) {
     const dispatch = useDispatch()
@@ -19,7 +20,7 @@ export default function EventListScreen({ navigation }) {
     const [categories, setCategories] = useState([])
     const [categoryModalVisible, setCategoryModalVisible] = useState(false)
     const debouncedSearch = useDebounce(search, 500)
-
+    const {user} = useSelector(state => state.auth)
     const categoryItems = [{ id: 'ALL', name: 'ALL' }, ...categories]
 
     useEffect(() => {
@@ -114,6 +115,8 @@ export default function EventListScreen({ navigation }) {
     }
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
+            <Text>Welcome {user?.name}</Text>
+
             <TextInput style={[styles.searchBar, {
                 backgroundColor: colors.surface,
                 color: colors.text,
