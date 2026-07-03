@@ -219,42 +219,67 @@ export default function EventDetailScreen({ navigation, route }) {
                     </View>
 
                     {/* Bottom padding for sticky button */}
-                    <View style={{ height: 80 }} />
+                    <View style={{ height: 140 }} />
                 </View>
             </ScrollView>
 
             {/* Sticky Book Now Button */}
             <View style={[styles.stickyButton, { backgroundColor: colors.background, borderTopColor: colors.border }]}>
                 {
-                    isOrganizer ?
+                    <TouchableOpacity
+                        style={[
+                            styles.bookButton,
+                            { backgroundColor: colors.textSecondary }
+                        ]}
+                        onPress={() => navigation.navigate("AddReview", { event })}
+                    >
+                        <Text style={{ color: '#fff', fontWeight: '600', fontSize: 15 }}>
+                            Check Reviews
+                        </Text>
+                    </TouchableOpacity>
+                }
+                {isOrganizer ? (
+                    <View style={styles.actionRow}>
                         <TouchableOpacity
                             style={[
-                                styles.bookButton,
-                                { backgroundColor: colors.primary }
+                                styles.actionButton,
+                                { backgroundColor: colors.primary, marginRight: 10 }
                             ]}
-                            onPress={() => navigation.navigate("Event Edit", {event})}
+                            onPress={() => navigation.navigate("Event Edit", { event })}
                         >
-                            <Text style={{ color: '#fff', fontWeight: '600', fontSize: 15 }}>
-                                Edit Event Details
-                            </Text>
-                        </TouchableOpacity>
-                        :
-                        <TouchableOpacity
-                            style={[
-                                styles.bookButton,
-                                { backgroundColor: canBook ? colors.primary : colors.textSecondary }
-                            ]}
-                            disabled={!canBook}
-                            onPress={() => {
-                                navigation.navigate("Booking", { eventId: event.id, price: event.price });
-                            }}
-                        >
-                            <Text style={{ color: '#fff', fontWeight: '600', fontSize: 15 }}>
-                                {canBook ? `Book Now · ${event.price === 0 ? 'Free' : `₹${event.price}`}` : getStatusText()}
+                            <Text style={styles.actionButtonText}>
+                                Edit Event
                             </Text>
                         </TouchableOpacity>
 
-                }
+                        <TouchableOpacity
+                            style={[
+                                styles.actionButton,
+                                { backgroundColor: colors.danger }
+                            ]}
+                            onPress={() => navigation.navigate("AddReview", { event })}
+                        >
+                            <Text style={styles.actionButtonText}>
+                                Delete
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                ) : (
+                    <TouchableOpacity
+                        style={[
+                            styles.bookButton,
+                            { backgroundColor: canBook ? colors.primary : colors.textSecondary, marginTop: 10 }
+                        ]}
+                        disabled={!canBook}
+                        onPress={() => {
+                            navigation.navigate("Booking", { eventId: event.id });
+                        }}
+                    >
+                        <Text style={{ color: '#fff', fontWeight: '600', fontSize: 15 }}>
+                            {canBook ? `Book Now · ${event.price === 0 ? 'Free' : `₹${event.price}`}` : getStatusText()}
+                        </Text>
+                    </TouchableOpacity>
+                )}
             </View>
         </View>
     );
@@ -309,7 +334,6 @@ const styles = StyleSheet.create({
     infoRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 8,
         marginBottom: 6,
     },
     divider: {
@@ -348,6 +372,22 @@ const styles = StyleSheet.create({
         right: 0,
         padding: 16,
         borderTopWidth: 0.5,
+    },
+    actionRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 10,
+    },
+    actionButton: {
+        flex: 1,
+        padding: 14,
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    actionButtonText: {
+        color: '#fff',
+        fontWeight: '600',
+        fontSize: 15,
     },
     bookButton: {
         padding: 14,

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   TouchableOpacity,
   Text,
@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { lightColors } from "../styles/colors";
+import { ThemeContext } from "../context/ThemeContext";
 
 const Button = ({
   title,
@@ -17,12 +18,18 @@ const Button = ({
   textStyle,
   ...rest
 }) => {
+  const theme = useContext(ThemeContext);
+  const colors = theme?.colors || lightColors;
   const isDisabled = disabled || loading;
 
   return (
     <TouchableOpacity
       style={[
         styles.button,
+        {
+          backgroundColor: variant === "outline" ? "transparent" : colors.primary,
+          borderColor: variant === "outline" ? colors.primary : "transparent",
+        },
         variant === "outline" && styles.outlineButton,
         isDisabled && styles.disabledButton,
         style,
@@ -34,13 +41,13 @@ const Button = ({
     >
       {loading ? (
         <ActivityIndicator
-          color={variant === "outline" ? lightColors.primary : "#FFFFFF"}
+          color={variant === "outline" ? colors.primary : "#FFFFFF"}
         />
       ) : (
         <Text
           style={[
             styles.buttonText,
-            variant === "outline" && styles.outlineButtonText,
+            variant === "outline" && { color: colors.primary },
             textStyle,
           ]}
         >

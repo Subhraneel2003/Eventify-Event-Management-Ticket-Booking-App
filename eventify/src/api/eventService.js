@@ -73,3 +73,13 @@ export const updateEventSeats = async (id, ticketCount, status) => {
     throw handleError(err, 'updateEventSeats');
   }
 };
+
+export const updateEventsInfo = async (id, value) => {
+  try {
+    const res = await api.patch(`/events/${id}`, value)
+    return res.data
+  }
+  catch (err) {
+    throw handleError(err, 'updateEventsInfo');
+  }
+}
