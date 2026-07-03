@@ -3,9 +3,7 @@ import MapView, { Marker } from "react-native-maps";
 import React, { useEffect, useState, useContext } from 'react'
 import { Ionicons } from '@expo/vector-icons';
 import { fetchEventById } from '../../api/eventService';
-import { fetchUserById } from '../../api/userService';
 import { ThemeContext } from '../../context/ThemeContext';
-import { useSelector } from 'react-redux';
 import { useSelector } from 'react-redux';
 
 const { width } = Dimensions.get('window');
@@ -16,7 +14,7 @@ export default function EventDetailScreen({ navigation, route }) {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const { user } = useSelector(state => state.auth)
-    
+
     useEffect(() => {
         loadEvent();
     }, []);
@@ -35,62 +33,59 @@ export default function EventDetailScreen({ navigation, route }) {
 
     const isOrganizer = user?.role === "organizer" && user?.id === event?.organizerId
 
-  const isOrganizer =
-    user?.role === 'organizer' && user?.id === event?.organizerId;
+    if (loading) {
+        return (
+            <View style={[styles.centered, { backgroundColor: colors.background }]}>
+                <ActivityIndicator size="large" color={colors.primary} />
+            </View>
+        );
+    }
 
-  if (loading) {
+    if (error) {
+        return (
+            <View style={[styles.centered, { backgroundColor: colors.background }]}>
+                <Text style={{ color: colors.danger }}>
+                    Something went wrong: {error}
+                </Text>
+                <TouchableOpacity onPress={loadEvent}>
+                    <Text style={{ color: colors.primary, marginTop: 10 }}>Retry</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
+    const isSoldOut = event.availableSeats === 0;
+    const isCancelled = event.status === 'cancelled';
+    const isCompleted = event.status === 'completed';
+    const canBook = !isSoldOut && !isCancelled && !isCompleted;
+
+    const getStatusColor = () => {
+        if (isCancelled) return colors.danger;
+        if (isCompleted) return colors.textSecondary;
+        if (isSoldOut) return colors.danger;
+        return '#22c55e';
+    };
+
+    const getStatusText = () => {
+        if (isCancelled) return 'Cancelled';
+        if (isCompleted) return 'Completed';
+        if (isSoldOut) return 'Sold Out';
+        return `${event.availableSeats} seats left`;
+    };
     return (
-      <View style={[styles.centered, { backgroundColor: colors.background }]}>
-        <ActivityIndicator size="large" color={colors.primary} />
-      </View>
-    );
-  }
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <Image
+                    source={{ uri: event.coverImage }}
+                    style={styles.coverImage}
+                    resizeMode="cover"
+                />
 
-  if (error) {
-    return (
-      <View style={[styles.centered, { backgroundColor: colors.background }]}>
-        <Text style={{ color: colors.danger }}>
-          Something went wrong: {error}
-        </Text>
-        <TouchableOpacity onPress={loadEvent}>
-          <Text style={{ color: colors.primary, marginTop: 10 }}>Retry</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
-  const isSoldOut = event.availableSeats === 0;
-  const isCancelled = event.status === 'cancelled';
-  const isCompleted = event.status === 'completed';
-  const canBook = !isSoldOut && !isCancelled && !isCompleted;
-
-  const getStatusColor = () => {
-    if (isCancelled) return colors.danger;
-    if (isCompleted) return colors.textSecondary;
-    if (isSoldOut) return colors.danger;
-    return '#22c55e';
-  };
-
-  const getStatusText = () => {
-    if (isCancelled) return 'Cancelled';
-    if (isCompleted) return 'Completed';
-    if (isSoldOut) return 'Sold Out';
-    return `${event.availableSeats} seats left`;
-  };
-  return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <Image
-          source={{ uri: event.coverImage }}
-          style={styles.coverImage}
-          resizeMode="cover"
-        />
-
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="arrow-back" size={20} color="#fff" />
-        </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.backButton}
+                    onPress={() => navigation.goBack()}
+                >
+                    <Ionicons name="arrow-back" size={20} color="#fff" />
+                </TouchableOpacity>
 
                 <View style={styles.content}>
                     <View style={styles.row}>
@@ -102,20 +97,20 @@ export default function EventDetailScreen({ navigation, route }) {
                         </Text>
                     </View>
 
-          <Text style={[styles.title, { color: colors.text }]}>
-            {event.title}
-          </Text>
+                    <Text style={[styles.title, { color: colors.text }]}>
+                        {event.title}
+                    </Text>
 
-          <View style={styles.infoRow}>
-            <Ionicons
-              name="calendar-outline"
-              size={16}
-              color={colors.textSecondary}
-            />
-            <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
-              {event.date}
-            </Text>
-          </View>
+                    <View style={styles.infoRow}>
+                        <Ionicons
+                            name="calendar-outline"
+                            size={16}
+                            color={colors.textSecondary}
+                        />
+                        <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
+                            {event.date}
+                        </Text>
+                    </View>
 
                     <View style={styles.infoRow}>
                         <Ionicons name="time-outline" size={16} color={colors.textSecondary} />
@@ -134,66 +129,44 @@ export default function EventDetailScreen({ navigation, route }) {
                     <View style={styles.infoRow}>
                         <Ionicons name="person-outline" size={16} color={colors.textSecondary} />
                         <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
-                            Event Organizer: {user?.name}
+                            {user?.name}
                         </Text>
                     </View>
 
                     <View style={styles.infoRow}>
                         <Ionicons name="mail-outline" size={16} color={colors.textSecondary} />
                         <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
-                            Event Organiser Email: {user?.email}
+                            {user?.email}
                         </Text>
                     </View>
 
-          <View style={styles.infoRow}>
-            <Ionicons
-              name="person-outline"
-              size={16}
-              color={colors.textSecondary}
-            />
-            <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
-              Event Organizer: {organizer.name}
-            </Text>
-          </View>
+                    <View style={styles.infoRow}>
+                        <Ionicons
+                            name="location-outline"
+                            size={16}
+                            color={colors.textSecondary}
+                        />
+                        <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
+                            {event.address}
+                        </Text>
+                    </View>
 
-          <View style={styles.infoRow}>
-            <Ionicons
-              name="mail-outline"
-              size={16}
-              color={colors.textSecondary}
-            />
-            <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
-              Event Organiser Email: {organizer.email}
-            </Text>
-          </View>
+                    <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
-          <View style={styles.infoRow}>
-            <Ionicons
-              name="location-outline"
-              size={16}
-              color={colors.textSecondary}
-            />
-            <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
-              {event.address}
-            </Text>
-          </View>
+                    <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                        About this event
+                    </Text>
+                    <Text
+                        style={{
+                            color: colors.textSecondary,
+                            fontSize: 13,
+                            lineHeight: 22,
+                        }}
+                    >
+                        {event.description}
+                    </Text>
 
-          <View style={[styles.divider, { backgroundColor: colors.border }]} />
-
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
-            About this event
-          </Text>
-          <Text
-            style={{
-              color: colors.textSecondary,
-              fontSize: 13,
-              lineHeight: 22,
-            }}
-          >
-            {event.description}
-          </Text>
-
-          <View style={[styles.divider, { backgroundColor: colors.border }]} />
+                    <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
                     <Text style={[styles.sectionTitle, { color: colors.text }]}>Location</Text>
                     <View
@@ -245,10 +218,10 @@ export default function EventDetailScreen({ navigation, route }) {
                         </View>
                     </View>
 
-          {/* Bottom padding for sticky button */}
-          <View style={{ height: 80 }} />
-        </View>
-      </ScrollView>
+                    {/* Bottom padding for sticky button */}
+                    <View style={{ height: 80 }} />
+                </View>
+            </ScrollView>
 
             {/* Sticky Book Now Button */}
             <View style={[styles.stickyButton, { backgroundColor: colors.background, borderTopColor: colors.border }]}>
@@ -259,7 +232,7 @@ export default function EventDetailScreen({ navigation, route }) {
                                 styles.bookButton,
                                 { backgroundColor: colors.primary }
                             ]}
-                            onPress={() => navigation.navigate("Event Edit", eventId)}
+                            onPress={() => navigation.navigate("Event Edit", {event})}
                         >
                             <Text style={{ color: '#fff', fontWeight: '600', fontSize: 15 }}>
                                 Edit Event Details
@@ -273,8 +246,7 @@ export default function EventDetailScreen({ navigation, route }) {
                             ]}
                             disabled={!canBook}
                             onPress={() => {
-                                // wire to bookingSlice later
-                                console.log('Book now tapped for event:', event.id);
+                                navigation.navigate("Booking", { eventId: event.id, price: event.price });
                             }}
                         >
                             <Text style={{ color: '#fff', fontWeight: '600', fontSize: 15 }}>
