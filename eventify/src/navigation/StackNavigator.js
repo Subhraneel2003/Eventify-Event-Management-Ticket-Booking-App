@@ -6,6 +6,7 @@ import LoginScreen from "../screens/Auth/LoginScreen";
 import SignupScreen from "../screens/Auth/SignupScreen";
 import DrawerNavigator from "./DrawerNavigator";
 import EventDetailScreen from "../screens/EventDetails/EventDetailScreen";
+import EventEditScreen from "../screens/EventDetails/EventEditScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,7 @@ const StackNavigator = () => {
       {token ? (<>
         <Stack.Screen name="MainApp" component={DrawerNavigator} />
         <Stack.Screen name="Event Details" component={EventDetailScreen}/>
+        <Stack.Screen name="Event Edit" component={EventEditScreen} />
         </>
       ) : (
         <>

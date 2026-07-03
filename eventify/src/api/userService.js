@@ -8,7 +8,7 @@ const api = axios.create({
 
 export const fetchUserById = async(id) =>{
     try{
-        const res= await api.get(`/events/${id}`)
+        const res= await api.get(`/users/${id}`)
         return res.data 
     }
     catch(err){
