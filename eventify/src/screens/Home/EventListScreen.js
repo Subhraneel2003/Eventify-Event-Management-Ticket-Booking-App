@@ -9,7 +9,6 @@ import EventCard from '../../components/EventCard'
 import { fetchCategories } from '../../api/categoryService'
 import { Ionicons } from '@expo/vector-icons';
 import { useDebounce } from '../../hooks/useDebounce'
-import { useDebounce } from '../../hooks/useDebounce'
 
 export default function EventListScreen({ navigation }) {
     const dispatch = useDispatch()
@@ -115,7 +114,7 @@ export default function EventListScreen({ navigation }) {
     }
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
-            <Text>Welcome {user?.name}</Text>
+            <Text style={[styles.welcomeText, { color: colors.text }]}>Welcome {user?.name}</Text>
 
             <TextInput style={[styles.searchBar, {
                 backgroundColor: colors.surface,
@@ -174,6 +173,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
+    },
+    welcomeText: {
+        fontSize: 18,
+        fontWeight: '600',
+        marginBottom: 12,
     },
     centered: {
         flex: 1,

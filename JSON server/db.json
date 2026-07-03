@@ -91,18 +91,40 @@
       "createdAt": "2024-09-01T08:00:00.000Z"
     }
   ],
-
   "categories": [
-    { "id": "1", "name": "Music" },
-    { "id": "2", "name": "Technology" },
-    { "id": "3", "name": "Sports" },
-    { "id": "4", "name": "Arts & Theatre" },
-    { "id": "5", "name": "Food & Drink" },
-    { "id": "6", "name": "Business" },
-    { "id": "7", "name": "Comedy" },
-    { "id": "8", "name": "Workshops" }
+    {
+      "id": "1",
+      "name": "Music"
+    },
+    {
+      "id": "2",
+      "name": "Technology"
+    },
+    {
+      "id": "3",
+      "name": "Sports"
+    },
+    {
+      "id": "4",
+      "name": "Arts & Theatre"
+    },
+    {
+      "id": "5",
+      "name": "Food & Drink"
+    },
+    {
+      "id": "6",
+      "name": "Business"
+    },
+    {
+      "id": "7",
+      "name": "Comedy"
+    },
+    {
+      "id": "8",
+      "name": "Workshops"
+    }
   ],
-
   "events": [
     {
       "id": "1",
@@ -115,7 +137,10 @@
       "time": "17:00",
       "venueName": "DY Patil Stadium",
       "address": "Sector 7, Nerul, Navi Mumbai, Maharashtra",
-      "location": { "latitude": 19.033, "longitude": 73.0297 },
+      "location": {
+        "latitude": 19.033,
+        "longitude": 73.0297
+      },
       "coverImage": "https://picsum.photos/seed/sunburn/800/450",
       "price": 2499,
       "totalSeats": 5000,
@@ -133,7 +158,10 @@
       "time": "09:30",
       "venueName": "Bombay Exhibition Centre",
       "address": "Goregaon East, Mumbai, Maharashtra",
-      "location": { "latitude": 19.1551, "longitude": 72.8633 },
+      "location": {
+        "latitude": 19.1551,
+        "longitude": 72.8633
+      },
       "coverImage": "https://picsum.photos/seed/techcrunch/800/450",
       "price": 4999,
       "totalSeats": 1200,
@@ -151,7 +179,10 @@
       "time": "05:30",
       "venueName": "Chhatrapati Shivaji Maharaj Terminus",
       "address": "Fort, Mumbai, Maharashtra",
-      "location": { "latitude": 18.9402, "longitude": 72.8356 },
+      "location": {
+        "latitude": 18.9402,
+        "longitude": 72.8356
+      },
       "coverImage": "https://picsum.photos/seed/marathon/800/450",
       "price": 999,
       "totalSeats": 10000,
@@ -169,7 +200,10 @@
       "time": "19:00",
       "venueName": "Prithvi Theatre",
       "address": "Juhu, Mumbai, Maharashtra",
-      "location": { "latitude": 19.1075, "longitude": 72.8263 },
+      "location": {
+        "latitude": 19.1075,
+        "longitude": 72.8263
+      },
       "coverImage": "https://picsum.photos/seed/theatre/800/450",
       "price": 799,
       "totalSeats": 200,
@@ -187,7 +221,10 @@
       "time": "12:00",
       "venueName": "Phoenix Marketcity Grounds",
       "address": "Kurla West, Mumbai, Maharashtra",
-      "location": { "latitude": 19.0863, "longitude": 72.8891 },
+      "location": {
+        "latitude": 19.0863,
+        "longitude": 72.8891
+      },
       "coverImage": "https://picsum.photos/seed/streetfood/800/450",
       "price": 299,
       "totalSeats": 3000,
@@ -205,7 +242,10 @@
       "time": "18:30",
       "venueName": "WeWork BKC",
       "address": "Bandra Kurla Complex, Mumbai, Maharashtra",
-      "location": { "latitude": 19.066, "longitude": 72.8679 },
+      "location": {
+        "latitude": 19.066,
+        "longitude": 72.8679
+      },
       "coverImage": "https://picsum.photos/seed/startupnight/800/450",
       "price": 0,
       "totalSeats": 150,
@@ -223,7 +263,10 @@
       "time": "20:00",
       "venueName": "NCPA",
       "address": "Nariman Point, Mumbai, Maharashtra",
-      "location": { "latitude": 18.9281, "longitude": 72.8226 },
+      "location": {
+        "latitude": 18.9281,
+        "longitude": 72.8226
+      },
       "coverImage": "https://picsum.photos/seed/comedynight/800/450",
       "price": 1499,
       "totalSeats": 800,
@@ -241,7 +284,10 @@
       "time": "10:00",
       "venueName": "91springboard",
       "address": "Andheri East, Mumbai, Maharashtra",
-      "location": { "latitude": 19.1197, "longitude": 72.8468 },
+      "location": {
+        "latitude": 19.1197,
+        "longitude": 72.8468
+      },
       "coverImage": "https://picsum.photos/seed/uxbootcamp/800/450",
       "price": 1999,
       "totalSeats": 60,
@@ -259,7 +305,10 @@
       "time": "19:30",
       "venueName": "Blue Frog",
       "address": "Lower Parel, Mumbai, Maharashtra",
-      "location": { "latitude": 19.0008, "longitude": 72.8302 },
+      "location": {
+        "latitude": 19.0008,
+        "longitude": 72.8302
+      },
       "coverImage": "https://picsum.photos/seed/indierock/800/450",
       "price": 599,
       "totalSeats": 300,
@@ -277,7 +326,10 @@
       "time": "09:00",
       "venueName": "Jio World Convention Centre",
       "address": "Bandra Kurla Complex, Mumbai, Maharashtra",
-      "location": { "latitude": 19.0691, "longitude": 72.8645 },
+      "location": {
+        "latitude": 19.0691,
+        "longitude": 72.8645
+      },
       "coverImage": "https://picsum.photos/seed/aisummit/800/450",
       "price": 3499,
       "totalSeats": 2000,
@@ -285,7 +337,6 @@
       "createdAt": "2026-05-20T08:00:00.000Z"
     }
   ],
-
   "bookings": [
     {
       "id": "1",
@@ -406,9 +457,18 @@
       "bookingDate": "2026-06-25T15:40:00.000Z",
       "status": "confirmed",
       "qrCode": "QR-EVT1-USR2-H7I8J9"
+    },
+    {
+      "userId": "3",
+      "eventId": "2",
+      "ticketCount": 2,
+      "totalAmount": 9998,
+      "bookingDate": "2026-07-03T09:41:33.198Z",
+      "status": "cancelled",
+      "qrCode": "e20c5caf-e2af-4e7d-bfab-63ba947852d6",
+      "id": "L_XMxPd"
     }
   ],
-
   "reviews": [
     {
       "id": "1",
