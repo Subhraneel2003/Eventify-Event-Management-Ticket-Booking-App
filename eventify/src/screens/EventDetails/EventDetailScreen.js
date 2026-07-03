@@ -12,7 +12,7 @@ export default function EventDetailScreen({ navigation, route }) {
     const [event, setEvent] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    const [organiserId, setOrganiserId] = useState(0)
+    const [organiserId, setOrganiserId] = useState("")
 
     useEffect(() => {
         loadEvent();
@@ -145,6 +145,7 @@ export default function EventDetailScreen({ navigation, route }) {
                         </Text>
                     </View>
 
+                    {/* Total Seats, Available, Price*/}
                     <View style={[styles.seatsRow, { backgroundColor: colors.surface, borderColor: colors.border }]}>
                         <View style={{ alignItems: 'center' }}>
                             <Text style={{ color: colors.text, fontWeight: '600', fontSize: 16 }}>{event.totalSeats}</Text>
@@ -194,6 +195,8 @@ export default function EventDetailScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        marginBottom: 30,
+        marginTop: 30
     },
     centered: {
         flex: 1,

@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator, StyleSheet, TextInput, TouchableOpacity, FlatList } from 'react-native'
+import { View, Text, ActivityIndicator, StyleSheet, TextInput, TouchableOpacity, FlatList, Modal } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setError, setEvents, setFilteredEvents, setLoading } from '../../store/slices/eventSlice'
@@ -16,7 +16,7 @@ export default function EventListScreen({ navigation }) {
     const [search, setSearch] = useState("")
     const [category, setCategory] = useState("ALL")
     const [categories, setCategories] = useState([])
-    const [categoryMenuVisible, setCategoryMenuVisible] = useState(false)
+    const [categoryModalVisible, setCategoryModalVisible] = useState(false)
 
     const categoryItems = [{ id: 'ALL', name: 'ALL' }, ...categories]
 
@@ -116,7 +116,7 @@ export default function EventListScreen({ navigation }) {
                         backgroundColor: colors.surface,
                         borderColor: colors.border,
                     }]}
-                    onPress={() => setCategoryMenuVisible(prev => !prev)}>
+                    onPress={() => setCategoryModalVisible(true)}>
                     <Text style={[styles.dropdownButtonText, { color: colors.text }]}>Category: {category}</Text>
                     <Text style={[styles.dropdownButtonIcon, { color: colors.textSecondary }]}><Ionicons name="chevron-down" size={18} color={colors.textSecondary} /></Text>
                 </TouchableOpacity>
