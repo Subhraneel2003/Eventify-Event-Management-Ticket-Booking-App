@@ -14,7 +14,6 @@ export default function EventDetailScreen({ navigation, route }) {
     const [event, setEvent] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    const [organizer, setOrganizer] = useState(null)
     const { user } = useSelector(state => state.auth)
     
     useEffect(() => {
@@ -26,8 +25,6 @@ export default function EventDetailScreen({ navigation, route }) {
             setLoading(true);
             const event = await fetchEventById(eventId);
             setEvent(event);
-            const organizerDetails = await fetchUserById(event.organizerId);
-            setOrganizer(organizerDetails);
         } catch (err) {
             setError(err.message);
         } finally {
@@ -125,14 +122,14 @@ export default function EventDetailScreen({ navigation, route }) {
                     <View style={styles.infoRow}>
                         <Ionicons name="person-outline" size={16} color={colors.textSecondary} />
                         <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
-                            Event Organizer: {organizer.name}
+                            Event Organizer: {user?.name}
                         </Text>
                     </View>
 
                     <View style={styles.infoRow}>
                         <Ionicons name="mail-outline" size={16} color={colors.textSecondary} />
                         <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
-                            Event Organiser Email: {organizer.email}
+                            Event Organiser Email: {user?.email}
                         </Text>
                     </View>
 

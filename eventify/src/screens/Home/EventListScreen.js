@@ -19,7 +19,7 @@ export default function EventListScreen({ navigation }) {
     const [categories, setCategories] = useState([])
     const [categoryModalVisible, setCategoryModalVisible] = useState(false)
     const debouncedSearch = useDebounce(search, 500)
-
+    const {user} = useSelector(state => state.auth)
     const categoryItems = [{ id: 'ALL', name: 'ALL' }, ...categories]
 
     useEffect(() => {
@@ -114,6 +114,8 @@ export default function EventListScreen({ navigation }) {
     }
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
+            <Text>Welcome {user?.name}</Text>
+
             <TextInput style={[styles.searchBar, {
                 backgroundColor: colors.surface,
                 color: colors.text,
