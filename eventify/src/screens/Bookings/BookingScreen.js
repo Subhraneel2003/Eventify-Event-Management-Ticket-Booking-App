@@ -9,6 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchEventById, updateEventSeats } from '../../api/eventService';
 import { ThemeContext } from '../../context/ThemeContext';
@@ -19,6 +20,7 @@ import {
 import axios from 'axios';
 import * as Crypto from 'expo-crypto';
 import { API_BASE_URL } from '../../utils/constants';
+import { saveBookings } from '../../services/storageService';
 
 export default function BookingScreen({ navigation, route }) {
   const { eventId } = route.params;
@@ -26,6 +28,7 @@ export default function BookingScreen({ navigation, route }) {
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
+  const { bookings } = useSelector((state) => state.bookings);
 
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -112,6 +115,8 @@ export default function BookingScreen({ navigation, route }) {
       dispatch(addBooking(bookingWithQRCode));
       dispatch(setSelectedBooking(bookingWithQRCode));
 
+      await saveBookings(bookings);
+
       navigation.navigate('BookingDetails');
     } catch (error) {
       Alert.alert('Error', 'An error occured while Booking');
@@ -120,7 +125,7 @@ export default function BookingScreen({ navigation, route }) {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'left', 'right']}>
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backBtn}
@@ -295,7 +300,7 @@ export default function BookingScreen({ navigation, route }) {
           <Text style={styles.confirmText}>Confirm</Text>
         </TouchableOpacity>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

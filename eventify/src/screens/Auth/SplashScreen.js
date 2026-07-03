@@ -2,8 +2,14 @@ import React, { useContext, useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { ThemeContext } from '../../context/ThemeContext';
 import { useDispatch } from 'react-redux';
-import { clearAuthData, getAuthData } from '../../services/storageService';
+import {
+  clearAuthData,
+  clearBookingsData,
+  getAuthData,
+  loadBookings,
+} from '../../services/storageService';
 import { completeAuthCheck, login, logout } from '../../store/slices/authSlice';
+import { clearBookings, setBookings } from '../../store/slices/bookingSlice';
 import { isTokenValid } from '../../utils/tokenManager';
 
 const SplashScreen = () => {
@@ -12,15 +18,28 @@ const SplashScreen = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { token, user } = await getAuthData();
+      try {
+        const { token, user } = await getAuthData();
 
-      if (!token || !user || !isTokenValid(token)) {
-        await clearAuthData();
+        if (!token || !user || !isTokenValid(token)) {
+          await clearAuthData();
+          await clearBookingsData();
+          dispatch(logout());
+          dispatch(clearBookings());
+          return;
+        }
+
+        dispatch(login({ user, token }));
+
+        const bookings = await loadBookings();
+        dispatch(setBookings(bookings));
+      } catch (err) {
+        console.error('Auth check failed:', err);
         dispatch(logout());
-        return;
+        dispatch(clearBookings());
+      } finally {
+        dispatch(completeAuthCheck());
       }
-
-      dispatch(login({ user, token }));
     };
 
     checkAuth();

@@ -10,6 +10,7 @@ import {
   Modal,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
 import QRCode from 'react-native-qrcode-svg';
 import MapView, { Marker } from 'react-native-maps';
@@ -23,7 +24,7 @@ import { API_BASE_URL } from '../../utils/constants';
 export default function BookingDetailsScreen({ navigation }) {
   const { colors } = useContext(ThemeContext);
   const dispatch = useDispatch();
-  const booking = useSelector((state) => state.booking.selectedBooking);
+  const booking = useSelector((state) => state.bookings.selectedBooking);
 
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -142,7 +143,7 @@ export default function BookingDetailsScreen({ navigation }) {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'left', 'right']}>
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backBtn}
@@ -461,7 +462,7 @@ export default function BookingDetailsScreen({ navigation }) {
           </View>
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 }
 
