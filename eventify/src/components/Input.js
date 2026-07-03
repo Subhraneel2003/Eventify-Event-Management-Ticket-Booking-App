@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import { lightColors } from "../styles/colors";
+import { ThemeContext } from "../context/ThemeContext";
 
 const Input = ({
   label,
@@ -15,23 +16,33 @@ const Input = ({
   ...rest
 }) => {
   const hasError = touched && error;
+  const theme = useContext(ThemeContext);
+  const colors = theme?.colors || lightColors;
 
   return (
     <View style={styles.container}>
-      {label && <Text style={styles.label}>{label}</Text>}
+      {label && <Text style={[styles.label, { color: colors.text }]}>{label}</Text>}
       <TextInput
-        style={[styles.input, hasError && styles.inputError]}
+        style={[
+          styles.input,
+          rest.multiline && styles.multilineInput,
+          {
+            borderColor: hasError ? colors.danger : colors.border,
+            backgroundColor: colors.surface,
+            color: colors.text,
+          },
+        ]}
         value={value}
         onChangeText={onChangeText}
         onBlur={onBlur}
         placeholder={placeholder}
-        placeholderTextColor={lightColors.textSecondary}
+        placeholderTextColor={colors.textSecondary}
         secureTextEntry={secureTextEntry}
         keyboardType={keyboardType}
         autoCapitalize="none"
         {...rest}
       />
-      {hasError && <Text style={styles.errorText}>{error}</Text>}
+      {hasError && <Text style={[styles.errorText, { color: colors.danger }]}>{error}</Text>}
     </View>
   );
 };
@@ -43,18 +54,20 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "600",
-    color: lightColors.text,
     marginBottom: 6,
   },
   input: {
-    height: 50,
+    minHeight: 50,
     borderWidth: 1.5,
-    borderColor: lightColors.border,
     borderRadius: 12,
     paddingHorizontal: 16,
     fontSize: 15,
-    color: lightColors.text,
     backgroundColor: lightColors.surface,
+  },
+  multilineInput: {
+    minHeight: 120,
+    paddingTop: 14,
+    textAlignVertical: 'top',
   },
   inputError: {
     borderColor: lightColors.danger,
