@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator, StyleSheet, TextInput, TouchableOpacity, FlatList } from 'react-native'
+import { View, Text, ActivityIndicator, StyleSheet, TextInput, TouchableOpacity, FlatList, Modal } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setError, setEvents, setFilteredEvents, setLoading } from '../../store/slices/eventSlice'
@@ -8,6 +8,7 @@ import { ThemeContext } from '../../context/ThemeContext'
 import EventCard from '../../components/EventCard'
 import { fetchCategories } from '../../api/categoryService'
 import { Ionicons } from '@expo/vector-icons';
+import { useDebounce } from '../../hooks/useDebounce'
 
 export default function EventListScreen({ navigation }) {
     const dispatch = useDispatch()
@@ -16,13 +17,18 @@ export default function EventListScreen({ navigation }) {
     const [search, setSearch] = useState("")
     const [category, setCategory] = useState("ALL")
     const [categories, setCategories] = useState([])
-    const [categoryMenuVisible, setCategoryMenuVisible] = useState(false)
+    const [categoryModalVisible, setCategoryModalVisible] = useState(false)
+    const debouncedSearch = useDebounce(search, 500)
 
     const categoryItems = [{ id: 'ALL', name: 'ALL' }, ...categories]
 
     useEffect(() => {
         loadCategories()
     }, [])
+
+    useEffect(() => {
+        handleSearch(debouncedSearch);
+    }, [debouncedSearch]);
 
     useFocusEffect(React.useCallback(() => {
         loadEvents()
@@ -51,25 +57,29 @@ export default function EventListScreen({ navigation }) {
         }
     }
     const handleSearch = async (query) => {
-        setSearch(query)
+
         if (query.trim() === "") {
             dispatch(setFilteredEvents(events))
             return
         }
+
         try {
             dispatch(setLoading(true))
             const data = await searchEvents(query)
             dispatch(setFilteredEvents(data))
-        } catch (err) {
+        }
+
+        catch (err) {
             dispatch(setError(err.message))
         }
+
         finally {
             dispatch(setLoading(false))
         }
     }
     const handleCategory = async (cat) => {
         setCategory(cat)
-        setCategoryMenuVisible(false)
+        setCategoryModalVisible(false)
         if (cat.trim() === "ALL") {
             dispatch(setFilteredEvents(events))
             return
@@ -108,35 +118,40 @@ export default function EventListScreen({ navigation }) {
                 backgroundColor: colors.surface,
                 color: colors.text,
                 borderColor: colors.border
-            }]} placeholder='Search...' value={search} onChangeText={handleSearch} />
+            }]} placeholder='Search...' value={search} onChangeText={setSearch} />
 
-            <View style={styles.dropdownWrapper}>
+            <View style={{ marginBottom: 20 }}>
                 <TouchableOpacity
                     style={[styles.dropdownButton, {
                         backgroundColor: colors.surface,
                         borderColor: colors.border,
                     }]}
-                    onPress={() => setCategoryMenuVisible(prev => !prev)}>
+                    onPress={() => setCategoryModalVisible(true)}>
                     <Text style={[styles.dropdownButtonText, { color: colors.text }]}>Category: {category}</Text>
                     <Text style={[styles.dropdownButtonIcon, { color: colors.textSecondary }]}><Ionicons name="chevron-down" size={18} color={colors.textSecondary} /></Text>
                 </TouchableOpacity>
-                {categoryMenuVisible && (
-                    <View style={[styles.dropdownMenu, {
-                        backgroundColor: colors.surface,
-                        borderColor: colors.border,
-                    }]}> 
-                        {categoryItems.map((item) => (
-                            <TouchableOpacity
-                                key={item.id}
-                                onPress={() => handleCategory(item.name)}
-                                style={[styles.dropdownItem, category === item.name && styles.dropdownItemActive]}>
-                                <Text style={[styles.dropdownItemText, {
-                                    color: category === item.name ? '#fff' : colors.text,
-                                }]}>{item.name}</Text>
+
+                <Modal visible={categoryModalVisible} transparent={true} animationType='slide'
+                    onRequestClose={() => setCategoryModalVisible(false)}>
+                    <View style={styles.overlay}>
+                        <View style={[styles.modalContainer, { backgroundColor: colors.surface }]}>
+                            <Text style={styles.modalTitle}>Select Category</Text>
+                            {categoryItems.map((item) => (
+                                <TouchableOpacity
+                                    key={item.id}
+                                    onPress={() => handleCategory(item.name)}
+                                    style={[styles.dropdownItem, { backgroundColor: colors.surface }, category === item.name && styles.dropdownItemActive]}>
+                                    <Text style={[styles.dropdownItemText, {
+                                        color: category === item.name ? '#fff' : colors.text,
+                                    }]}>{item.name}</Text>
+                                </TouchableOpacity>
+                            ))}
+                            <TouchableOpacity onPress={() => setCategoryModalVisible(false)}>
+                                <Text style={{ color: colors.primary, textAlign: "center", marginTop: 10, fontWeight: "600", }}>Cancel</Text>
                             </TouchableOpacity>
-                        ))}
+                        </View>
                     </View>
-                )}
+                </Modal>
             </View>
             <FlatList data={filteredEvents} keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
@@ -169,6 +184,22 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         fontSize: 14,
     },
+    overlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.4)',
+        justifyContent: 'flex-end',
+    },
+    modalContainer: {
+        backgroundColor: 'white',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        padding: 20,
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: '600',
+        marginBottom: 20
+    },
     dropdownWrapper: {
         marginBottom: 16,
     },
@@ -189,16 +220,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginLeft: 10,
     },
-    dropdownMenu: {
-        marginTop: 8,
-        borderRadius: 14,
-        borderWidth: 1,
-        overflow: 'hidden',
-    },
     dropdownItem: {
         paddingVertical: 14,
-        paddingHorizontal: 16,
-        backgroundColor: '#fff',
+        paddingHorizontal: 16
     },
     dropdownItemActive: {
         backgroundColor: '#6F4BFF',
