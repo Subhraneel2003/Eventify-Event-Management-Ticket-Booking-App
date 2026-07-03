@@ -6,14 +6,13 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
-  Linking,
-  Platform,
   ActivityIndicator,
   Modal,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import QRCode from 'react-native-qrcode-svg';
+import MapView, { Marker } from 'react-native-maps';
 import { ThemeContext } from '../../context/ThemeContext';
 import { cancelBooking } from '../../store/slices/bookingSlice';
 import { fetchEventById, updateEventSeats } from '../../api/eventService';
@@ -135,18 +134,6 @@ export default function BookingDetailsScreen({ navigation }) {
       Alert.alert('Error', 'Failed to cancel booking. Please try again.');
     } finally {
       setCancelling(false);
-    }
-  };
-
-  const handleOpenMap = () => {
-    if (venueLatitude && venueLongitude) {
-      const scheme = Platform.select({
-        ios: `maps:0,0?q=${venueName}@${venueLatitude},${venueLongitude}`,
-        android: `geo:${venueLatitude},${venueLongitude}?q=${venueLatitude},${venueLongitude}(${venueName})`,
-      });
-      Linking.openURL(scheme);
-    } else {
-      Alert.alert('Map', 'Venue location is not available for this event.');
     }
   };
 
@@ -318,21 +305,44 @@ export default function BookingDetailsScreen({ navigation }) {
               </Text>
             </View>
 
-            <View
-              style={[styles.dashedDivider, { borderColor: colors.border }]}
-            />
-
-            <TouchableOpacity style={styles.mapRow} onPress={handleOpenMap}>
-              <Ionicons name="map-outline" size={18} color={colors.primary} />
-              <Text style={[styles.mapText, { color: colors.primary }]}>
-                Venue in MapView
-              </Text>
-              <Ionicons
-                name="chevron-forward"
-                size={16}
-                color={colors.primary}
-              />
-            </TouchableOpacity>
+            {venueLatitude && venueLongitude && (
+              <>
+                <View
+                  style={[styles.dashedDivider, { borderColor: colors.border }]}
+                />
+                <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                  Location
+                </Text>
+                <View
+                  style={[
+                    styles.mapPlaceholder,
+                    {
+                      backgroundColor: colors.surface,
+                      borderColor: colors.border,
+                    },
+                  ]}
+                >
+                  <MapView
+                    style={{ flex: 1 }}
+                    initialRegion={{
+                      latitude: venueLatitude,
+                      longitude: venueLongitude,
+                      latitudeDelta: 0.01,
+                      longitudeDelta: 0.01,
+                    }}
+                  >
+                    <Marker
+                      coordinate={{
+                        latitude: venueLatitude,
+                        longitude: venueLongitude,
+                      }}
+                      title={venueName}
+                      description={event?.address}
+                    />
+                  </MapView>
+                </View>
+              </>
+            )}
           </View>
 
           <View
@@ -627,16 +637,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
   },
-  // --- Map Link ---
-  mapRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  sectionTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 8,
   },
-  mapText: {
-    fontSize: 14,
-    fontWeight: '500',
-    flex: 1,
+  mapPlaceholder: {
+    height: 200,
+    borderRadius: 12,
+    overflow: 'hidden',
+    borderWidth: 0.5,
+    marginBottom: 16,
   },
   // --- Action Buttons ---
   actionRow: {
