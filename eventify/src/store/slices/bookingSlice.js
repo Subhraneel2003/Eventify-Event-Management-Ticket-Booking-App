@@ -1,13 +1,13 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   bookings: [],
-  loading: false,
+  loading: true,
   selectedBooking: null,
 };
 
 const bookingSlice = createSlice({
-  name: "booking",
+  name: 'booking',
   initialState,
   reducers: {
     setLoading(state, action) {
@@ -18,11 +18,15 @@ const bookingSlice = createSlice({
       state.loading = false;
     },
     addBooking(state, action) {
-      state.bookings.push(action.payload);
+      state.bookings.push({ status: 'confirmed', ...action.payload });
+    },
+    cancelBooking(state, action) {
+      const booking = state.bookings.find((b) => b.id === action.payload);
+      if (booking) booking.status = 'cancelled';
     },
     validateBooking(state, action) {
       const booking = state.bookings.find((b) => b.id === action.payload);
-      if (booking) booking.status = "used";
+      if (booking) booking.status = 'used';
     },
     setSelectedBooking(state, action) {
       state.selectedBooking = action.payload;
@@ -38,6 +42,7 @@ export const {
   setLoading,
   setBookings,
   addBooking,
+  cancelBooking,
   validateBooking,
   setSelectedBooking,
   clearBookings,

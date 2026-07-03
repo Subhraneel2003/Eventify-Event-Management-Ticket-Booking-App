@@ -9,6 +9,7 @@ import EventCard from '../../components/EventCard'
 import { fetchCategories } from '../../api/categoryService'
 import { Ionicons } from '@expo/vector-icons';
 import { useDebounce } from '../../hooks/useDebounce'
+import { useDebounce } from '../../hooks/useDebounce'
 
 export default function EventListScreen({ navigation }) {
     const dispatch = useDispatch()
