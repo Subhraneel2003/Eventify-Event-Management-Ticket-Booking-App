@@ -64,7 +64,7 @@ export default function EventEditScreen({ route, navigation }) {
                 showsVerticalScrollIndicator={true}
             >
                 <Text style={[styles.heading, { color: colors.text }]}>Edit Event</Text>
-                <View style={[styles.card, { backgroundColor: colors.surface }]}>    
+                <View style={[styles.card, { backgroundColor: colors.surface }]}>
                     <Formik
                         initialValues={{
                             title: event.title,
@@ -143,7 +143,7 @@ export default function EventEditScreen({ route, navigation }) {
                                     onRequestClose={() => setCategoryModalVisible(false)}
                                 >
                                     <View style={styles.overlay}>
-                                        <View style={[styles.modalContainer, { backgroundColor: colors.surface }]}> 
+                                        <View style={[styles.modalContainer, { backgroundColor: colors.surface }]}>
                                             <Text style={[styles.modalTitle, { color: colors.text }]}>Select Category</Text>
                                             {categories.length > 0 ? (
                                                 categories.map((item) => (
@@ -270,6 +270,13 @@ export default function EventEditScreen({ route, navigation }) {
                     </Formik>
                 </View>
             </ScrollView>
+
+            <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => navigation.goBack()}
+            >
+                <Ionicons name="arrow-back" size={20} color="#fff" />
+            </TouchableOpacity>
         </KeyboardAvoidingView>
     );
 }
@@ -278,6 +285,17 @@ export default function EventEditScreen({ route, navigation }) {
 const styles = StyleSheet.create({
     flex: {
         flex: 1,
+    },
+    backButton: {
+        position: 'absolute',
+        top: 45,
+        left: 16,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        borderRadius: 20,
+        width: 36,
+        height: 36,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     scrollContent: {
         flexGrow: 1,

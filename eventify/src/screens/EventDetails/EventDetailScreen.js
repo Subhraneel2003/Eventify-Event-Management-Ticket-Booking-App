@@ -107,35 +107,35 @@ export default function EventDetailScreen({ navigation, route }) {
                             size={16}
                             color={colors.textSecondary}
                         />
-                        <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
+                        <Text style={{ color: colors.textSecondary, fontSize: 13, marginLeft: 5 }}>
                             {event.date}
                         </Text>
                     </View>
 
                     <View style={styles.infoRow}>
                         <Ionicons name="time-outline" size={16} color={colors.textSecondary} />
-                        <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
+                        <Text style={{ color: colors.textSecondary, fontSize: 13, marginLeft: 5 }}>
                             {event.time}
                         </Text>
                     </View>
 
                     <View style={styles.infoRow}>
                         <Ionicons name="business-outline" size={16} color={colors.textSecondary} />
-                        <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
+                        <Text style={{ color: colors.textSecondary, fontSize: 13, marginLeft: 5 }}>
                             {event.venueName}
                         </Text>
                     </View>
 
                     <View style={styles.infoRow}>
                         <Ionicons name="person-outline" size={16} color={colors.textSecondary} />
-                        <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
+                        <Text style={{ color: colors.textSecondary, fontSize: 13, marginLeft: 5 }}>
                             {user?.name}
                         </Text>
                     </View>
 
                     <View style={styles.infoRow}>
                         <Ionicons name="mail-outline" size={16} color={colors.textSecondary} />
-                        <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
+                        <Text style={{ color: colors.textSecondary, fontSize: 13, marginLeft: 5 }}>
                             {user?.email}
                         </Text>
                     </View>
@@ -146,7 +146,7 @@ export default function EventDetailScreen({ navigation, route }) {
                             size={16}
                             color={colors.textSecondary}
                         />
-                        <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
+                        <Text style={{ color: colors.textSecondary, fontSize: 13, marginLeft: 5 }}>
                             {event.address}
                         </Text>
                     </View>
