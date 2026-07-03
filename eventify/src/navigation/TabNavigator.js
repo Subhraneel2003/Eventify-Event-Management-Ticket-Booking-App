@@ -11,6 +11,7 @@ export default function TabNavigator() {
     const { colors } = useContext(ThemeContext)
     return (
         <BottomTab.Navigator screenOptions={{
+            headerShown: false,
             tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
             tabBarActiveTintColor: colors.primary,
             tabBarInactiveTintColor: colors.textSecondary,

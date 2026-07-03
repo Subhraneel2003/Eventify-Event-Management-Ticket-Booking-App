@@ -1,9 +1,11 @@
-import { View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator, StyleSheet, Dimensions, } from 'react-native'
+import { View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator, StyleSheet, Dimensions } from 'react-native'
+import MapView, { Marker } from "react-native-maps";
 import React, { useEffect, useState, useContext } from 'react'
 import { Ionicons } from '@expo/vector-icons';
 import { fetchEventById } from '../../api/eventService';
 import { fetchUserById } from '../../api/userService';
 import { ThemeContext } from '../../context/ThemeContext';
+import { useSelector } from 'react-redux';
 
 const { width } = Dimensions.get('window');
 export default function EventDetailScreen({ navigation, route }) {
@@ -12,8 +14,9 @@ export default function EventDetailScreen({ navigation, route }) {
     const [event, setEvent] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    const [organiserId, setOrganiserId] = useState("")
-
+    const [organizer, setOrganizer] = useState(null)
+    const { user } = useSelector(state => state.auth)
+    
     useEffect(() => {
         loadEvent();
     }, []);
@@ -23,14 +26,16 @@ export default function EventDetailScreen({ navigation, route }) {
             setLoading(true);
             const event = await fetchEventById(eventId);
             setEvent(event);
-            const organizer = await fetchUserById(event.organizerId);
-            setOrganiserId(organizer);
+            const organizerDetails = await fetchUserById(event.organizerId);
+            setOrganizer(organizerDetails);
         } catch (err) {
             setError(err.message);
         } finally {
             setLoading(false);
         }
     };
+
+    const isOrganizer = user?.role === "organizer" && user?.id === event?.organizerId
 
     if (loading) {
         return (
@@ -90,7 +95,7 @@ export default function EventDetailScreen({ navigation, route }) {
                             <Text style={{ color: colors.textSecondary, fontSize: 12 }}>{event.category}</Text>
                         </View>
                         <Text style={{ color: getStatusColor(), fontSize: 12, fontWeight: '500' }}>
-                           <Ionicons name="ellipse" size={8} color={getStatusColor()} /> {getStatusText()}
+                            <Ionicons name="ellipse" size={8} color={getStatusColor()} /> {getStatusText()}
                         </Text>
                     </View>
 
@@ -104,7 +109,7 @@ export default function EventDetailScreen({ navigation, route }) {
                     </View>
 
                     <View style={styles.infoRow}>
-                        <Ionicons name="time-outline" size={16} color={colors.textSecondary} /> 
+                        <Ionicons name="time-outline" size={16} color={colors.textSecondary} />
                         <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
                             {event.time}
                         </Text>
@@ -114,6 +119,20 @@ export default function EventDetailScreen({ navigation, route }) {
                         <Ionicons name="business-outline" size={16} color={colors.textSecondary} />
                         <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
                             {event.venueName}
+                        </Text>
+                    </View>
+
+                    <View style={styles.infoRow}>
+                        <Ionicons name="person-outline" size={16} color={colors.textSecondary} />
+                        <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
+                            Event Organizer: {organizer.name}
+                        </Text>
+                    </View>
+
+                    <View style={styles.infoRow}>
+                        <Ionicons name="mail-outline" size={16} color={colors.textSecondary} />
+                        <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
+                            Event Organiser Email: {organizer.email}
                         </Text>
                     </View>
 
@@ -133,16 +152,34 @@ export default function EventDetailScreen({ navigation, route }) {
 
                     <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
-                    {/* Map Placeholder — replace with MapView later */}
                     <Text style={[styles.sectionTitle, { color: colors.text }]}>Location</Text>
-                    <View style={[styles.mapPlaceholder, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-                        <Ionicons name="map-outline" size={32} color={colors.textSecondary} />
-                        <Text style={{ color: colors.textSecondary, fontSize: 12, marginTop: 8 }}>
-                            {event.location.latitude}, {event.location.longitude}
-                        </Text>
-                        <Text style={{ color: colors.textSecondary, fontSize: 11, marginTop: 4 }}>
-                            Map integration coming soon
-                        </Text>
+                    <View
+                        style={[
+                            styles.mapPlaceholder,
+                            {
+                                backgroundColor: colors.surface,
+                                borderColor: colors.border,
+                            },
+                        ]}
+                    >
+                        <MapView
+                            style={{ flex: 1 }}
+                            initialRegion={{
+                                latitude: event.location.latitude,
+                                longitude: event.location.longitude,
+                                latitudeDelta: 0.01,
+                                longitudeDelta: 0.01,
+                            }}
+                        >
+                            <Marker
+                                coordinate={{
+                                    latitude: event.location.latitude,
+                                    longitude: event.location.longitude,
+                                }}
+                                title={event.venueName}
+                                description={event.address}
+                            />
+                        </MapView>
                     </View>
 
                     {/* Total Seats, Available, Price*/}
@@ -172,21 +209,37 @@ export default function EventDetailScreen({ navigation, route }) {
 
             {/* Sticky Book Now Button */}
             <View style={[styles.stickyButton, { backgroundColor: colors.background, borderTopColor: colors.border }]}>
-                <TouchableOpacity
-                    style={[
-                        styles.bookButton,
-                        { backgroundColor: canBook ? colors.primary : colors.textSecondary }
-                    ]}
-                    disabled={!canBook}
-                    onPress={() => {
-                        // wire to bookingSlice later
-                        console.log('Book now tapped for event:', event.id);
-                    }}
-                >
-                    <Text style={{ color: '#fff', fontWeight: '600', fontSize: 15 }}>
-                        {canBook ? `Book Now · ${event.price === 0 ? 'Free' : `₹${event.price}`}` : getStatusText()}
-                    </Text>
-                </TouchableOpacity>
+                {
+                    isOrganizer ?
+                        <TouchableOpacity
+                            style={[
+                                styles.bookButton,
+                                { backgroundColor: colors.primary }
+                            ]}
+                            onPress={() => navigation.navigate("Event Edit", eventId)}
+                        >
+                            <Text style={{ color: '#fff', fontWeight: '600', fontSize: 15 }}>
+                                Edit Event Details
+                            </Text>
+                        </TouchableOpacity>
+                        :
+                        <TouchableOpacity
+                            style={[
+                                styles.bookButton,
+                                { backgroundColor: canBook ? colors.primary : colors.textSecondary }
+                            ]}
+                            disabled={!canBook}
+                            onPress={() => {
+                                // wire to bookingSlice later
+                                console.log('Book now tapped for event:', event.id);
+                            }}
+                        >
+                            <Text style={{ color: '#fff', fontWeight: '600', fontSize: 15 }}>
+                                {canBook ? `Book Now · ${event.price === 0 ? 'Free' : `₹${event.price}`}` : getStatusText()}
+                            </Text>
+                        </TouchableOpacity>
+
+                }
             </View>
         </View>
     );
@@ -254,11 +307,10 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     mapPlaceholder: {
-        height: 150,
+        height: 200,
         borderRadius: 12,
+        overflow: "hidden",
         borderWidth: 0.5,
-        justifyContent: 'center',
-        alignItems: 'center',
         marginBottom: 16,
     },
     seatsRow: {
