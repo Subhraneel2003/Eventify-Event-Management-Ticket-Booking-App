@@ -8,7 +8,7 @@ import DrawerNavigator from './DrawerNavigator';
 import EventDetailScreen from '../screens/EventDetails/EventDetailScreen';
 import BookingScreen from '../screens/Bookings/BookingScreen';
 import BookingDetailsScreen from '../screens/Bookings/BookingDetailsScreen';
-import AddReviewScreen from '../screens/EventDetails/AddReviewScreen';
+import AddReviewScreen from '../screens/Reviews/AddReviewScreen';
 import EventEditScreen from '../screens/EventDetails/EventEditScreen';
 
 const Stack = createNativeStackNavigator();
