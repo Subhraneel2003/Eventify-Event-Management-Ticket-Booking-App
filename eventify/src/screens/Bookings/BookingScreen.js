@@ -9,6 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchEventById, updateEventSeats } from '../../api/eventService';
 import { ThemeContext } from '../../context/ThemeContext';
@@ -124,7 +125,7 @@ export default function BookingScreen({ navigation, route }) {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'left', 'right']}>
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backBtn}
@@ -299,7 +300,7 @@ export default function BookingScreen({ navigation, route }) {
           <Text style={styles.confirmText}>Confirm</Text>
         </TouchableOpacity>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
