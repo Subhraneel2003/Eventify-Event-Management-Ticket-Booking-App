@@ -147,12 +147,10 @@ export default function BookingScreen({ navigation, route }) {
             },
           ]}
         >
-          {/* Dashed top border decoration */}
           <View
             style={[styles.ticketNotch, { backgroundColor: colors.background }]}
           />
 
-          {/* Top section - decorative line */}
           <View
             style={[styles.ticketTopLine, { borderBottomColor: colors.border }]}
           />
@@ -218,7 +216,6 @@ export default function BookingScreen({ navigation, route }) {
               </Text>
             </View>
 
-            {/* Dashed Divider */}
             <View
               style={[styles.dashedDivider, { borderColor: colors.border }]}
             />
@@ -258,7 +255,6 @@ export default function BookingScreen({ navigation, route }) {
               </View>
             </View>
 
-            {/* Dashed Divider */}
             <View
               style={[styles.dashedDivider, { borderColor: colors.border }]}
             />
@@ -273,12 +269,10 @@ export default function BookingScreen({ navigation, route }) {
             </View>
           </View>
 
-          {/* Bottom section - decorative line */}
           <View
             style={[styles.ticketBottomLine, { borderTopColor: colors.border }]}
           />
 
-          {/* Bottom notch */}
           <View
             style={[
               styles.ticketNotchBottom,
