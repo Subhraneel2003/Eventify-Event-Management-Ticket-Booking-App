@@ -178,8 +178,7 @@ export default function EventDetailScreen({ navigation, route }) {
                     ]}
                     disabled={!canBook}
                     onPress={() => {
-                        // wire to bookingSlice later
-                        console.log('Book now tapped for event:', event.id);
+                        navigation.navigate('Booking', { eventId: event.id });
                     }}
                 >
                     <Text style={{ color: '#fff', fontWeight: '600', fontSize: 15 }}>
