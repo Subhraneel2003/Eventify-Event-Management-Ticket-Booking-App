@@ -17,6 +17,9 @@ export const eventEditValidation = Yup.object({
     category: Yup.string()
         .required("Category is required"),
 
+    status: Yup.string()
+        .required("Status is required"),    
+
     date: Yup.string()
         .required("Date is required"),
 

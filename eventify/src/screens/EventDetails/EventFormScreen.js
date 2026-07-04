@@ -19,8 +19,10 @@ export default function EventFormScreen({ route, navigation }) {
     const { height } = useWindowDimensions();
     const [categories, setCategories] = useState([]);
     const [categoryModalVisible, setCategoryModalVisible] = useState(false);
+    const [statusModalVisible, setStatusModalVisible] = useState(false)
     const event = useSelector(state => state.events.events.find(e => e.id === eventId))
     const { user } = useSelector(state => state.auth)
+    const statusItems = ["Completed", "Upcoming", "Cancelled"]
     const [region, setRegion] = useState({
         latitude: 19.033,
         longitude: 73.0297,
@@ -56,8 +58,9 @@ export default function EventFormScreen({ route, navigation }) {
                     payload.price !== event.price ||
                     payload.totalSeats !== event.totalSeats ||
                     payload.availableSeats !== event.availableSeats ||
+                    payload.status !== event.status ||
                     payload.location.latitude !== event.location.latitude ||
-                    payload.location.latitude !== event.location.latitude;
+                    payload.location.longitude !== event.location.longitude;
 
                 if (!hasChanged) {
                     Alert.alert("No Changes", "No changes were made.");
@@ -118,6 +121,52 @@ export default function EventFormScreen({ route, navigation }) {
         }
     }
 
+    const handleMarkerDrag = async (e, setFieldValue) => {
+        const { latitude, longitude } = e.nativeEvent.coordinate;
+        try {
+            const { status } = await Location.requestForegroundPermissionsAsync()
+
+            if (status !== "granted") {
+                Alert.alert("Permission Denied", "Location permission is required to locate the venue.")
+                return
+            }
+            
+            setRegion({
+                latitude,
+                longitude,
+                latitudeDelta: region.latitudeDelta,
+                longitudeDelta: region.longitudeDelta,
+            });
+
+            setFieldValue("location.latitude", latitude);
+            setFieldValue("location.longitude", longitude);
+
+            const result = await Location.reverseGeocodeAsync({
+                latitude,
+                longitude,
+            });
+
+            if (result.length > 0) {
+                const place = result[0];
+
+                const address = [
+                    place.name,
+                    place.street,
+                    place.city,
+                    place.region,
+                    place.postalCode,
+                    place.country,
+                ]
+                    .filter(Boolean)
+                    .join(", ");
+
+                setFieldValue("address", address);
+            }
+        } catch (err) {
+            Alert.alert("Error", "Unable to update the address.");
+        }
+    }
+
     return (
         <KeyboardAvoidingView
             style={[styles.flex, { backgroundColor: colors.background }]}
@@ -149,6 +198,7 @@ export default function EventFormScreen({ route, navigation }) {
                             price: String(event.price),
                             totalSeats: String(event.totalSeats),
                             availableSeats: String(event.availableSeats),
+                            status: event.status,
                             location: {
                                 latitude: event.location.latitude,
                                 longitude: event.location.longitude,
@@ -157,6 +207,7 @@ export default function EventFormScreen({ route, navigation }) {
                             title: "",
                             description: "",
                             category: "",
+                            status: "",
                             date: "",
                             time: "",
                             venueName: "",
@@ -171,7 +222,7 @@ export default function EventFormScreen({ route, navigation }) {
                             }
                         }
                         }
-                        validationSchema={undefined}
+                        validationSchema={eventEditValidation}
                         onSubmit={handleUpdate}
                     >
                         {({
@@ -216,7 +267,7 @@ export default function EventFormScreen({ route, navigation }) {
                                         }]}
                                         onPress={() => setCategoryModalVisible(true)}
                                     >
-                                        <Text style={[styles.dropdownButtonText, { color: colors.text }]}> {values.category || 'Select category'}</Text>
+                                        <Text style={[styles.dropdownButtonText, { color: colors.text }]}> {values.category || 'Select Category'}</Text>
                                         <Ionicons name="chevron-down" size={18} color={colors.textSecondary} />
                                     </TouchableOpacity>
                                     {touched.category && errors.category ? (
@@ -257,6 +308,60 @@ export default function EventFormScreen({ route, navigation }) {
                                                 <Text style={[styles.emptyText, { color: colors.textSecondary }]}>Loading categories...</Text>
                                             )}
                                             <TouchableOpacity onPress={() => setCategoryModalVisible(false)} activeOpacity={0.8}>
+                                                <Text style={{ color: colors.primary, textAlign: 'center', marginTop: 10, fontWeight: '600' }}>Cancel</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                </Modal>
+
+                                <View style={styles.dropdownWrapper}>
+                                    <Text style={[styles.label, { color: colors.text }]}>Status</Text>
+                                    <TouchableOpacity
+                                        style={[styles.dropdownButton, {
+                                            backgroundColor: colors.surface,
+                                            borderColor: colors.border,
+                                        }]}
+                                        onPress={() => setStatusModalVisible(true)}
+                                    >
+                                        <Text style={[styles.dropdownButtonText, { color: colors.text }]}> {values.status || 'Select Status'}</Text>
+                                        <Ionicons name="chevron-down" size={18} color={colors.textSecondary} />
+                                    </TouchableOpacity>
+                                    {touched.status && errors.status ? (
+                                        <Text style={[styles.errorText, { color: colors.danger }]}>{errors.status}</Text>
+                                    ) : null}
+                                </View>
+
+                                <Modal
+                                    visible={statusModalVisible}
+                                    transparent
+                                    animationType="slide"
+                                    onRequestClose={() => setStatusModalVisible(false)}
+                                >
+                                    <View style={styles.overlay}>
+                                        <View style={[styles.modalContainer, { backgroundColor: colors.surface }]}>
+                                            <Text style={[styles.modalTitle, { color: colors.text }]}>Select Status</Text>
+                                            {
+                                                statusItems.map((item) => (
+                                                    <TouchableOpacity
+                                                        key={item}
+                                                        onPress={() => {
+                                                            setFieldValue('status', item);
+                                                            setStatusModalVisible(false);
+                                                        }}
+                                                        style={[
+                                                            styles.dropdownItem,
+                                                            { backgroundColor: colors.surface },
+                                                            values.status === item && styles.dropdownItemActive,
+                                                        ]}
+                                                        activeOpacity={0.8}
+                                                    >
+                                                        <Text style={[styles.dropdownItemText, {
+                                                            color: values.status === item ? '#fff' : colors.text,
+                                                        }]}>{item}</Text>
+                                                    </TouchableOpacity>
+                                                ))
+                                            }
+                                            <TouchableOpacity onPress={() => setStatusModalVisible(false)} activeOpacity={0.8}>
                                                 <Text style={{ color: colors.primary, textAlign: 'center', marginTop: 10, fontWeight: '600' }}>Cancel</Text>
                                             </TouchableOpacity>
                                         </View>
@@ -347,12 +452,17 @@ export default function EventFormScreen({ route, navigation }) {
                                 />
 
                                 <Button title="Locate Venue" onPress={() => handleLocate(values.address, values.venueName, setFieldValue)} style={styles.mapButton} />
+                                <Text style={styles.label}>Location</Text>
                                 <View style={styles.mapContainer}>
                                     <MapView region={region} style={styles.map}>
-                                        <Marker coordinate={{
-                                            latitude: region.latitude,
-                                            longitude: region.longitude
-                                        }} />
+                                        <Marker
+                                            draggable
+                                            coordinate={{
+                                                latitude: region.latitude,
+                                                longitude: region.longitude
+                                            }}
+                                            onDragEnd={(e) => handleMarkerDrag(e, setFieldValue)}
+                                        />
                                     </MapView>
                                 </View>
                                 <Button
@@ -492,7 +602,7 @@ const styles = StyleSheet.create({
         height: 220,
         borderRadius: 12,
         overflow: "hidden",
-        marginTop: 12,
+
         marginBottom: 16,
         borderWidth: 1,
         borderColor: "#E5E7EB",
@@ -502,6 +612,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     mapButton: {
-        backgroundColor: "#067953"
+        backgroundColor: "#067953",
+        marginBottom: 15
     }
 });

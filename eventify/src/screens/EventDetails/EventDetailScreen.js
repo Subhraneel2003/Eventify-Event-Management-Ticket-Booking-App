@@ -1,8 +1,8 @@
-import { View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator, StyleSheet, Dimensions } from 'react-native'
+import { View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator, StyleSheet, Dimensions, Alert } from 'react-native'
 import MapView, { Marker } from "react-native-maps";
 import React, { useEffect, useState, useContext } from 'react'
 import { Ionicons } from '@expo/vector-icons';
-import { fetchEventById } from '../../api/eventService';
+import { deleteEvent, fetchEventById } from '../../api/eventService';
 import { ThemeContext } from '../../context/ThemeContext';
 import { useSelector } from 'react-redux';
 import Button from '../../components/Button';
@@ -76,6 +76,34 @@ export default function EventDetailScreen({ navigation, route }) {
         if (isSoldOut) return 'Sold Out';
         return `${event.availableSeats} seats left`;
     };
+
+    const handleDelete = async () => {
+        Alert.alert("Delete Event", "Are you sure you want to delete this event? This action cannot be undone.",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel"
+                },
+                {
+                    text: "Delete",
+                    style: "destructive",
+                    onPress: confirmDelete
+                }
+            ]
+        )
+    }
+
+    const confirmDelete = async () => {
+        try {
+            await deleteEvent(event.id)
+            Alert.alert("Success", "Event Deleted Successfully")
+            navigation.goBack()
+        }
+        catch (err) {
+            console.log(err.message)
+        }
+    }
+
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -224,57 +252,88 @@ export default function EventDetailScreen({ navigation, route }) {
                     </View>
 
                     {/* Bottom padding for sticky button */}
-                    <View style={{ height: 140 }} />
+                    <View style={{ height: 100 }} />
                 </View>
             </ScrollView>
 
-            {/* Sticky Book Now Button */}
-            <View style={[styles.stickyButton, { backgroundColor: colors.background, borderTopColor: colors.border }]}>
-                {
+            <View
+                style={[
+                    styles.stickyButton,
+                    {
+                        backgroundColor: colors.background,
+                        borderTopColor: colors.border,
+                    },
+                ]}
+            >
+                {isCompleted ? (
                     <Button
                         title="Check Reviews"
                         style={[
                             styles.bookButton,
-                            { backgroundColor: colors.textSecondary }
+                            { backgroundColor: colors.textSecondary },
                         ]}
-                        onPress={() => navigation.navigate("Reviews", { eventId: event.id })}
+                        onPress={() =>
+                            navigation.navigate("Reviews", {
+                                eventId: event.id,
+                            })
+                        }
                     />
-                }
-                {isOrganizer ? (
+                ) : isOrganizer ? (
                     <View style={styles.actionRow}>
                         <Button
                             title="Edit Event"
                             style={[
                                 styles.actionButton,
-                                { backgroundColor: colors.primary, marginRight: 10 }
+                                {
+                                    backgroundColor: colors.primary,
+                                    marginRight: 10,
+                                },
                             ]}
-                            onPress={() => navigation.navigate("Event Edit", { mode: "edit", eventId: event.id })}
+                            onPress={() =>
+                                navigation.navigate("Event Edit", {
+                                    mode: "edit",
+                                    eventId: event.id,
+                                })
+                            }
                         />
 
                         <Button
                             title="Delete Event"
                             style={[
                                 styles.actionButton,
-                                { backgroundColor: colors.danger }
+                                {
+                                    backgroundColor: colors.danger,
+                                },
                             ]}
-                            onPress={() => navigation.navigate("AddReview", { event })}
+                            onPress={handleDelete}
                         />
                     </View>
                 ) : (
                     <Button
-                        title={canBook ? `Book Now · ${event.price === 0 ? 'Free' : `₹${event.price}`}` : getStatusText()}
+                        title={
+                            canBook
+                                ? `Book Now · ${event.price === 0 ? "Free" : `₹${event.price}`}`
+                                : getStatusText()
+                        }
                         style={[
                             styles.bookButton,
-                            { backgroundColor: canBook ? colors.primary : colors.textSecondary, marginTop: 10 }
+                            {
+                                backgroundColor: canBook
+                                    ? colors.primary
+                                    : colors.textSecondary,
+                                marginTop: 10,
+                            },
                         ]}
                         disabled={!canBook}
-                        onPress={() => {
-                            navigation.navigate("Booking", { eventId: event.id });
-                        }}
+                        onPress={() =>
+                            navigation.navigate("Booking", {
+                                eventId: event.id,
+                            })
+                        }
                     />
                 )}
             </View>
-        </View>
+        </View >
     );
 }
 
@@ -368,7 +427,7 @@ const styles = StyleSheet.create({
     },
     actionRow: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: "space-between",
         marginTop: 10,
     },
     actionButton: {
