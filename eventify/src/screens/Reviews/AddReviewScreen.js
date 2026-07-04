@@ -43,6 +43,7 @@ export default function AddReviewScreen({ navigation, route }) {
       setSubmitting(true);
       const newReview = {
         userId: user.id,
+        userName: user.name,
         eventId,
         bookingId,
         rating,

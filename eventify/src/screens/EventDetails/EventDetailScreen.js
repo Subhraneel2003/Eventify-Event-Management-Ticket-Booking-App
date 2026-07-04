@@ -231,7 +231,7 @@ export default function EventDetailScreen({ navigation, route }) {
                             styles.bookButton,
                             { backgroundColor: colors.textSecondary }
                         ]}
-                        onPress={() => navigation.navigate("AddReview", { event })}
+                        onPress={() => navigation.navigate("Reviews", { eventId: event.id })}
                     >
                         <Text style={{ color: '#fff', fontWeight: '600', fontSize: 15 }}>
                             Check Reviews

@@ -21,6 +21,7 @@ import axios from 'axios';
 import * as Crypto from 'expo-crypto';
 import { API_BASE_URL } from '../../utils/constants';
 import { saveBookings } from '../../services/storageService';
+import { formatDate, formatTime } from '../../utils/date';
 
 export default function BookingScreen({ navigation, route }) {
   const { eventId } = route.params;
@@ -125,7 +126,10 @@ export default function BookingScreen({ navigation, route }) {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'left', 'right']}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+      edges={['top', 'left', 'right']}
+    >
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backBtn}
@@ -189,7 +193,7 @@ export default function BookingScreen({ navigation, route }) {
                 Date:{' '}
               </Text>
               <Text style={[styles.infoValue, { color: colors.text }]}>
-                {event.date}
+                {formatDate(event.date)}
               </Text>
             </View>
 
@@ -203,7 +207,7 @@ export default function BookingScreen({ navigation, route }) {
                 Time:{' '}
               </Text>
               <Text style={[styles.infoValue, { color: colors.text }]}>
-                {event.time}
+                {formatTime(event.time)}
               </Text>
             </View>
 

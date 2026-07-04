@@ -174,7 +174,7 @@
       "description": "An annual city marathon with full, half, and 10K categories, open to professional and amateur runners alike.",
       "category": "Sports",
       "organizerId": "7",
-      "status": "upcoming",
+      "status": "completed",
       "date": "2026-01-18",
       "time": "05:30",
       "venueName": "Chhatrapati Shivaji Maharaj Terminus",
@@ -459,88 +459,67 @@
       "qrCode": "QR-EVT1-USR2-H7I8J9"
     },
     {
-      "userId": "3",
-      "eventId": "2",
-      "ticketCount": 2,
-      "totalAmount": 9998,
-      "bookingDate": "2026-07-03T09:41:33.198Z",
-      "status": "cancelled",
-      "qrCode": "e20c5caf-e2af-4e7d-bfab-63ba947852d6",
-      "id": "L_XMxPd"
+      "id": "13",
+      "userId": "2",
+      "eventId": "3",
+      "ticketCount": 1,
+      "totalAmount": 999,
+      "bookingDate": "2025-12-15T09:30:00.000Z",
+      "status": "used",
+      "qrCode": "QR-EVT3-USR2-K3L4M5"
+    },
+    {
+      "id": "14",
+      "userId": "8",
+      "eventId": "4",
+      "ticketCount": 1,
+      "totalAmount": 799,
+      "bookingDate": "2025-11-28T17:10:00.000Z",
+      "status": "used",
+      "qrCode": "QR-EVT4-USR8-N6O7P8"
     }
   ],
   "reviews": [
     {
       "id": "1",
-      "bookingId": "4",
-      "eventId": "4",
-      "userId": "6",
-      "rating": 5,
-      "comment": "Absolutely loved the modern take on Romeo & Juliet. The lead actors were phenomenal and the stage design was stunning.",
-      "createdAt": "2025-12-06T10:30:00.000Z"
-    },
-    {
-      "id": "2",
-      "bookingId": "13",
-      "eventId": "4",
-      "userId": "2",
-      "rating": 4,
-      "comment": "Great performance overall, though the second act felt a bit slow. Worth watching for the visuals alone.",
-      "createdAt": "2025-12-07T18:00:00.000Z"
-    },
-    {
-      "id": "3",
       "bookingId": "3",
       "eventId": "3",
       "userId": "5",
+      "userName": "Vikram Singh",
       "rating": 5,
       "comment": "Well organized marathon with great crowd support and hydration stations every couple of kilometers.",
       "createdAt": "2025-12-12T09:15:00.000Z"
     },
     {
+      "id": "2",
+      "bookingId": "4",
+      "eventId": "4",
+      "userId": "6",
+      "userName": "Ananya Reddy",
+      "rating": 5,
+      "comment": "Absolutely loved the modern take on Romeo & Juliet. The lead actors were phenomenal and the stage design was stunning.",
+      "createdAt": "2025-12-06T10:30:00.000Z"
+    },
+    {
+      "id": "3",
+      "bookingId": "13",
+      "eventId": "3",
+      "userId": "2",
+      "userName": "Isha Patel",
+      "rating": 4,
+      "comment": "Great route and volunteers, though the start could have been better coordinated to avoid early congestion.",
+      "createdAt": "2025-12-20T08:45:00.000Z"
+    },
+    {
       "id": "4",
-      "bookingId": "1",
-      "eventId": "1",
-      "userId": "1",
-      "rating": 4,
-      "comment": "Amazing lineup and production quality, but the entry lines were way too long for VIP ticket holders.",
-      "createdAt": "2026-06-05T20:00:00.000Z"
-    },
-    {
-      "id": "5",
-      "bookingId": "12",
-      "eventId": "1",
-      "userId": "2",
-      "rating": 3,
-      "comment": "Good music but the venue felt overcrowded and food prices were on the higher side.",
-      "createdAt": "2026-06-06T11:20:00.000Z"
-    },
-    {
-      "id": "6",
-      "bookingId": "5",
-      "eventId": "5",
+      "bookingId": "14",
+      "eventId": "4",
       "userId": "8",
-      "rating": 5,
-      "comment": "So many food options to try! My family had a great time, will definitely come back next year.",
-      "createdAt": "2026-06-11T19:40:00.000Z"
-    },
-    {
-      "id": "7",
-      "bookingId": "11",
-      "eventId": "5",
-      "userId": "1",
+      "userName": "Priya Nair",
       "rating": 4,
-      "comment": "Loved the variety of stalls, though it got a bit too crowded by evening.",
-      "createdAt": "2026-06-23T14:10:00.000Z"
-    },
-    {
-      "id": "8",
-      "bookingId": "2",
-      "eventId": "2",
-      "userId": "2",
-      "rating": 5,
-      "comment": "Incredible networking opportunities and the panel discussions were genuinely insightful.",
-      "createdAt": "2026-06-04T09:00:00.000Z"
+      "comment": "Beautifully staged production, though the intimate venue meant sightlines weren't great from the back rows.",
+      "createdAt": "2025-12-07T13:00:00.000Z"
     }
-  ]
+  ],
+  "$schema": ["./node_modules/json-server/schema.json"]
 }
