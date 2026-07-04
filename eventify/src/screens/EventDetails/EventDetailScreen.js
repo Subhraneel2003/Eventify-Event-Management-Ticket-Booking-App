@@ -237,7 +237,7 @@ export default function EventDetailScreen({ navigation, route }) {
                             styles.bookButton,
                             { backgroundColor: colors.textSecondary }
                         ]}
-                        onPress={() => navigation.navigate("AddReview", { event })}
+                        onPress={() => navigation.navigate("Reviews", { eventId: event.id })}
                     />
                 }
                 {isOrganizer ? (
