@@ -1,9 +1,30 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import React, { useContext } from 'react'
 import { ThemeContext } from '../context/ThemeContext'
+import { Ionicons } from '@expo/vector-icons';
+import { formatDate, formatTime } from '../utils/date';
 
 export default function EventCard({ event, onPress }) {
     const { colors } = useContext(ThemeContext)
+    const isSoldOut = event.availableSeats === 0;
+    const isCancelled = event.status === 'cancelled';
+    const isCompleted = event.status === 'completed';
+    const canBook = !isSoldOut && !isCancelled && !isCompleted;
+
+    const getStatusColor = () => {
+        if (isCancelled) return colors.danger;
+        if (isCompleted) return colors.textSecondary;
+        if (isSoldOut) return colors.danger;
+        return '#22c55e';
+    };
+
+    const getStatusText = () => {
+        if (isCancelled) return 'Cancelled';
+        if (isCompleted) return 'Completed';
+        if (isSoldOut) return 'Sold Out';
+        return `Hurry Up! ${event.availableSeats} seats left`;
+    };
+
     return (
         <TouchableOpacity style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]} onPress={onPress}>
             <Image
@@ -12,11 +33,16 @@ export default function EventCard({ event, onPress }) {
                 resizeMode="cover"
             />
             <View style={styles.cardContent}>
+                <View style={styles.row}>
+                    <Text style={{ color: getStatusColor(), fontSize: 12, fontWeight: '500' }}>
+                        <Ionicons name="ellipse" size={8} color={getStatusColor()} /> {getStatusText()}
+                    </Text>
+                </View>
                 <Text style={{ color: colors.text, fontWeight: '500', fontSize: 14, marginBottom: 4 }}>
                     {event.title}
                 </Text>
                 <Text style={{ color: colors.textSecondary, fontSize: 12, marginBottom: 2 }}>
-                    {event.date} · {event.time}
+                    {formatDate(event.date)}  <Ionicons name="ellipse" size={6}/>  {formatTime(event.time)}
                 </Text>
                 <Text style={{ color: colors.textSecondary, fontSize: 12, marginBottom: 8 }}>
                     {event.address}
@@ -60,5 +86,11 @@ const styles = StyleSheet.create({
         paddingVertical: 4,
         borderRadius: 999,
         borderWidth: 0.5,
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 8,
     },
 });

@@ -9,6 +9,7 @@ import EventCard from '../../components/EventCard'
 import { fetchCategories } from '../../api/categoryService'
 import { Ionicons } from '@expo/vector-icons';
 import { useDebounce } from '../../hooks/useDebounce'
+import Button from '../../components/Button'
 
 export default function EventListScreen({ navigation }) {
     const dispatch = useDispatch()
@@ -19,7 +20,7 @@ export default function EventListScreen({ navigation }) {
     const [categories, setCategories] = useState([])
     const [categoryModalVisible, setCategoryModalVisible] = useState(false)
     const debouncedSearch = useDebounce(search, 500)
-    const {user} = useSelector(state => state.auth)
+    const { user } = useSelector(state => state.auth)
     const categoryItems = [{ id: 'ALL', name: 'ALL' }, ...categories]
 
     useEffect(() => {
@@ -112,6 +113,7 @@ export default function EventListScreen({ navigation }) {
             </View>
         );
     }
+
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
             <Text style={[styles.welcomeText, { color: colors.text }]}>Welcome {user?.name}</Text>
@@ -155,16 +157,18 @@ export default function EventListScreen({ navigation }) {
                     </View>
                 </Modal>
             </View>
-            <FlatList data={filteredEvents} keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => (
-                    <EventCard event={item} onPress={() => navigation.navigate("Event Details", { eventId: item.id })} />
-                )}
-                ListEmptyComponent={
-                    <Text style={{ color: colors.textSecondary, textAlign: 'center', marginTop: 40 }}>
-                        No events found
-                    </Text>
-                }
-            />
+                <Button title="Add New Event" onPress={() => navigation.navigate("Event Edit", { mode: "create" })} style={{ marginBottom: 15 }} />
+
+                <FlatList data={filteredEvents} keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item }) => (
+                        <EventCard event={item} onPress={() => navigation.navigate("Event Details", { eventId: item.id })} />
+                    )}
+                    ListEmptyComponent={
+                        <Text style={{ color: colors.textSecondary, textAlign: 'center', marginTop: 40 }}>
+                            No events found
+                        </Text>
+                    }
+                />
         </View>
     )
 }

@@ -83,3 +83,25 @@ export const updateEventsInfo = async (id, value) => {
     throw handleError(err, 'updateEventsInfo');
   }
 }
+
+export const addEvent = async (eventData) => {
+  try{
+    const res = await api.post('/events', eventData)
+    return res.data
+  }
+  catch(err)
+  {
+    throw handleError(err, 'addEvent');
+  }
+}
+
+export const deleteEvent = async (id) =>{
+  try{
+    const res=api.delete(`/events/${id}`)
+    return res.data
+  }
+  catch(err)
+  {
+    throw handleError(err, 'deleteEvent')
+  }
+} 

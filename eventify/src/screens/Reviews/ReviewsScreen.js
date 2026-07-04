@@ -49,8 +49,8 @@ export default function ReviewsScreen({ navigation, route }) {
   const averageRating =
     reviews.length > 0
       ? (
-          reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
-        ).toFixed(1)
+        reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+      ).toFixed(1)
       : 0;
 
   const renderStars = (rating, size = 14) => {
