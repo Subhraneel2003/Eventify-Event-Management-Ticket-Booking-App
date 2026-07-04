@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import React, { useContext } from 'react'
 import { ThemeContext } from '../context/ThemeContext'
 import { Ionicons } from '@expo/vector-icons';
+import { formatDate, formatTime } from '../utils/date';
 
 export default function EventCard({ event, onPress }) {
     const { colors } = useContext(ThemeContext)
@@ -41,7 +42,7 @@ export default function EventCard({ event, onPress }) {
                     {event.title}
                 </Text>
                 <Text style={{ color: colors.textSecondary, fontSize: 12, marginBottom: 2 }}>
-                    {event.date} · {event.time}
+                    {formatDate(event.date)}  <Ionicons name="ellipse" size={6}/>  {formatTime(event.time)}
                 </Text>
                 <Text style={{ color: colors.textSecondary, fontSize: 12, marginBottom: 8 }}>
                     {event.address}

@@ -23,6 +23,8 @@ export default function EventFormScreen({ route, navigation }) {
     const event = useSelector(state => state.events.events.find(e => e.id === eventId))
     const { user } = useSelector(state => state.auth)
     const statusItems = ["Completed", "Upcoming", "Cancelled"]
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [showTimePicker, setShowTimePicker] = useState(false);
     const [region, setRegion] = useState({
         latitude: 19.033,
         longitude: 73.0297,
@@ -130,7 +132,7 @@ export default function EventFormScreen({ route, navigation }) {
                 Alert.alert("Permission Denied", "Location permission is required to locate the venue.")
                 return
             }
-            
+
             setRegion({
                 latitude,
                 longitude,
@@ -368,25 +370,64 @@ export default function EventFormScreen({ route, navigation }) {
                                     </View>
                                 </Modal>
 
-                                <Input
-                                    label="Date"
-                                    placeholder="YYYY-MM-DD"
-                                    value={values.date}
-                                    onChangeText={handleChange('date')}
-                                    onBlur={handleBlur('date')}
-                                    error={errors.date}
-                                    touched={touched.date}
-                                />
+                                <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                                    <Input
+                                        label="Date"
+                                        placeholder="Select Date"
+                                        value={values.date}
+                                        editable={false}
+                                        pointerEvents="none"
+                                        error={errors.date}
+                                        touched={touched.date}
+                                    />
+                                </TouchableOpacity>
+                                {showDatePicker && (
+                                    <DateTimePicker
+                                        value={values.date ? new Date(values.date) : new Date()}
+                                        mode="date"
+                                        display="default"
+                                        minimumDate={new Date()}
+                                        onChange={(event, selectedDate) => {
+                                            setShowDatePicker(false);
 
-                                <Input
-                                    label="Time"
-                                    placeholder="HH:MM"
-                                    value={values.time}
-                                    onChangeText={handleChange('time')}
-                                    onBlur={handleBlur('time')}
-                                    error={errors.time}
-                                    touched={touched.time}
-                                />
+                                            if (selectedDate) {
+                                                const formatted = selectedDate.toISOString().split("T")[0];
+                                                setFieldValue("date", formatted);
+                                            }
+                                        }}
+                                    />
+                                )}
+
+                                <TouchableOpacity onPress={() => setShowTimePicker(true)}>
+                                    <Input
+                                        label="Time"
+                                        placeholder="Select Time"
+                                        value={values.time}
+                                        editable={false}
+                                        pointerEvents="none"
+                                        error={errors.time}
+                                        touched={touched.time}
+                                    />
+                                </TouchableOpacity>
+
+                                {showTimePicker && (
+                                    <DateTimePicker
+                                        value={new Date()}
+                                        mode="time"
+                                        display="default"
+                                        is24Hour={true}
+                                        onChange={(event, selectedTime) => {
+                                            setShowTimePicker(false);
+
+                                            if (selectedTime) {
+                                                const hours = String(selectedTime.getHours()).padStart(2, "0");
+                                                const minutes = String(selectedTime.getMinutes()).padStart(2, "0");
+
+                                                setFieldValue("time", `${hours}:${minutes}`);
+                                            }
+                                        }}
+                                    />
+                                )}
 
                                 <Input
                                     label="Venue Name"

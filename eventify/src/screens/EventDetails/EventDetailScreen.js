@@ -7,6 +7,7 @@ import { ThemeContext } from '../../context/ThemeContext';
 import { useSelector } from 'react-redux';
 import Button from '../../components/Button';
 import { fetchUserById } from '../../api/userService';
+import { formatDate, formatTime } from '../../utils/date';
 
 const { width } = Dimensions.get('window');
 export default function EventDetailScreen({ navigation, route }) {
@@ -141,14 +142,14 @@ export default function EventDetailScreen({ navigation, route }) {
                             color={colors.textSecondary}
                         />
                         <Text style={{ color: colors.textSecondary, fontSize: 13, marginLeft: 5 }}>
-                            {event.date}
+                            {formatDate(event.date)}
                         </Text>
                     </View>
 
                     <View style={styles.infoRow}>
                         <Ionicons name="time-outline" size={16} color={colors.textSecondary} />
                         <Text style={{ color: colors.textSecondary, fontSize: 13, marginLeft: 5 }}>
-                            {event.time}
+                            {formatTime(event.time)}
                         </Text>
                     </View>
 
