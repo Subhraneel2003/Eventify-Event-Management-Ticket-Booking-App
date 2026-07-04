@@ -5,6 +5,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { fetchEventById } from '../../api/eventService';
 import { ThemeContext } from '../../context/ThemeContext';
 import { useSelector } from 'react-redux';
+import Button from '../../components/Button';
+import { fetchUserById } from '../../api/userService';
 
 const { width } = Dimensions.get('window');
 export default function EventDetailScreen({ navigation, route }) {
@@ -14,6 +16,7 @@ export default function EventDetailScreen({ navigation, route }) {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const { user } = useSelector(state => state.auth)
+    const [organizer, setOrganizer] = useState(null)
 
     useEffect(() => {
         loadEvent();
@@ -24,6 +27,8 @@ export default function EventDetailScreen({ navigation, route }) {
             setLoading(true);
             const event = await fetchEventById(eventId);
             setEvent(event);
+            const organizerDetails = await fetchUserById(event.organizerId);
+            setOrganizer(organizerDetails);
         } catch (err) {
             setError(err.message);
         } finally {
@@ -129,14 +134,14 @@ export default function EventDetailScreen({ navigation, route }) {
                     <View style={styles.infoRow}>
                         <Ionicons name="person-outline" size={16} color={colors.textSecondary} />
                         <Text style={{ color: colors.textSecondary, fontSize: 13, marginLeft: 5 }}>
-                            {user?.name}
+                            {organizer?.name}
                         </Text>
                     </View>
 
                     <View style={styles.infoRow}>
                         <Ionicons name="mail-outline" size={16} color={colors.textSecondary} />
                         <Text style={{ color: colors.textSecondary, fontSize: 13, marginLeft: 5 }}>
-                            {user?.email}
+                            {organizer?.email}
                         </Text>
                     </View>
 
@@ -226,46 +231,38 @@ export default function EventDetailScreen({ navigation, route }) {
             {/* Sticky Book Now Button */}
             <View style={[styles.stickyButton, { backgroundColor: colors.background, borderTopColor: colors.border }]}>
                 {
-                    <TouchableOpacity
+                    <Button
+                        title="Check Reviews"
                         style={[
                             styles.bookButton,
                             { backgroundColor: colors.textSecondary }
                         ]}
                         onPress={() => navigation.navigate("AddReview", { event })}
-                    >
-                        <Text style={{ color: '#fff', fontWeight: '600', fontSize: 15 }}>
-                            Check Reviews
-                        </Text>
-                    </TouchableOpacity>
+                    />
                 }
                 {isOrganizer ? (
                     <View style={styles.actionRow}>
-                        <TouchableOpacity
+                        <Button
+                            title="Edit Event"
                             style={[
                                 styles.actionButton,
                                 { backgroundColor: colors.primary, marginRight: 10 }
                             ]}
-                            onPress={() => navigation.navigate("Event Edit", { event })}
-                        >
-                            <Text style={styles.actionButtonText}>
-                                Edit Event
-                            </Text>
-                        </TouchableOpacity>
+                            onPress={() => navigation.navigate("Event Edit", { mode: "edit", eventId: event.id })}
+                        />
 
-                        <TouchableOpacity
+                        <Button
+                            title="Delete Event"
                             style={[
                                 styles.actionButton,
                                 { backgroundColor: colors.danger }
                             ]}
                             onPress={() => navigation.navigate("AddReview", { event })}
-                        >
-                            <Text style={styles.actionButtonText}>
-                                Delete
-                            </Text>
-                        </TouchableOpacity>
+                        />
                     </View>
                 ) : (
-                    <TouchableOpacity
+                    <Button
+                        title={canBook ? `Book Now · ${event.price === 0 ? 'Free' : `₹${event.price}`}` : getStatusText()}
                         style={[
                             styles.bookButton,
                             { backgroundColor: canBook ? colors.primary : colors.textSecondary, marginTop: 10 }
@@ -274,11 +271,7 @@ export default function EventDetailScreen({ navigation, route }) {
                         onPress={() => {
                             navigation.navigate("Booking", { eventId: event.id });
                         }}
-                    >
-                        <Text style={{ color: '#fff', fontWeight: '600', fontSize: 15 }}>
-                            {canBook ? `Book Now · ${event.price === 0 ? 'Free' : `₹${event.price}`}` : getStatusText()}
-                        </Text>
-                    </TouchableOpacity>
+                    />
                 )}
             </View>
         </View>

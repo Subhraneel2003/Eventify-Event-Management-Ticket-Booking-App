@@ -5,16 +5,28 @@ import { eventEditValidation } from '../../validations/eventEditValidation';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { ThemeContext } from '../../context/ThemeContext';
-import { updateEventsInfo } from '../../api/eventService';
+import { addEvent, updateEventsInfo } from '../../api/eventService';
 import { fetchCategories } from '../../api/categoryService';
 import { Ionicons } from '@expo/vector-icons';
+import { useSelector } from 'react-redux';
+import * as Location from "expo-location";
+import MapView, { Marker } from "react-native-maps";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
-export default function EventEditScreen({ route, navigation }) {
-    const { event } = route.params;
+export default function EventFormScreen({ route, navigation }) {
+    const { mode, eventId } = route.params;
     const { colors } = useContext(ThemeContext)
     const { height } = useWindowDimensions();
     const [categories, setCategories] = useState([]);
     const [categoryModalVisible, setCategoryModalVisible] = useState(false);
+    const event = useSelector(state => state.events.events.find(e => e.id === eventId))
+    const { user } = useSelector(state => state.auth)
+    const [region, setRegion] = useState({
+        latitude: 19.033,
+        longitude: 73.0297,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+    });
 
     useEffect(() => {
         const loadCategories = async () => {
@@ -30,26 +42,81 @@ export default function EventEditScreen({ route, navigation }) {
     }, []);
 
     const handleUpdate = async (values) => {
-        try {
-            const payload = {
-                ...values,
-                price: Number(values.price),
-                totalSeats: Number(values.totalSeats),
-                availableSeats: Number(values.availableSeats),
-            }
+        if (mode === "edit") {
+            try {
+                const payload = {
+                    ...values,
+                    price: Number(values.price),
+                    totalSeats: Number(values.totalSeats),
+                    availableSeats: Number(values.availableSeats),
+                }
+                const hasChanged =
+                    payload.title !== event.title ||
+                    payload.description !== event.description ||
+                    payload.price !== event.price ||
+                    payload.totalSeats !== event.totalSeats ||
+                    payload.availableSeats !== event.availableSeats ||
+                    payload.location.latitude !== event.location.latitude ||
+                    payload.location.latitude !== event.location.latitude;
 
-            if (JSON.stringify(payload) === JSON.stringify(event)) {
-                Alert.alert("No Changes", "No changes were made.");
-                return;
+                if (!hasChanged) {
+                    Alert.alert("No Changes", "No changes were made.");
+                    return;
+                }
+                await updateEventsInfo(event.id, payload)
+                Alert.alert("Success", "Events Info Successfully Updated")
+                navigation.goBack()
             }
-            await updateEventsInfo(event.id, payload)
-            Alert.alert("Success", "Events Info Successfully Updated")
-            navigation.goBack()
+            catch (err) {
+                console.log(err.message)
+            }
+        }
+        else {
+            try {
+                const payload = {
+                    ...values,
+                    organizerId: user.id,
+                    price: Number(values.price),
+                    totalSeats: Number(values.totalSeats),
+                    availableSeats: Number(values.availableSeats),
+                    createdAt: new Date().toISOString()
+                }
+                await addEvent(payload)
+                Alert.alert("Success", "New Event Created")
+                navigation.goBack()
+            } catch (err) {
+                console.log(err.message)
+            }
+        }
+    }
+
+    const handleLocate = async (address, venue, setFieldValue) => {
+        try {
+            const { status } = await Location.requestForegroundPermissionsAsync()
+            if (status !== "granted") {
+                Alert.alert("Permission Denied", "Location permission is required to locate the venue.")
+                return
+            }
+            const searchQuery = `${venue}, ${address}`
+            const res = await Location.geocodeAsync(searchQuery)
+            if (res.length === 0) {
+                Alert.alert("Warning", "Location not Found")
+                return
+            }
+            const { latitude, longitude } = res[0]
+            setRegion({
+                latitude: latitude,
+                longitude: longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01
+            })
+            setFieldValue("location.latitude", latitude)
+            setFieldValue("location.longitude", longitude)
         }
         catch (err) {
-            console.log(err.message)
+            Alert.alert("Unable to trace Location")
         }
-    };
+    }
 
     return (
         <KeyboardAvoidingView
@@ -63,10 +130,14 @@ export default function EventEditScreen({ route, navigation }) {
                 keyboardShouldPersistTaps="handled"
                 showsVerticalScrollIndicator={true}
             >
-                <Text style={[styles.heading, { color: colors.text }]}>Edit Event</Text>
+                <Text style={[styles.heading, { color: colors.text }]}>
+                    {
+                        mode === "edit" ? "Edit Event Form" : "New Event Form"
+                    }
+                </Text>
                 <View style={[styles.card, { backgroundColor: colors.surface }]}>
                     <Formik
-                        initialValues={{
+                        initialValues={mode === "edit" ? {
                             title: event.title,
                             description: event.description,
                             category: event.category,
@@ -81,9 +152,26 @@ export default function EventEditScreen({ route, navigation }) {
                             location: {
                                 latitude: event.location.latitude,
                                 longitude: event.location.longitude,
-                            },
-                        }}
-                        validationSchema={eventEditValidation}
+                            }
+                        } : {
+                            title: "",
+                            description: "",
+                            category: "",
+                            date: "",
+                            time: "",
+                            venueName: "",
+                            address: "",
+                            coverImage: "",
+                            price: "",
+                            totalSeats: "",
+                            availableSeats: "",
+                            location: {
+                                latitude: "",
+                                longitude: "",
+                            }
+                        }
+                        }
+                        validationSchema={undefined}
                         onSubmit={handleUpdate}
                     >
                         {({
@@ -258,8 +346,17 @@ export default function EventEditScreen({ route, navigation }) {
                                     keyboardType="numeric"
                                 />
 
+                                <Button title="Locate Venue" onPress={() => handleLocate(values.address, values.venueName, setFieldValue)} style={styles.mapButton} />
+                                <View style={styles.mapContainer}>
+                                    <MapView region={region} style={styles.map}>
+                                        <Marker coordinate={{
+                                            latitude: region.latitude,
+                                            longitude: region.longitude
+                                        }} />
+                                    </MapView>
+                                </View>
                                 <Button
-                                    title="Update Event"
+                                    title={mode === "edit" ? "Update Event" : "Submit New Event"}
                                     onPress={handleSubmit}
                                     loading={isSubmitting}
                                     style={styles.updateButton}
@@ -391,4 +488,20 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '600',
     },
+    mapContainer: {
+        height: 220,
+        borderRadius: 12,
+        overflow: "hidden",
+        marginTop: 12,
+        marginBottom: 16,
+        borderWidth: 1,
+        borderColor: "#E5E7EB",
+    },
+
+    map: {
+        flex: 1,
+    },
+    mapButton: {
+        backgroundColor: "#067953"
+    }
 });
