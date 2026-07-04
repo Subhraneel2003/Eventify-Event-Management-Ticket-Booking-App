@@ -21,6 +21,7 @@ import { getQRData } from '../../utils/qrManager';
 import axios from 'axios';
 import { API_BASE_URL } from '../../utils/constants';
 import Button from '../../components/Button';
+import { formatDate, formatTime } from '../../utils/date';
 
 export default function BookingDetailsScreen({ navigation }) {
   const { colors } = useContext(ThemeContext);
@@ -144,7 +145,10 @@ export default function BookingDetailsScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'left', 'right']}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+      edges={['top', 'left', 'right']}
+    >
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backBtn}
@@ -253,7 +257,7 @@ export default function BookingDetailsScreen({ navigation }) {
                 Date:{' '}
               </Text>
               <Text style={[styles.infoValue, { color: colors.text }]}>
-                {date}
+                {formatDate(date)}
               </Text>
             </View>
 
@@ -267,7 +271,7 @@ export default function BookingDetailsScreen({ navigation }) {
                 Time:{' '}
               </Text>
               <Text style={[styles.infoValue, { color: colors.text }]}>
-                {time}
+                {formatTime(time)}
               </Text>
             </View>
 
