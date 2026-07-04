@@ -10,6 +10,7 @@ import BookingScreen from '../screens/Bookings/BookingScreen';
 import BookingDetailsScreen from '../screens/Bookings/BookingDetailsScreen';
 import EventEditScreen from '../screens/EventDetails/EventEditScreen';
 import AddReviewScreen from '../screens/Reviews/AddReviewScreen';
+import ReviewsScreen from '../screens/Reviews/ReviewsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +37,7 @@ const StackNavigator = () => {
             component={BookingDetailsScreen}
           />
           <Stack.Screen name="AddReview" component={AddReviewScreen} />
+          <Stack.Screen name="Reviews" component={ReviewsScreen} />
           <Stack.Screen name="Event Edit" component={EventEditScreen} />
         </>
       ) : (
