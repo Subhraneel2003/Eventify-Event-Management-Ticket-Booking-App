@@ -20,6 +20,7 @@ import { fetchEventById, updateEventSeats } from '../../api/eventService';
 import { getQRData } from '../../utils/qrManager';
 import axios from 'axios';
 import { API_BASE_URL } from '../../utils/constants';
+import Button from '../../components/Button';
 
 export default function BookingDetailsScreen({ navigation }) {
   const { colors } = useContext(ThemeContext);
@@ -382,24 +383,26 @@ export default function BookingDetailsScreen({ navigation }) {
             </TouchableOpacity>
           )}
 
-          <TouchableOpacity
-            style={[
-              styles.actionButton,
-              {
-                backgroundColor: colors.primary + '15',
-                borderColor: colors.primary,
-                flex: status === 'confirmed' ? 1 : undefined,
-                width: status === 'confirmed' ? undefined : '100%',
-              },
-            ]}
-            onPress={handleReview}
-            activeOpacity={0.7}
-          >
-            <Ionicons name="star-outline" size={20} color={colors.primary} />
-            <Text style={[styles.actionBtnText, { color: colors.primary }]}>
-              Write a Review
-            </Text>
-          </TouchableOpacity>
+          {status === 'used' && (
+            <TouchableOpacity
+              style={[
+                styles.actionButton,
+                {
+                  backgroundColor: colors.primary + '15',
+                  borderColor: colors.primary,
+                  flex: undefined,
+                  width: '100%',
+                },
+              ]}
+              onPress={handleReview}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="star-outline" size={20} color={colors.primary} />
+              <Text style={[styles.actionBtnText, { color: colors.primary }]}>
+                Write a Review
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </ScrollView>
 
@@ -426,38 +429,35 @@ export default function BookingDetailsScreen({ navigation }) {
             </Text>
 
             <View style={styles.modalActions}>
-              <TouchableOpacity
+              <Button
+                title="No"
+                onPress={() => setCancelModalVisible(false)}
+                disabled={cancelling}
                 style={[
                   styles.modalBtn,
                   {
                     backgroundColor: colors.background,
                     borderColor: colors.border,
                     borderWidth: 1,
+                    height: undefined,
                   },
                 ]}
-                onPress={() => setCancelModalVisible(false)}
-                disabled={cancelling}
-                activeOpacity={0.7}
-              >
-                <Text style={[styles.modalBtnText, { color: colors.text }]}>
-                  No
-                </Text>
-              </TouchableOpacity>
+                textStyle={[styles.modalBtnText, { color: colors.text }]}
+              />
 
-              <TouchableOpacity
-                style={[styles.modalBtn, { backgroundColor: colors.danger }]}
+              <Button
+                title="Yes, Cancel"
                 onPress={confirmCancel}
-                disabled={cancelling}
-                activeOpacity={0.7}
-              >
-                {cancelling ? (
-                  <ActivityIndicator size="small" color="#fff" />
-                ) : (
-                  <Text style={[styles.modalBtnText, { color: '#fff' }]}>
-                    Yes, Cancel
-                  </Text>
-                )}
-              </TouchableOpacity>
+                loading={cancelling}
+                style={[
+                  styles.modalBtn,
+                  {
+                    backgroundColor: colors.danger,
+                    height: undefined,
+                  },
+                ]}
+                textStyle={[styles.modalBtnText, { color: '#fff' }]}
+              />
             </View>
           </View>
         </View>

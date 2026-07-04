@@ -9,7 +9,7 @@ import EventDetailScreen from '../screens/EventDetails/EventDetailScreen';
 import BookingScreen from '../screens/Bookings/BookingScreen';
 import BookingDetailsScreen from '../screens/Bookings/BookingDetailsScreen';
 import EventEditScreen from '../screens/EventDetails/EventEditScreen';
-import AddReviewScreen from '../screens/EventDetails/AddReviewScreen';
+import AddReviewScreen from '../screens/Reviews/AddReviewScreen';
 
 const Stack = createNativeStackNavigator();
 
