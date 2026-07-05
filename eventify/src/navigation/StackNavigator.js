@@ -11,6 +11,9 @@ import BookingDetailsScreen from '../screens/Bookings/BookingDetailsScreen';
 import AddReviewScreen from '../screens/Reviews/AddReviewScreen';
 import ReviewsScreen from '../screens/Reviews/ReviewsScreen';
 import EventFormScreen from '../screens/EventDetails/EventFormScreen';
+import EditProfileScreen from '../screens/Profile/EditProfileScreen';
+import EditEmailScreen from '../screens/Profile/EditEmailScreen';
+import EditPassScreen from '../screens/Profile/EditPassScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +42,9 @@ const StackNavigator = () => {
           <Stack.Screen name="AddReview" component={AddReviewScreen} />
           <Stack.Screen name="Reviews" component={ReviewsScreen} />
           <Stack.Screen name="Event Edit" component={EventFormScreen} />
+          <Stack.Screen name="Profile Edit" component={EditProfileScreen} />
+          <Stack.Screen name="Profile Edit Email" component={EditEmailScreen} />
+          <Stack.Screen name="Profile Edit Pass" component={EditPassScreen} />
         </>
       ) : (
         <>

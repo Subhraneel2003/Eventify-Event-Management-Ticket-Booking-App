@@ -626,19 +626,6 @@ const styles = StyleSheet.create({
     loginButton: {
         marginTop: 8,
     },
-    footerRow: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 20,
-    },
-    footerText: {
-        fontSize: 14,
-    },
-    footerLink: {
-        fontSize: 14,
-        fontWeight: '600',
-    },
     mapContainer: {
         height: 220,
         borderRadius: 12,
