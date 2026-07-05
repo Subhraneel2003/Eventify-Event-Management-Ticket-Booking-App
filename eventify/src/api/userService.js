@@ -15,3 +15,13 @@ export const fetchUserById = async(id) =>{
         throw handleError(err, 'fetchUserById')
     }
 }
+
+export const updateProfile = async(id, profileData) =>{
+    try{
+        const res= await api.patch(`/users/${id}`, profileData)
+        return res.data
+    }
+    catch(err){
+        throw handleError(err, 'updateProfile')
+    }
+}
