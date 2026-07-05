@@ -100,9 +100,9 @@ export default function BookingDetailsScreen({ navigation }) {
 
   const qrData = getQRData(id, eventId, userId, qrCode);
 
-  const eventTitle = event?.title || 'Unknown Event';
+  const eventTitle = event?.title || booking?.eventName || 'Unknown Event';
   const venueName = event?.venueName || 'N/A';
-  const date = event?.date || 'N/A';
+  const date = event?.date || booking?.eventDate || 'N/A';
   const time = event?.time || 'N/A';
   const price = event?.price ?? 0;
   const venueLatitude = event?.location?.latitude;

@@ -1,4 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { API_BASE_URL } from '../utils/constants';
 
 export const saveAuthData = async (user, token) => {
   try {
@@ -40,11 +42,21 @@ export const saveBookings = async (bookings) => {
   }
 };
 
-export const loadBookings = async () => {
+export const loadBookings = async (userId) => {
   try {
     const bookings = await AsyncStorage.getItem('bookings');
 
-    return bookings ? JSON.parse(bookings) : [];
+    const parsedBookings = bookings ? JSON.parse(bookings) : [];
+
+    if (parsedBookings.length === 0) {
+      const response = await axios.get(
+        `${API_BASE_URL}/bookings?userId=${userId}&_sort=eventDate`
+      );
+      await AsyncStorage.setItem('bookings', JSON.stringify(response.data));
+      return response.data;
+    }
+
+    return parsedBookings;
   } catch (error) {
     console.log('Failed to load bookings', error);
     return [];
