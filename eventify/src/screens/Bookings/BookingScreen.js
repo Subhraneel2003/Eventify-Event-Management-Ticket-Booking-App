@@ -13,10 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchEventById, updateEventSeats } from '../../api/eventService';
 import { ThemeContext } from '../../context/ThemeContext';
-import {
-  addBooking,
-  setSelectedBooking,
-} from '../../store/slices/bookingSlice';
+import { addBooking } from '../../store/slices/bookingSlice';
 import axios from 'axios';
 import * as Crypto from 'expo-crypto';
 import { API_BASE_URL } from '../../utils/constants';
@@ -93,6 +90,8 @@ export default function BookingScreen({ navigation, route }) {
       const booking = {
         userId: user.id,
         eventId: event.id,
+        eventName: event.title,
+        eventDate: event.date,
         ticketCount,
         totalAmount: totalPrice,
         bookingDate: new Date().toISOString(),
@@ -114,11 +113,12 @@ export default function BookingScreen({ navigation, route }) {
 
       const bookingWithQRCode = updatedBooking.data;
       dispatch(addBooking(bookingWithQRCode));
-      dispatch(setSelectedBooking(bookingWithQRCode));
 
-      await saveBookings(bookings);
+      await saveBookings([...bookings, bookingWithQRCode]);
 
-      navigation.navigate('BookingDetails');
+      navigation.navigate('BookingDetails', {
+        bookingId: bookingWithQRCode.id,
+      });
     } catch (error) {
       Alert.alert('Error', 'An error occured while Booking');
       console.log('Error occurred in booking', error);

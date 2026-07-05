@@ -2,7 +2,7 @@ import { View, Text } from 'react-native'
 import React, { useContext } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import EventListScreen from '../screens/Home/EventListScreen';
-import BookingScreen from '../screens/Bookings/BookingScreen';
+import MyBookings from '../screens/Bookings/MyBookings';
 import ProfileScreen from '../screens/Profile/ProfileScreen';
 import { ThemeContext } from '../context/ThemeContext';
 
@@ -17,7 +17,7 @@ export default function TabNavigator() {
             tabBarInactiveTintColor: colors.textSecondary,
         }}>
             <BottomTab.Screen name='Home' component={EventListScreen} />
-            <BottomTab.Screen name='Bookings' component={BookingScreen} />
+            <BottomTab.Screen name='Bookings' component={MyBookings} />
             <BottomTab.Screen name='Profile' component={ProfileScreen} />
         </BottomTab.Navigator>
     )

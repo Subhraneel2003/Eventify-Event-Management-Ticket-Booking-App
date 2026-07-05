@@ -23,11 +23,12 @@ import { API_BASE_URL } from '../../utils/constants';
 import Button from '../../components/Button';
 import { formatDate, formatTime } from '../../utils/date';
 
-export default function BookingDetailsScreen({ navigation }) {
+export default function BookingDetailsScreen({ route, navigation }) {
   const { colors } = useContext(ThemeContext);
   const dispatch = useDispatch();
-  const booking = useSelector((state) => state.bookings.selectedBooking);
+  const { bookingId } = route.params || {};
 
+  const [booking, setBooking] = useState(null);
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -35,23 +36,52 @@ export default function BookingDetailsScreen({ navigation }) {
   const [cancelling, setCancelling] = useState(false);
 
   useEffect(() => {
-    if (booking?.eventId) {
-      loadEvent();
+    if (bookingId) {
+      loadBookingAndEvent();
+    } else {
+      setLoading(false);
     }
-  }, [booking?.eventId]);
+  }, [bookingId]);
 
-  const loadEvent = async () => {
+  const loadBookingAndEvent = async () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await fetchEventById(booking.eventId);
-      setEvent(data);
+      const response = await axios.get(`${API_BASE_URL}/bookings/${bookingId}`);
+      const bookingData = response.data;
+      setBooking(bookingData);
+
+      if (bookingData?.eventId) {
+        const eventData = await fetchEventById(bookingData.eventId);
+        setEvent(eventData);
+      }
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <View style={[styles.centered, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={[styles.centered, { backgroundColor: colors.background }]}>
+        <Text style={{ color: colors.danger, fontSize: 14 }}>
+          Something went wrong: {error}
+        </Text>
+        <TouchableOpacity onPress={loadBookingAndEvent}>
+          <Text style={{ color: colors.primary, marginTop: 10 }}>Retry</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   if (!booking) {
     return (
@@ -74,35 +104,14 @@ export default function BookingDetailsScreen({ navigation }) {
     );
   }
 
-  if (loading) {
-    return (
-      <View style={[styles.centered, { backgroundColor: colors.background }]}>
-        <ActivityIndicator size="large" color={colors.primary} />
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={[styles.centered, { backgroundColor: colors.background }]}>
-        <Text style={{ color: colors.danger, fontSize: 14 }}>
-          Something went wrong: {error}
-        </Text>
-        <TouchableOpacity onPress={loadEvent}>
-          <Text style={{ color: colors.primary, marginTop: 10 }}>Retry</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
-
   const { id, ticketCount, totalAmount, status, qrCode, eventId, userId } =
     booking;
 
   const qrData = getQRData(id, eventId, userId, qrCode);
 
-  const eventTitle = event?.title || 'Unknown Event';
+  const eventTitle = event?.title || booking?.eventName || 'Unknown Event';
   const venueName = event?.venueName || 'N/A';
-  const date = event?.date || 'N/A';
+  const date = event?.date || booking?.eventDate || 'N/A';
   const time = event?.time || 'N/A';
   const price = event?.price ?? 0;
   const venueLatitude = event?.location?.latitude;
