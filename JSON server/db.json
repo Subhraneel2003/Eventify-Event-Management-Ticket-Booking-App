@@ -92,38 +92,14 @@
     }
   ],
   "categories": [
-    {
-      "id": "1",
-      "name": "Music"
-    },
-    {
-      "id": "2",
-      "name": "Technology"
-    },
-    {
-      "id": "3",
-      "name": "Sports"
-    },
-    {
-      "id": "4",
-      "name": "Arts & Theatre"
-    },
-    {
-      "id": "5",
-      "name": "Food & Drink"
-    },
-    {
-      "id": "6",
-      "name": "Business"
-    },
-    {
-      "id": "7",
-      "name": "Comedy"
-    },
-    {
-      "id": "8",
-      "name": "Workshops"
-    }
+    { "id": "1", "name": "Music" },
+    { "id": "2", "name": "Technology" },
+    { "id": "3", "name": "Sports" },
+    { "id": "4", "name": "Arts & Theatre" },
+    { "id": "5", "name": "Food & Drink" },
+    { "id": "6", "name": "Business" },
+    { "id": "7", "name": "Comedy" },
+    { "id": "8", "name": "Workshops" }
   ],
   "events": [
     {
@@ -137,10 +113,7 @@
       "time": "17:00",
       "venueName": "DY Patil Stadium",
       "address": "Sector 7, Nerul, Navi Mumbai, Maharashtra",
-      "location": {
-        "latitude": 19.033,
-        "longitude": 73.0297
-      },
+      "location": { "latitude": 19.033, "longitude": 73.0297 },
       "coverImage": "https://picsum.photos/seed/sunburn/800/450",
       "price": 2499,
       "totalSeats": 5000,
@@ -158,10 +131,7 @@
       "time": "09:30",
       "venueName": "Bombay Exhibition Centre",
       "address": "Goregaon East, Mumbai, Maharashtra",
-      "location": {
-        "latitude": 19.1551,
-        "longitude": 72.8633
-      },
+      "location": { "latitude": 19.1551, "longitude": 72.8633 },
       "coverImage": "https://picsum.photos/seed/techcrunch/800/450",
       "price": 4999,
       "totalSeats": 1200,
@@ -179,10 +149,7 @@
       "time": "05:30",
       "venueName": "Chhatrapati Shivaji Maharaj Terminus",
       "address": "Fort, Mumbai, Maharashtra",
-      "location": {
-        "latitude": 18.9402,
-        "longitude": 72.8356
-      },
+      "location": { "latitude": 18.9402, "longitude": 72.8356 },
       "coverImage": "https://picsum.photos/seed/marathon/800/450",
       "price": 999,
       "totalSeats": 10000,
@@ -200,10 +167,7 @@
       "time": "19:00",
       "venueName": "Prithvi Theatre",
       "address": "Juhu, Mumbai, Maharashtra",
-      "location": {
-        "latitude": 19.1075,
-        "longitude": 72.8263
-      },
+      "location": { "latitude": 19.1075, "longitude": 72.8263 },
       "coverImage": "https://picsum.photos/seed/theatre/800/450",
       "price": 799,
       "totalSeats": 200,
@@ -221,10 +185,7 @@
       "time": "12:00",
       "venueName": "Phoenix Marketcity Grounds",
       "address": "Kurla West, Mumbai, Maharashtra",
-      "location": {
-        "latitude": 19.0863,
-        "longitude": 72.8891
-      },
+      "location": { "latitude": 19.0863, "longitude": 72.8891 },
       "coverImage": "https://picsum.photos/seed/streetfood/800/450",
       "price": 299,
       "totalSeats": 3000,
@@ -242,10 +203,7 @@
       "time": "18:30",
       "venueName": "WeWork BKC",
       "address": "Bandra Kurla Complex, Mumbai, Maharashtra",
-      "location": {
-        "latitude": 19.066,
-        "longitude": 72.8679
-      },
+      "location": { "latitude": 19.066, "longitude": 72.8679 },
       "coverImage": "https://picsum.photos/seed/startupnight/800/450",
       "price": 0,
       "totalSeats": 150,
@@ -263,10 +221,7 @@
       "time": "20:00",
       "venueName": "NCPA",
       "address": "Nariman Point, Mumbai, Maharashtra",
-      "location": {
-        "latitude": 18.9281,
-        "longitude": 72.8226
-      },
+      "location": { "latitude": 18.9281, "longitude": 72.8226 },
       "coverImage": "https://picsum.photos/seed/comedynight/800/450",
       "price": 1499,
       "totalSeats": 800,
@@ -284,10 +239,7 @@
       "time": "10:00",
       "venueName": "91springboard",
       "address": "Andheri East, Mumbai, Maharashtra",
-      "location": {
-        "latitude": 19.1197,
-        "longitude": 72.8468
-      },
+      "location": { "latitude": 19.1197, "longitude": 72.8468 },
       "coverImage": "https://picsum.photos/seed/uxbootcamp/800/450",
       "price": 1999,
       "totalSeats": 60,
@@ -305,10 +257,7 @@
       "time": "19:30",
       "venueName": "Blue Frog",
       "address": "Lower Parel, Mumbai, Maharashtra",
-      "location": {
-        "latitude": 19.0008,
-        "longitude": 72.8302
-      },
+      "location": { "latitude": 19.0008, "longitude": 72.8302 },
       "coverImage": "https://picsum.photos/seed/indierock/800/450",
       "price": 599,
       "totalSeats": 300,
@@ -326,10 +275,7 @@
       "time": "09:00",
       "venueName": "Jio World Convention Centre",
       "address": "Bandra Kurla Complex, Mumbai, Maharashtra",
-      "location": {
-        "latitude": 19.0691,
-        "longitude": 72.8645
-      },
+      "location": { "latitude": 19.0691, "longitude": 72.8645 },
       "coverImage": "https://picsum.photos/seed/aisummit/800/450",
       "price": 3499,
       "totalSeats": 2000,
@@ -342,6 +288,8 @@
       "id": "1",
       "userId": "1",
       "eventId": "1",
+      "eventName": "Sunburn Music Festival 2026",
+      "eventDate": "2026-08-15",
       "ticketCount": 2,
       "totalAmount": 4998,
       "bookingDate": "2026-06-01T10:15:00.000Z",
@@ -352,6 +300,8 @@
       "id": "2",
       "userId": "2",
       "eventId": "2",
+      "eventName": "TechCrunch Disrupt India",
+      "eventDate": "2026-09-10",
       "ticketCount": 1,
       "totalAmount": 4999,
       "bookingDate": "2026-06-03T14:20:00.000Z",
@@ -362,6 +312,8 @@
       "id": "3",
       "userId": "5",
       "eventId": "3",
+      "eventName": "Mumbai Marathon 2026",
+      "eventDate": "2026-01-18",
       "ticketCount": 1,
       "totalAmount": 999,
       "bookingDate": "2025-12-10T09:00:00.000Z",
@@ -372,6 +324,8 @@
       "id": "4",
       "userId": "6",
       "eventId": "4",
+      "eventName": "Romeo & Juliet - Stage Play",
+      "eventDate": "2025-12-05",
       "ticketCount": 2,
       "totalAmount": 1598,
       "bookingDate": "2025-11-25T18:30:00.000Z",
@@ -382,6 +336,8 @@
       "id": "5",
       "userId": "8",
       "eventId": "5",
+      "eventName": "Street Food Carnival",
+      "eventDate": "2026-07-22",
       "ticketCount": 4,
       "totalAmount": 1196,
       "bookingDate": "2026-06-10T11:45:00.000Z",
@@ -392,6 +348,8 @@
       "id": "6",
       "userId": "1",
       "eventId": "6",
+      "eventName": "Startup Pitch Night",
+      "eventDate": "2026-08-02",
       "ticketCount": 1,
       "totalAmount": 0,
       "bookingDate": "2026-06-12T16:00:00.000Z",
@@ -402,6 +360,8 @@
       "id": "7",
       "userId": "2",
       "eventId": "7",
+      "eventName": "Stand-Up Comedy Night with Zakir Khan",
+      "eventDate": "2026-07-30",
       "ticketCount": 2,
       "totalAmount": 2998,
       "bookingDate": "2026-06-15T20:10:00.000Z",
@@ -412,6 +372,8 @@
       "id": "8",
       "userId": "5",
       "eventId": "8",
+      "eventName": "UI/UX Design Bootcamp",
+      "eventDate": "2026-08-20",
       "ticketCount": 1,
       "totalAmount": 1999,
       "bookingDate": "2026-06-18T13:30:00.000Z",
@@ -422,6 +384,8 @@
       "id": "9",
       "userId": "6",
       "eventId": "9",
+      "eventName": "Indie Rock Night",
+      "eventDate": "2026-06-15",
       "ticketCount": 3,
       "totalAmount": 1797,
       "bookingDate": "2026-04-01T17:00:00.000Z",
@@ -432,6 +396,8 @@
       "id": "10",
       "userId": "8",
       "eventId": "10",
+      "eventName": "AI & Machine Learning Summit",
+      "eventDate": "2026-09-25",
       "ticketCount": 1,
       "totalAmount": 3499,
       "bookingDate": "2026-06-20T08:50:00.000Z",
@@ -442,6 +408,8 @@
       "id": "11",
       "userId": "1",
       "eventId": "5",
+      "eventName": "Street Food Carnival",
+      "eventDate": "2026-07-22",
       "ticketCount": 2,
       "totalAmount": 598,
       "bookingDate": "2026-06-22T10:00:00.000Z",
@@ -452,6 +420,8 @@
       "id": "12",
       "userId": "2",
       "eventId": "1",
+      "eventName": "Sunburn Music Festival 2026",
+      "eventDate": "2026-08-15",
       "ticketCount": 1,
       "totalAmount": 2499,
       "bookingDate": "2026-06-25T15:40:00.000Z",
@@ -462,6 +432,8 @@
       "id": "13",
       "userId": "2",
       "eventId": "3",
+      "eventName": "Mumbai Marathon 2026",
+      "eventDate": "2026-01-18",
       "ticketCount": 1,
       "totalAmount": 999,
       "bookingDate": "2025-12-15T09:30:00.000Z",
@@ -472,6 +444,8 @@
       "id": "14",
       "userId": "8",
       "eventId": "4",
+      "eventName": "Romeo & Juliet - Stage Play",
+      "eventDate": "2025-12-05",
       "ticketCount": 1,
       "totalAmount": 799,
       "bookingDate": "2025-11-28T17:10:00.000Z",
@@ -521,7 +495,5 @@
       "createdAt": "2025-12-07T13:00:00.000Z"
     }
   ],
-  "$schema": [
-    "./node_modules/json-server/schema.json"
-  ]
+  "$schema": ["./node_modules/json-server/schema.json"]
 }

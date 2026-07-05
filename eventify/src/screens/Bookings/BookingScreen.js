@@ -93,6 +93,8 @@ export default function BookingScreen({ navigation, route }) {
       const booking = {
         userId: user.id,
         eventId: event.id,
+        eventName: event.title,
+        eventDate: event.date,
         ticketCount,
         totalAmount: totalPrice,
         bookingDate: new Date().toISOString(),
