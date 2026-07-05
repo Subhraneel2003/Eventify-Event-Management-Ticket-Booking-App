@@ -95,13 +95,13 @@ export const addEvent = async (eventData) => {
   }
 }
 
-export const deleteEvent = async (id) =>{
-  try{
-    const res=api.delete(`/events/${id}`)
-    return res.data
-  }
-  catch(err)
-  {
-    throw handleError(err, 'deleteEvent')
-  }
-} 
+// export const deleteEvent = async (id) =>{
+//   try{
+//     const res=api.delete(`/events/${id}`)
+//     return res.data
+//   }
+//   catch(err)
+//   {
+//     throw handleError(err, 'deleteEvent')
+//   }
+// } 
