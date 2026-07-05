@@ -118,13 +118,25 @@ export default function EventListScreen({ navigation }) {
     const isOrganizerAddNewEvent = user?.role === "organizer"
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
-            <Text style={[styles.welcomeText, { color: colors.text }]}>Welcome {user?.name}</Text>
+            <View style={styles.header}>
+                <Text style={[styles.greeting, { color: colors.textSecondary }]}>
+                    Welcome back,
+                </Text>
+
+                <Text style={[styles.userName, { color: colors.text }]}>
+                    {user?.name} <Ionicons
+                        name="happy-outline"
+                        size={30}
+                        color={colors.text}
+                    />
+                </Text>
+            </View>
 
             <TextInput style={[styles.searchBar, {
                 backgroundColor: colors.surface,
                 color: colors.text,
-                borderColor: colors.border
-            }]} placeholder='Search...' value={search} onChangeText={setSearch} />
+                borderColor: colors.border,
+            }]} placeholder='Search...' placeholderTextColor={colors.textSecondary} value={search} onChangeText={setSearch} />
 
             <View style={{ marginBottom: 20 }}>
                 <TouchableOpacity
@@ -159,20 +171,30 @@ export default function EventListScreen({ navigation }) {
                     </View>
                 </Modal>
             </View>
-                {isOrganizerAddNewEvent && (
-                    <Button title="Add New Event" onPress={() => navigation.navigate("Event Edit", { mode: "create" })} style={{ marginBottom: 15 }} />
-                )}
 
-                <FlatList data={filteredEvents} keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => (
-                        <EventCard event={item} onPress={() => navigation.navigate("Event Details", { eventId: item.id })} />
-                    )}
-                    ListEmptyComponent={
-                        <Text style={{ color: colors.textSecondary, textAlign: 'center', marginTop: 40 }}>
-                            No events found
-                        </Text>
-                    }
-                />
+            <FlatList data={filteredEvents} keyExtractor={(item) => item.id.toString()}
+                ListHeaderComponent={
+                    isOrganizerAddNewEvent ? (
+                        <Button
+                            title="Add New Event"
+                            onPress={() =>
+                                navigation.navigate("Event Edit", {
+                                    mode: "create",
+                                })
+                            }
+                            style={{ marginBottom: 15 }}
+                        />
+                    ) : null
+                }
+                renderItem={({ item }) => (
+                    <EventCard event={item} onPress={() => navigation.navigate("Event Details", { eventId: item.id })} />
+                )}
+                ListEmptyComponent={
+                    <Text style={{ color: colors.textSecondary, textAlign: 'center', marginTop: 40 }}>
+                        No events found
+                    </Text>
+                }
+            />
         </View>
     )
 }
@@ -182,11 +204,21 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
     },
-    welcomeText: {
-        fontSize: 18,
-        fontWeight: '600',
-        marginBottom: 12,
+    header: {
+        marginBottom: 20,
     },
+
+    greeting: {
+        fontSize: 16,
+        fontWeight: "500",
+    },
+
+    userName: {
+        fontSize: 30,
+        fontWeight: "700",
+        marginTop: 2,
+    },
+
     centered: {
         flex: 1,
         justifyContent: 'center',

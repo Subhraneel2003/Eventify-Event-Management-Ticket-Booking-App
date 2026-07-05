@@ -5,6 +5,7 @@ import SettingsScreen from '../screens/Settings/SettingsScreen';
 import HelpScreen from '../screens/Help/HelpScreen';
 import { ThemeContext } from '../context/ThemeContext';
 import TabNavigator from './TabNavigator';
+import AboutScreen from '../screens/About/AboutScreen';
 
 
 const Drawer = createDrawerNavigator()
@@ -21,6 +22,7 @@ export default function DrawerNavigator() {
             <Drawer.Screen name="MainTabs" component={TabNavigator} options={{ title: 'Eventify' }} />
             <Drawer.Screen name='Settings' component={SettingsScreen} />
             <Drawer.Screen name='Help' component={HelpScreen} />
+            <Drawer.Screen name='About' component={AboutScreen} />
         </Drawer.Navigator>
     )
 }

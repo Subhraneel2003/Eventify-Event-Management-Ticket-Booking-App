@@ -1,5 +1,5 @@
 import { View, Text, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity, Alert, } from 'react-native'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateProfile } from '../../api/userService'
 import { updateUser } from '../../store/slices/authSlice'
@@ -14,6 +14,9 @@ export default function EditProfileScreen({ navigation }) {
     const { colors } = useContext(ThemeContext)
     const { user } = useSelector(state => state.auth)
     const dispatch = useDispatch()
+    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const handleUpdate = async (values) => {
         try {
@@ -51,7 +54,7 @@ export default function EditProfileScreen({ navigation }) {
             console.log(err.message);
         }
     };
-    
+
     return (
         <KeyboardAvoidingView
             style={[styles.flex, { backgroundColor: colors.background }]}
@@ -100,6 +103,11 @@ export default function EditProfileScreen({ navigation }) {
                                     onBlur={handleBlur('currentPassword')}
                                     error={errors.currentPassword}
                                     touched={touched.currentPassword}
+                                    secureTextEntry={!showCurrentPassword}
+                                    showPasswordToggle
+                                    onToggleSecureEntry={() =>
+                                        setShowCurrentPassword(prev => !prev)
+                                    }
                                 />
 
                                 <Input
@@ -110,6 +118,11 @@ export default function EditProfileScreen({ navigation }) {
                                     onBlur={handleBlur('newPassword')}
                                     error={errors.newPassword}
                                     touched={touched.newPassword}
+                                    secureTextEntry={!showNewPassword}
+                                    showPasswordToggle
+                                    onToggleSecureEntry={() =>
+                                        setShowNewPassword(prev => !prev)
+                                    }
                                 />
 
                                 <Input
@@ -120,6 +133,11 @@ export default function EditProfileScreen({ navigation }) {
                                     onBlur={handleBlur('confirmPassword')}
                                     error={errors.confirmPassword}
                                     touched={touched.confirmPassword}
+                                    secureTextEntry={!showConfirmPassword}
+                                    showPasswordToggle
+                                    onToggleSecureEntry={() =>
+                                        setShowConfirmPassword(prev => !prev)
+                                    }
                                 />
 
                                 <Button title="Save Changes"

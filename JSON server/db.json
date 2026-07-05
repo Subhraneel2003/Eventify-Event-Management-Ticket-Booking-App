@@ -7,7 +7,7 @@
       "password": "Password@123",
       "role": "user",
       "phone": "9876543210",
-      "profileImage": "https://i.pravatar.cc/150?img=1",
+      "profileImage": "file:///data/user/0/host.exp.exponent/cache/ImagePicker/6709e94c-b09f-4507-be12-fb27f4c74a9d.jpeg",
       "createdAt": "2025-01-12T09:30:00.000Z"
     },
     {
@@ -26,8 +26,8 @@
       "email": "rohan.mehta@example.com",
       "password": "Password@123",
       "role": "organizer",
-      "phone": "9876543213",
-      "profileImage": "https://i.pravatar.cc/150?img=12",
+      "phone": "9876543212",
+      "profileImage": "file:///data/user/0/host.exp.exponent/cache/ImagePicker/3338d157-8d64-49fa-9e56-364da40893f0.jpeg",
       "createdAt": "2024-11-02T08:15:00.000Z"
     },
     {
@@ -505,6 +505,18 @@
       "bookingDate": "2025-11-28T17:10:00.000Z",
       "status": "used",
       "qrCode": "QR-EVT4-USR8-N6O7P8"
+    },
+    {
+      "userId": "1",
+      "eventId": "2",
+      "eventName": "TechCrunch Disrupt India",
+      "eventDate": "2026-09-10",
+      "ticketCount": 1,
+      "totalAmount": 4999,
+      "bookingDate": "2026-07-05T14:29:42.284Z",
+      "status": "cancelled",
+      "qrCode": "cb1b1928-7304-4aa0-8106-9bddd2eb831b",
+      "id": "eW4KIYK"
     }
   ],
   "reviews": [
