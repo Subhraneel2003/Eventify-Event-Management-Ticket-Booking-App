@@ -11,24 +11,26 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { ThemeContext } from '../../context/ThemeContext';
-import { loadBookings } from '../../services/storageService';
-import { setSelectedBooking } from '../../store/slices/bookingSlice';
+import { setBookings } from '../../store/slices/bookingSlice';
 import { formatDate } from '../../utils/date';
+import axios from 'axios';
+import { API_BASE_URL } from '../../utils/constants';
 
 export default function MyBookings({ navigation }) {
   const { colors } = useContext(ThemeContext);
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
-
-  const [bookings, setBookings] = useState([]);
+  const bookings = useSelector((state) => state.bookings.bookings);
   const [loading, setLoading] = useState(true);
 
   const fetchBookings = async () => {
     try {
       setLoading(true);
-      const saved = await loadBookings(user.id);
-      setBookings(saved);
+      const response = await axios.get(
+        `${API_BASE_URL}/bookings?userId=${user.id}&_sort=eventDate&_order=asc`
+      );
+      dispatch(setBookings(response.data));
     } catch (error) {
       console.log('Error loading bookings', error);
     } finally {
@@ -41,8 +43,7 @@ export default function MyBookings({ navigation }) {
   }, []);
 
   const handleBookingPress = (booking) => {
-    dispatch(setSelectedBooking(booking));
-    navigation.navigate('BookingDetails');
+    navigation.navigate('BookingDetails', { bookingId: booking.id });
   };
 
   const BookingCard = ({ item }) => {
