@@ -1,4 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   View,
   Text,
@@ -28,7 +29,7 @@ export default function MyBookings({ navigation }) {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${API_BASE_URL}/bookings?userId=${user.id}&_sort=eventDate&_order=asc`
+        `${API_BASE_URL}/bookings?userId=${user.id}&_expand=event&_sort=bookingDate&_order=desc`
       );
       dispatch(setBookings(response.data));
     } catch (error) {
@@ -38,17 +39,19 @@ export default function MyBookings({ navigation }) {
     }
   };
 
-  useEffect(() => {
-    fetchBookings();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchBookings();
+    }, [])
+  );
 
   const handleBookingPress = (booking) => {
     navigation.navigate('BookingDetails', { bookingId: booking.id });
   };
 
   const BookingCard = ({ item }) => {
-    const eventTitle = item.eventName || 'Unknown Event';
-    const eventDate = item.eventDate ? formatDate(item.eventDate) : 'N/A';
+    const eventTitle = item.event?.title || 'Unknown Event';
+    const eventDate = item.event?.date ? formatDate(item.event.date) : 'N/A';
 
     return (
       <TouchableOpacity

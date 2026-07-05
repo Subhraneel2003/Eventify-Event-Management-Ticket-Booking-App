@@ -32,6 +32,7 @@ export default function BookingScreen({ navigation, route }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [ticketCount, setTicketCount] = useState(1);
+  const [confirming, setConfirming] = useState(false);
 
   useEffect(() => {
     loadEvent();
@@ -87,11 +88,10 @@ export default function BookingScreen({ navigation, route }) {
 
   const handleConfirm = async () => {
     try {
+      setConfirming(true);
       const booking = {
         userId: user.id,
         eventId: event.id,
-        eventName: event.title,
-        eventDate: event.date,
         ticketCount,
         totalAmount: totalPrice,
         bookingDate: new Date().toISOString(),
@@ -122,6 +122,8 @@ export default function BookingScreen({ navigation, route }) {
     } catch (error) {
       Alert.alert('Error', 'An error occured while Booking');
       console.log('Error occurred in booking', error);
+    } finally {
+      setConfirming(false);
     }
   };
 
@@ -291,17 +293,28 @@ export default function BookingScreen({ navigation, route }) {
         </View>
 
         <TouchableOpacity
-          style={[styles.confirmButton, { backgroundColor: colors.primary }]}
+          style={[
+            styles.confirmButton,
+            { backgroundColor: colors.primary },
+            confirming && { opacity: 0.6 }
+          ]}
           onPress={handleConfirm}
+          disabled={confirming}
           activeOpacity={0.8}
         >
-          <Ionicons
-            name="checkmark-circle-outline"
-            size={20}
-            color="#fff"
-            style={{ marginRight: 8 }}
-          />
-          <Text style={styles.confirmText}>Confirm</Text>
+          {confirming ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <>
+              <Ionicons
+                name="checkmark-circle-outline"
+                size={20}
+                color="#fff"
+                style={{ marginRight: 8 }}
+              />
+              <Text style={styles.confirmText}>Confirm</Text>
+            </>
+          )}
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
