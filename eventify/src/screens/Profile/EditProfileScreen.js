@@ -6,7 +6,7 @@ import { updateUser } from '../../store/slices/authSlice'
 import { Formik } from 'formik'
 import Input from '../../components/Input'
 import Button from '../../components/Button'
-import { profileEditValidationSchema } from '../../validations/EditProfileDetailsValidation'
+import { profileEditValidationSchema } from '../../validations/editProfileDetailsValidation'
 import { ThemeContext } from '../../context/ThemeContext'
 import { Ionicons } from '@expo/vector-icons'
 
@@ -25,7 +25,6 @@ export default function EditProfileScreen({ navigation }) {
                 return
             }
             const updatedValue = await updateProfile(user?.id, values)
-            console.log(updatedValue);
             dispatch(updateUser(updatedValue))
             Alert.alert("Success", "Your Info Successfully Updated")
             navigation.goBack()
