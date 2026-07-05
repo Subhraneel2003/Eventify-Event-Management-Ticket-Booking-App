@@ -19,6 +19,11 @@ import * as Crypto from 'expo-crypto';
 import { API_BASE_URL } from '../../utils/constants';
 import { saveBookings } from '../../services/storageService';
 import { formatDate, formatTime } from '../../utils/date';
+import {
+  scheduleBookingConfirmation,
+  scheduleEventReminder,
+  scheduleEventReminderDemo,
+} from '../../services/notificationService';
 
 export default function BookingScreen({ navigation, route }) {
   const { eventId } = route.params;
@@ -115,6 +120,35 @@ export default function BookingScreen({ navigation, route }) {
       dispatch(addBooking(bookingWithQRCode));
 
       await saveBookings([...bookings, bookingWithQRCode]);
+
+      try {
+        await scheduleBookingConfirmation(event.title);
+      } catch (err) {
+        console.log('Error scheduling booking confirmation notification:', err);
+      }
+
+      // Schedule event reminder before the event starts
+      try {
+        const eventDateTime = new Date(`${event.date}T${event.time}:00`);
+        if (!isNaN(eventDateTime.getTime())) {
+          await scheduleEventReminder(event.title, eventDateTime);
+        } else {
+          console.log(
+            'Invalid event date/time for scheduling reminder:',
+            event.date,
+            event.time
+          );
+        }
+      } catch (err) {
+        console.log('Error scheduling event reminder notification:', err);
+      }
+
+      // Schedule event reminder demo 10 seconds after booking (for Demo purposes)
+      // try {
+      //   await scheduleEventReminderDemo(event.title);
+      // } catch (err) {
+      //   console.log('Error scheduling event reminder demo notification:', err);
+      // }
 
       navigation.navigate('BookingDetails', {
         bookingId: bookingWithQRCode.id,
@@ -296,7 +330,7 @@ export default function BookingScreen({ navigation, route }) {
           style={[
             styles.confirmButton,
             { backgroundColor: colors.primary },
-            confirming && { opacity: 0.6 }
+            confirming && { opacity: 0.6 },
           ]}
           onPress={handleConfirm}
           disabled={confirming}
