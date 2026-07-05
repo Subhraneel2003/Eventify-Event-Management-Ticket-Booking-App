@@ -14,6 +14,7 @@ import EventFormScreen from '../screens/EventDetails/EventFormScreen';
 import EditProfileScreen from '../screens/Profile/EditProfileScreen';
 import EditEmailScreen from '../screens/Profile/EditEmailScreen';
 import EditPassScreen from '../screens/Profile/EditPassScreen';
+import ImageProfileScreen from '../screens/Profile/ImageProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -45,6 +46,7 @@ const StackNavigator = () => {
           <Stack.Screen name="Profile Edit" component={EditProfileScreen} />
           <Stack.Screen name="Profile Edit Email" component={EditEmailScreen} />
           <Stack.Screen name="Profile Edit Pass" component={EditPassScreen} />
+          <Stack.Screen name="Profile Image" component={ImageProfileScreen}/>
         </>
       ) : (
         <>

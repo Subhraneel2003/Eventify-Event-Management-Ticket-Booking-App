@@ -8,7 +8,7 @@ import { logout } from "../../store/slices/authSlice";
 import { clearAuthData } from "../../services/storageService";
 
 export default function ProfileScreen({ navigation }) {
-    const { colors } = useContext(ThemeContext);
+    const { colors, toggleTheme } = useContext(ThemeContext);
     const { user } = useSelector((state) => state.auth);
     const dispatch = useDispatch()
 
@@ -62,7 +62,7 @@ export default function ProfileScreen({ navigation }) {
         >
 
             <View style={styles.header}>
-                <TouchableOpacity activeOpacity={0.8}>
+                <TouchableOpacity activeOpacity={0.8} onPress={()=>navigation.navigate("Profile Image", {imageUri: user?.profileImage})}>
                     <Image
                         source={{ uri: user?.profileImage }}
                         style={styles.avatar}
@@ -158,7 +158,10 @@ export default function ProfileScreen({ navigation }) {
                             backgroundColor: colors.danger,
                         },
                     ]}
-                    onPress={() => handleLogOut()}
+                    onPress={() => {
+                        handleLogOut()
+                        toggleTheme()
+                    }}
                 />
             </View>
         </ScrollView>

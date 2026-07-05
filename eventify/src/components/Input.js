@@ -1,7 +1,14 @@
 import React, { useContext } from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
-import { lightColors } from "../styles/colors";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { ThemeContext } from "../context/ThemeContext";
+import { lightColors } from "../styles/colors";
 
 const Input = ({
   label,
@@ -9,40 +16,81 @@ const Input = ({
   onChangeText,
   onBlur,
   placeholder,
-  secureTextEntry = false,
   keyboardType = "default",
+  secureTextEntry = false,
+  showPasswordToggle = false,
+  onToggleSecureEntry,
   error,
   touched,
   ...rest
 }) => {
-  const hasError = touched && error;
-  const theme = useContext(ThemeContext);
-  const colors = theme?.colors || lightColors;
+  const { colors } = useContext(ThemeContext) || {
+    colors: lightColors,
+  };
 
+  const hasError = touched && error;
   return (
     <View style={styles.container}>
-      {label && <Text style={[styles.label, { color: colors.text }]}>{label}</Text>}
-      <TextInput
+      {label && (
+        <Text style={[styles.label, { color: colors.text }]}>
+          {label}
+        </Text>
+      )}
+
+      <View
         style={[
-          styles.input,
-          rest.multiline && styles.multilineInput,
+          styles.inputContainer,
           {
-            borderColor: hasError ? colors.danger : colors.border,
             backgroundColor: colors.surface,
-            color: colors.text,
+            borderColor: hasError ? colors.danger : colors.border,
           },
+          rest.multiline && styles.multilineContainer,
         ]}
-        value={value}
-        onChangeText={onChangeText}
-        onBlur={onBlur}
-        placeholder={placeholder}
-        placeholderTextColor={colors.textSecondary}
-        secureTextEntry={secureTextEntry}
-        keyboardType={keyboardType}
-        autoCapitalize="none"
-        {...rest}
-      />
-      {hasError && <Text style={[styles.errorText, { color: colors.danger }]}>{error}</Text>}
+      >
+        <TextInput
+          style={[
+            styles.input,
+            {
+              color: colors.text,
+            },
+            rest.multiline && styles.multilineInput,
+          ]}
+          value={value}
+          onChangeText={onChangeText}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          placeholderTextColor={colors.textSecondary}
+          keyboardType={keyboardType}
+          secureTextEntry={secureTextEntry}
+          autoCapitalize="none"
+          {...rest}
+        />
+
+        {showPasswordToggle && (
+          <TouchableOpacity onPress={onToggleSecureEntry}>
+            <Ionicons
+              name={
+                secureTextEntry
+                  ? "eye-off-outline"
+                  : "eye-outline"
+              }
+              size={22}
+              color={colors.textSecondary}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
+
+      {hasError && (
+        <Text
+          style={[
+            styles.errorText,
+            { color: colors.danger },
+          ]}
+        >
+          {error}
+        </Text>
+      )}
     </View>
   );
 };
@@ -51,30 +99,39 @@ const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
   },
+
   label: {
     fontSize: 14,
     fontWeight: "600",
     marginBottom: 6,
   },
-  input: {
-    minHeight: 50,
+
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1.5,
     borderRadius: 12,
     paddingHorizontal: 16,
-    fontSize: 15,
-    backgroundColor: lightColors.surface,
+    minHeight: 50,
   },
+
+  multilineContainer: {
+    alignItems: "flex-start",
+  },
+
+  input: {
+    flex: 1,
+    fontSize: 15,
+    paddingVertical: 12,
+  },
+
   multilineInput: {
     minHeight: 120,
-    paddingTop: 14,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
-  inputError: {
-    borderColor: lightColors.danger,
-  },
+
   errorText: {
     fontSize: 12,
-    color: lightColors.danger,
     marginTop: 4,
     marginLeft: 4,
   },

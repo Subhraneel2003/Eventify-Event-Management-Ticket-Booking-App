@@ -1,5 +1,5 @@
 import { View, Text, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateProfile } from '../../api/userService'
 import { updateUser } from '../../store/slices/authSlice'
@@ -9,22 +9,30 @@ import Button from '../../components/Button'
 import { profileEditValidationSchema } from '../../validations/editProfileDetailsValidation'
 import { ThemeContext } from '../../context/ThemeContext'
 import { Ionicons } from '@expo/vector-icons'
+import { pickImage } from '../../services/imagePickerService'
 
 export default function EditProfileScreen({ navigation }) {
     const { colors } = useContext(ThemeContext)
     const { user } = useSelector(state => state.auth)
     const dispatch = useDispatch()
+    const [profileImage, setProfileImage] = useState(user?.profileImage)
 
     const handleUpdate = async (values) => {
         const hasChanged =
             values.name !== user?.name ||
-            values.phone !== user?.phone
+            values.phone !== user?.phone ||
+            profileImage !== user?.profileImage;
+
         try {
             if (!hasChanged) {
                 Alert.alert("No Changes", "No changed were made")
                 return
             }
-            const updatedValue = await updateProfile(user?.id, values)
+            const payload = {
+                ...values,
+                profileImage
+            }
+            const updatedValue = await updateProfile(user?.id, payload)
             dispatch(updateUser(updatedValue))
             Alert.alert("Success", "Your Info Successfully Updated")
             navigation.goBack()
@@ -32,8 +40,36 @@ export default function EditProfileScreen({ navigation }) {
         catch (err) {
             console.log(err.message)
         }
-
     }
+
+    const showImagePickerOptions = () => {
+        Alert.alert(
+            "Profile Image",
+            "Choose Profile Image",
+            [
+                {
+                    text: "Take Photo",
+                    onPress: () => handlePickImage("camera"),
+                },
+                {
+                    text: "Choose From Library",
+                    onPress: () => handlePickImage("gallery"),
+                },
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
+            ]
+        );
+    };
+
+    const handlePickImage = async (type) => {
+        const imageUri = await pickImage(type)
+        if (imageUri) {
+            setProfileImage(imageUri)
+        }
+    }
+
     return (
         <KeyboardAvoidingView
             style={[styles.flex, { backgroundColor: colors.background }]}
@@ -56,10 +92,25 @@ export default function EditProfileScreen({ navigation }) {
                 <View style={[styles.card, { backgroundColor: colors.surface }]}>
 
                     <View style={styles.avatarContainer}>
-                        <Image
-                            source={{ uri: user.profileImage }}
-                            style={styles.avatar}
-                        />
+                        <TouchableOpacity activeOpacity={0.8} onPress={showImagePickerOptions}>
+                            <Image
+                                source={{ uri: profileImage }}
+                                style={styles.avatar}
+                            />
+
+                            <View
+                                style={[
+                                    styles.cameraIcon,
+                                    { backgroundColor: colors.primary },
+                                ]}
+                            >
+                                <Ionicons
+                                    name="pencil-outline"
+                                    size={18}
+                                    color="#fff"
+                                />
+                            </View>
+                        </TouchableOpacity>
                     </View>
 
                     <Formik initialValues={{
@@ -117,15 +168,23 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     avatarContainer: {
-        justifyContent: "center",
         alignItems: "center",
         marginBottom: 20
     },
     avatar: {
-
         width: 120,
         height: 120,
         borderRadius: 60,
+    },
+    cameraIcon: {
+        position: "absolute",
+        bottom: 0,
+        right: 0,
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        justifyContent: "center",
+        alignItems: "center",
     },
     backButton: {
         position: 'absolute',
