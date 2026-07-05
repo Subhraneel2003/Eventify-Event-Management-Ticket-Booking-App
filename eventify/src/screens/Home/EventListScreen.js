@@ -115,7 +115,7 @@ export default function EventListScreen({ navigation }) {
     }
 
     const isOrganizer = user?.role === "organizer" && user?.id === event?.organizerId
-
+    const isOrganizerAddNewEvent = user?.role === "organizer"
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
             <Text style={[styles.welcomeText, { color: colors.text }]}>Welcome {user?.name}</Text>
@@ -159,7 +159,7 @@ export default function EventListScreen({ navigation }) {
                     </View>
                 </Modal>
             </View>
-                {isOrganizer && (
+                {isOrganizerAddNewEvent && (
                     <Button title="Add New Event" onPress={() => navigation.navigate("Event Edit", { mode: "create" })} style={{ marginBottom: 15 }} />
                 )}
 
