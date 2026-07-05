@@ -459,7 +459,6 @@
       "bookingId": "3",
       "eventId": "3",
       "userId": "5",
-      "userName": "Vikram Singh",
       "rating": 5,
       "comment": "Well organized marathon with great crowd support and hydration stations every couple of kilometers.",
       "createdAt": "2025-12-12T09:15:00.000Z"
@@ -469,7 +468,6 @@
       "bookingId": "4",
       "eventId": "4",
       "userId": "6",
-      "userName": "Ananya Reddy",
       "rating": 5,
       "comment": "Absolutely loved the modern take on Romeo & Juliet. The lead actors were phenomenal and the stage design was stunning.",
       "createdAt": "2025-12-06T10:30:00.000Z"
@@ -479,7 +477,6 @@
       "bookingId": "13",
       "eventId": "3",
       "userId": "2",
-      "userName": "Isha Patel",
       "rating": 4,
       "comment": "Great route and volunteers, though the start could have been better coordinated to avoid early congestion.",
       "createdAt": "2025-12-20T08:45:00.000Z"
@@ -489,7 +486,6 @@
       "bookingId": "14",
       "eventId": "4",
       "userId": "8",
-      "userName": "Priya Nair",
       "rating": 4,
       "comment": "Beautifully staged production, though the intimate venue meant sightlines weren't great from the back rows.",
       "createdAt": "2025-12-07T13:00:00.000Z"

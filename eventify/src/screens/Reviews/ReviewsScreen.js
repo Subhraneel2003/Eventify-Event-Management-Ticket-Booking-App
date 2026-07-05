@@ -32,7 +32,7 @@ export default function ReviewsScreen({ navigation, route }) {
         setError(null);
 
         const reviewsRes = await axios.get(
-          `${API_BASE_URL}/reviews?eventId=${eventId}&_sort=createdAt&_order=desc`
+          `${API_BASE_URL}/reviews?eventId=${eventId}&_sort=createdAt&_order=desc&_expand=user`
         );
 
         setReviews(reviewsRes.data);
@@ -106,6 +106,8 @@ export default function ReviewsScreen({ navigation, route }) {
 
   const ReviewCard = ({ item }) => {
     const isCurrentUser = item.userId === user?.id;
+    const userName = item.user?.name || 'Unknown User';
+    const userImage = item.user?.profileImage;
 
     return (
       <View
@@ -116,8 +118,8 @@ export default function ReviewsScreen({ navigation, route }) {
       >
         <View style={styles.reviewHeader}>
           <View style={styles.reviewUserInfo}>
-            {item.userImage ? (
-              <Image source={{ uri: item.userImage }} style={styles.avatar} />
+            {userImage ? (
+              <Image source={{ uri: userImage }} style={styles.avatar} />
             ) : (
               <View
                 style={[
@@ -126,7 +128,7 @@ export default function ReviewsScreen({ navigation, route }) {
                 ]}
               >
                 <Text style={styles.avatarInitial}>
-                  {(item.userName || 'Unknown User').charAt(0).toUpperCase()}
+                  {userName.charAt(0).toUpperCase()}
                 </Text>
               </View>
             )}
@@ -136,7 +138,7 @@ export default function ReviewsScreen({ navigation, route }) {
                   style={[styles.userName, { color: colors.text }]}
                   numberOfLines={1}
                 >
-                  {item.userName || 'Unknown User'}
+                  {userName}
                 </Text>
                 {isCurrentUser && (
                   <View
