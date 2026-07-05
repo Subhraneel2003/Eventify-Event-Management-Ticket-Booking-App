@@ -3,7 +3,6 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   bookings: [],
   loading: true,
-  selectedBooking: null,
 };
 
 const bookingSlice = createSlice({
@@ -28,9 +27,6 @@ const bookingSlice = createSlice({
       const booking = state.bookings.find((b) => b.id === action.payload);
       if (booking) booking.status = 'used';
     },
-    setSelectedBooking(state, action) {
-      state.selectedBooking = action.payload;
-    },
     clearBookings(state) {
       state.bookings = [];
       state.selectedBooking = null;
@@ -44,7 +40,6 @@ export const {
   addBooking,
   cancelBooking,
   validateBooking,
-  setSelectedBooking,
   clearBookings,
 } = bookingSlice.actions;
 

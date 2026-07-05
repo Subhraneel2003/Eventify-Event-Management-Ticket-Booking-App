@@ -6,10 +6,9 @@ import {
   clearAuthData,
   clearBookingsData,
   getAuthData,
-  loadBookings,
 } from '../../services/storageService';
 import { completeAuthCheck, login, logout } from '../../store/slices/authSlice';
-import { clearBookings, setBookings } from '../../store/slices/bookingSlice';
+import { clearBookings } from '../../store/slices/bookingSlice';
 import { isTokenValid } from '../../utils/tokenManager';
 
 const SplashScreen = () => {
@@ -30,9 +29,6 @@ const SplashScreen = () => {
         }
 
         dispatch(login({ user, token }));
-
-        const bookings = await loadBookings();
-        dispatch(setBookings(bookings));
       } catch (err) {
         console.error('Auth check failed:', err);
         dispatch(logout());
