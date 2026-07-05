@@ -78,32 +78,32 @@ export default function EventDetailScreen({ navigation, route }) {
         return `${event.availableSeats} seats left`;
     };
 
-    const handleDelete = async () => {
-        Alert.alert("Delete Event", "Are you sure you want to delete this event? This action cannot be undone.",
-            [
-                {
-                    text: "Cancel",
-                    style: "cancel"
-                },
-                {
-                    text: "Delete",
-                    style: "destructive",
-                    onPress: confirmDelete
-                }
-            ]
-        )
-    }
+    // const handleDelete = async () => {
+    //     Alert.alert("Delete Event", "Are you sure you want to delete this event? This action cannot be undone.",
+    //         [
+    //             {
+    //                 text: "Cancel",
+    //                 style: "cancel"
+    //             },
+    //             {
+    //                 text: "Delete",
+    //                 style: "destructive",
+    //                 onPress: confirmDelete
+    //             }
+    //         ]
+    //     )
+    // }
 
-    const confirmDelete = async () => {
-        try {
-            await deleteEvent(event.id)
-            Alert.alert("Success", "Event Deleted Successfully")
-            navigation.goBack()
-        }
-        catch (err) {
-            console.log(err.message)
-        }
-    }
+    // const confirmDelete = async () => {
+    //     try {
+    //         await deleteEvent(event.id)
+    //         Alert.alert("Success", "Event Deleted Successfully")
+    //         navigation.goBack()
+    //     }
+    //     catch (err) {
+    //         console.log(err.message)
+    //     }
+    // }
 
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -299,14 +299,14 @@ export default function EventDetailScreen({ navigation, route }) {
                         />
 
                         <Button
-                            title="Delete Event"
+                            title="Cancel Event"
                             style={[
                                 styles.actionButton,
                                 {
                                     backgroundColor: colors.danger,
                                 },
                             ]}
-                            onPress={handleDelete}
+                            // onPress={}
                         />
                     </View>
                 ) : (
