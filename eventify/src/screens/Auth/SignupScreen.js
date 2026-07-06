@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -22,6 +22,7 @@ import { API_BASE_URL } from '../../utils/constants';
 const SignupScreen = ({ navigation }) => {
   const { colors } = useContext(ThemeContext);
   const { height } = useWindowDimensions();
+  const [showPassword, setShowPassword] = useState(false);
 
   const initialValues = {
     name: '',
@@ -130,7 +131,9 @@ const SignupScreen = ({ navigation }) => {
                   onBlur={handleBlur('password')}
                   error={errors.password}
                   touched={touched.password}
-                  secureTextEntry
+                  secureTextEntry={!showPassword}
+                  showPasswordToggle
+                  onToggleSecureEntry={() => setShowPassword((prev) => !prev)}
                 />
 
                 <Input
