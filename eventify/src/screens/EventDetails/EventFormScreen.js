@@ -14,6 +14,7 @@ import MapView, { Marker } from "react-native-maps";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { pickImage } from '../../services/imagePickerService'
 import { useAuth } from '../../hooks/useAuth';
+import { uploadImage } from '../../utils/cloudinary';
 
 export default function EventFormScreen({ route, navigation }) {
     const { mode, eventId } = route.params;
@@ -65,7 +66,8 @@ export default function EventFormScreen({ route, navigation }) {
                     payload.availableSeats !== event.availableSeats ||
                     payload.status !== event.status ||
                     payload.location.latitude !== event.location.latitude ||
-                    payload.location.longitude !== event.location.longitude;
+                    payload.location.longitude !== event.location.longitude ||
+                    payload.coverImage !== event.coverImage
 
                 if (!hasChanged) {
                     Alert.alert("No Changes", "No changes were made.");
@@ -172,18 +174,18 @@ export default function EventFormScreen({ route, navigation }) {
         }
     }
 
-    const showImagePickerOptions = () => {
+    const showImagePickerOptions = (setFieldValue, setFieldTouched) => {
         Alert.alert(
             "Cover Image",
             "Choose Cover Image for Event",
             [
                 {
                     text: "Take Photo",
-                    onPress: () => handlePickImage("camera"),
+                    onPress: () => handlePickImage("camera", setFieldValue, setFieldTouched),
                 },
                 {
                     text: "Choose From Library",
-                    onPress: () => handlePickImage("gallery"),
+                    onPress: () => handlePickImage("gallery", setFieldValue, setFieldTouched),
                 },
                 {
                     text: "Cancel",
@@ -193,12 +195,18 @@ export default function EventFormScreen({ route, navigation }) {
         );
     };
 
-    const handlePickImage = async (type) => {
-        const imageUri = await pickImage(type)
+    const handlePickImage = async (type, setFieldValue, setFieldTouched) => {
+        const uri = await pickImage(type);
+
+        if (!uri) return;
+
+        const imageUri = await uploadImage(uri);
+
         if (imageUri) {
-            setCoverImage(imageUri)
+            setFieldValue("coverImage", imageUri);
+            setFieldTouched("coverImage", true);
         }
-    }
+    };
 
     return (
         <KeyboardAvoidingView
@@ -218,28 +226,6 @@ export default function EventFormScreen({ route, navigation }) {
                     }
                 </Text>
                 <View style={[styles.card, { backgroundColor: colors.surface }]}>
-
-                    <View style={styles.avatarContainer}>
-                        <TouchableOpacity activeOpacity={0.8} onPress={showImagePickerOptions}>
-                            <Image
-                                source={{ uri: coverImage }}
-                                style={styles.avatar}
-                            />
-
-                            <View
-                                style={[
-                                    styles.cameraIcon,
-                                    { backgroundColor: colors.primary },
-                                ]}
-                            >
-                                <Ionicons
-                                    name="pencil-outline"
-                                    size={18}
-                                    color="#fff"
-                                />
-                            </View>
-                        </TouchableOpacity>
-                    </View>
 
                     <Formik
                         initialValues={mode === "edit" ? {
@@ -290,8 +276,36 @@ export default function EventFormScreen({ route, navigation }) {
                             errors,
                             touched,
                             isSubmitting,
+                            setFieldTouched
                         }) => (
                             <View>
+
+                                <View style={styles.avatarContainer}>
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => showImagePickerOptions(setFieldValue, setFieldTouched)}>
+                                        <Image
+                                            source={{ uri: values.coverImage }}
+                                            style={styles.avatar}
+                                        />
+
+                                        <View
+                                            style={[
+                                                styles.cameraIcon,
+                                                { backgroundColor: colors.primary },
+                                            ]}
+                                        >
+                                            <Ionicons
+                                                name="pencil-outline"
+                                                size={18}
+                                                color="#fff"
+                                            />
+                                        </View>
+                                    </TouchableOpacity>
+                                    {touched.coverImage && errors.coverImage && (
+                                        <Text style={{ color: colors.danger, textAlign: "center", marginTop: 8 }}>
+                                            {errors.coverImage}
+                                        </Text>
+                                    )}
+                                </View>
 
                                 <Input
                                     label="Event Title"
@@ -501,16 +515,6 @@ export default function EventFormScreen({ route, navigation }) {
                                     onBlur={handleBlur('address')}
                                     error={errors.address}
                                     touched={touched.address}
-                                />
-
-                                <Input
-                                    label="Cover Image URL"
-                                    placeholder="Enter image URL"
-                                    value={values.coverImage}
-                                    onChangeText={handleChange('coverImage')}
-                                    onBlur={handleBlur('coverImage')}
-                                    error={errors.coverImage}
-                                    touched={touched.coverImage}
                                 />
 
                                 <Input

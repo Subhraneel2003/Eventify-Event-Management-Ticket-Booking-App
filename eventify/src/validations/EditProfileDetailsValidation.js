@@ -7,5 +7,9 @@ export const profileEditValidationSchema = Yup.object({
 
     phone: Yup.string()
         .matches(/^[0-9]{10}$/, "Phone Number must be 10 digits")
-        .required("Phone number is Required")
+        .required("Phone number is Required"),
+
+    profileImage: Yup.string()
+        .url("Profile Image must be a valid URL")
+        .required("Profile Image is required")
 })
