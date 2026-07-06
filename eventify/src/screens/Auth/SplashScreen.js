@@ -7,13 +7,14 @@ import {
   clearBookingsData,
   getAuthData,
 } from '../../services/storageService';
-import { completeAuthCheck, login, logout } from '../../store/slices/authSlice';
 import { clearBookings } from '../../store/slices/bookingSlice';
 import { isTokenValid } from '../../utils/tokenManager';
+import { useAuth } from '../../hooks/useAuth';
 
 const SplashScreen = () => {
   const { colors } = useContext(ThemeContext);
   const dispatch = useDispatch();
+  const { login, logout, completeAuthCheck } = useAuth();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -23,18 +24,18 @@ const SplashScreen = () => {
         if (!token || !user || !isTokenValid(token)) {
           await clearAuthData();
           await clearBookingsData();
-          dispatch(logout());
+          logout();
           dispatch(clearBookings());
           return;
         }
 
-        dispatch(login({ user, token }));
+        login({ user, token });
       } catch (err) {
         console.error('Auth check failed:', err);
-        dispatch(logout());
+        logout();
         dispatch(clearBookings());
       } finally {
-        dispatch(completeAuthCheck());
+        completeAuthCheck();
       }
     };
 

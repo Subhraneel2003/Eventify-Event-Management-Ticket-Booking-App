@@ -17,12 +17,13 @@ import { formatDate } from '../../utils/date';
 import { formatStatus } from '../../utils/string';
 import axios from 'axios';
 import { API_BASE_URL } from '../../utils/constants';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function MyBookings({ navigation }) {
   const { colors } = useContext(ThemeContext);
   const dispatch = useDispatch();
 
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useAuth();
   const bookings = useSelector((state) => state.bookings.bookings);
   const [loading, setLoading] = useState(true);
 

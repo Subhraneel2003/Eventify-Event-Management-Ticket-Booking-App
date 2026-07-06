@@ -24,13 +24,14 @@ import {
   scheduleEventReminder,
   scheduleEventReminderDemo,
 } from '../../services/notificationService';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function BookingScreen({ navigation, route }) {
   const { eventId } = route.params;
   const { colors } = useContext(ThemeContext);
   const dispatch = useDispatch();
 
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useAuth();
   const { bookings } = useSelector((state) => state.bookings);
 
   const [event, setEvent] = useState(null);
