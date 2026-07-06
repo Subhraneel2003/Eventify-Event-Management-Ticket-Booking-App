@@ -19,7 +19,7 @@ import axios from 'axios';
 import { API_BASE_URL } from '../../utils/constants';
 import { useAuth } from '../../hooks/useAuth';
 
-export default function MyBookings({ navigation }) {
+export default function MyBookingsScreen({ navigation }) {
   const { colors } = useContext(ThemeContext);
   const dispatch = useDispatch();
 
