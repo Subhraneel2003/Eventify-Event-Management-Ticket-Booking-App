@@ -5,15 +5,25 @@ import { useDispatch } from 'react-redux';
 import {
   clearAsyncStorageData,
   getAuthData,
+  getThemePreference,
 } from '../../services/storageService';
 import { clearBookings } from '../../store/slices/bookingSlice';
 import { isTokenValid } from '../../utils/tokenManager';
 import { useAuth } from '../../hooks/useAuth';
 
 const SplashScreen = () => {
-  const { colors } = useContext(ThemeContext);
+  const { colors, setIsDark } = useContext(ThemeContext);
   const dispatch = useDispatch();
   const { login, logout, completeAuthCheck } = useAuth();
+
+  useEffect(() => {
+    async function fetchThemePreference() {
+      const theme = await getThemePreference();
+      setIsDark(theme === 'dark');
+    }
+
+    fetchThemePreference();
+  }, []);
 
   useEffect(() => {
     const checkAuth = async () => {
