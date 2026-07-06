@@ -39,12 +39,11 @@ export default function BookingDetailsScreen({ route, navigation }) {
   const [cancelling, setCancelling] = useState(false);
 
   useEffect(() => {
-    if (!bookingId) return;
-    loadBookingAndEvent();
-    const interval = setInterval(() => {
+    if (bookingId) {
       loadBookingAndEvent();
-    }, 3000);
-    return () => clearInterval(interval);
+    } else {
+      setLoading(false);
+    }
   }, [bookingId]);
 
   const loadBookingAndEvent = async () => {
