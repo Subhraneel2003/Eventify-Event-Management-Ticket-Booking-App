@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import QRCode from 'react-native-qrcode-svg';
 import MapView, { Marker } from 'react-native-maps';
 import { ThemeContext } from '../../context/ThemeContext';
@@ -22,10 +22,13 @@ import axios from 'axios';
 import { API_BASE_URL } from '../../utils/constants';
 import Button from '../../components/Button';
 import { formatDate, formatTime } from '../../utils/date';
+import { formatStatus } from '../../utils/string';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function BookingDetailsScreen({ route, navigation }) {
   const { colors } = useContext(ThemeContext);
   const dispatch = useDispatch();
+  const { user } = useAuth();
   const { bookingId } = route.params || {};
 
   const [booking, setBooking] = useState(null);
@@ -121,11 +124,26 @@ export default function BookingDetailsScreen({ route, navigation }) {
   const statusColor =
     status === 'confirmed'
       ? '#4CAF50'
-      : status === 'cancelled'
+      : status === 'cancelled' || status === 'cancelled_by_organizer'
         ? colors.danger
         : status === 'used'
           ? colors.textSecondary
           : colors.primary;
+
+  const getRefundStatusColor = (refStatus) => {
+    switch (refStatus) {
+      case 'completed':
+      case 'refunded':
+      case 'issued':
+        return '#4CAF50';
+      case 'pending':
+        return '#FF9800';
+      case 'failed':
+        return colors.danger;
+      default:
+        return colors.primary;
+    }
+  };
 
   const handleCancel = () => {
     setCancelModalVisible(true);
@@ -232,12 +250,53 @@ export default function BookingDetailsScreen({ route, navigation }) {
                   style={[styles.statusDot, { backgroundColor: statusColor }]}
                 />
                 <Text style={[styles.statusText, { color: statusColor }]}>
-                  {status
-                    ? status.charAt(0).toUpperCase() + status.slice(1)
-                    : 'N/A'}
+                  {formatStatus(status)}
                 </Text>
               </View>
             </View>
+
+            {booking.refundStatus &&
+              booking.refundStatus !== 'not_applicable' && (
+                <View style={[styles.statusRow, { marginTop: 8 }]}>
+                  <Text
+                    style={[
+                      styles.statusLabel,
+                      { color: colors.textSecondary },
+                    ]}
+                  >
+                    Refund Status:{' '}
+                  </Text>
+                  <View
+                    style={[
+                      styles.statusBadge,
+                      {
+                        backgroundColor:
+                          getRefundStatusColor(booking.refundStatus) + '20',
+                        borderColor: getRefundStatusColor(booking.refundStatus),
+                      },
+                    ]}
+                  >
+                    <View
+                      style={[
+                        styles.statusDot,
+                        {
+                          backgroundColor: getRefundStatusColor(
+                            booking.refundStatus
+                          ),
+                        },
+                      ]}
+                    />
+                    <Text
+                      style={[
+                        styles.statusText,
+                        { color: getRefundStatusColor(booking.refundStatus) },
+                      ]}
+                    >
+                      {formatStatus(booking.refundStatus)}
+                    </Text>
+                  </View>
+                </View>
+              )}
 
             <Text style={[styles.eventTitle, { color: colors.text }]}>
               {eventTitle}

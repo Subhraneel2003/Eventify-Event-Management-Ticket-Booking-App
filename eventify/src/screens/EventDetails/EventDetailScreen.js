@@ -1,8 +1,23 @@
-import { View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator, StyleSheet, Dimensions, Alert } from 'react-native'
-import MapView, { Marker } from "react-native-maps";
-import React, { useEffect, useState, useContext } from 'react'
+import {
+    View,
+    Text,
+    Image,
+    ScrollView,
+    TouchableOpacity,
+    ActivityIndicator,
+    StyleSheet,
+    Dimensions,
+    Alert,
+} from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
+import React, { useEffect, useState, useContext } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { deleteEvent, fetchEventById } from '../../api/eventService';
+import {
+    cancelEvent,
+    deleteEvent,
+    fetchEventById,
+    refundUsersForEventCancel,
+} from '../../api/eventService';
 import { ThemeContext } from '../../context/ThemeContext';
 import { useSelector } from 'react-redux';
 import Button from '../../components/Button';
@@ -11,13 +26,13 @@ import { formatDate, formatTime } from '../../utils/date';
 
 const { width } = Dimensions.get('window');
 export default function EventDetailScreen({ navigation, route }) {
-    const { eventId } = route.params
-    const { colors } = useContext(ThemeContext)
-    const [event, setEvent] = useState(null)
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
-    const { user } = useSelector(state => state.auth)
-    const [organizer, setOrganizer] = useState(null)
+    const { eventId } = route.params;
+    const { colors } = useContext(ThemeContext);
+    const [event, setEvent] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const { user } = useSelector((state) => state.auth);
+    const [organizer, setOrganizer] = useState(null);
 
     useEffect(() => {
         loadEvent();
@@ -37,7 +52,66 @@ export default function EventDetailScreen({ navigation, route }) {
         }
     };
 
-    const isOrganizer = user?.role === "organizer" && user?.id === event?.organizerId
+    const handleCancelEvent = () => {
+        Alert.alert(
+            'Cancel Event',
+            'Are you sure you want to cancel this event? This action cannot be undone.',
+            [
+                { text: 'No', style: 'cancel' },
+                {
+                    text: 'Yes, Cancel',
+                    style: 'destructive',
+                    onPress: async () => {
+                        try {
+                            setLoading(true);
+                            await cancelEvent(eventId, event.price === 0);
+                            Alert.alert('Success', 'Event has been cancelled successfully.');
+                            loadEvent();
+                        } catch (err) {
+                            Alert.alert(
+                                'Error',
+                                err.message || 'Failed to cancel the event.'
+                            );
+                        } finally {
+                            setLoading(false);
+                        }
+                    },
+                },
+            ]
+        );
+    };
+
+    const handleRefundUsers = () => {
+        Alert.alert(
+            'Refund All Users',
+            'Are you sure you want to refund all users for this cancelled event? This action will process refunds for all bookings.',
+            [
+                { text: 'No', style: 'cancel' },
+                {
+                    text: 'Yes, Refund',
+                    style: 'destructive',
+                    onPress: async () => {
+                        try {
+                            setLoading(true);
+                            await refundUsersForEventCancel(eventId);
+                            Alert.alert('Success', 'Refunds have been processed successfully.');
+                            loadEvent();
+                        } catch (err) {
+                            Alert.alert(
+                                'Error',
+                                err.message || 'Failed to process refunds.'
+                            );
+                        } finally {
+                            setLoading(false);
+                        }
+                    },
+                },
+            ]
+        );
+    };
+
+    const isOrganizer =
+        user?.role === 'organizer' && user?.id === event?.organizerId;
 
     if (loading) {
         return (
@@ -78,33 +152,6 @@ export default function EventDetailScreen({ navigation, route }) {
         return `${event.availableSeats} seats left`;
     };
 
-    // const handleDelete = async () => {
-    //     Alert.alert("Delete Event", "Are you sure you want to delete this event? This action cannot be undone.",
-    //         [
-    //             {
-    //                 text: "Cancel",
-    //                 style: "cancel"
-    //             },
-    //             {
-    //                 text: "Delete",
-    //                 style: "destructive",
-    //                 onPress: confirmDelete
-    //             }
-    //         ]
-    //     )
-    // }
-
-    // const confirmDelete = async () => {
-    //     try {
-    //         await deleteEvent(event.id)
-    //         Alert.alert("Success", "Event Deleted Successfully")
-    //         navigation.goBack()
-    //     }
-    //     catch (err) {
-    //         console.log(err.message)
-    //     }
-    // }
-
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -123,11 +170,25 @@ export default function EventDetailScreen({ navigation, route }) {
 
                 <View style={styles.content}>
                     <View style={styles.row}>
-                        <View style={[styles.badge, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-                            <Text style={{ color: colors.textSecondary, fontSize: 12 }}>{event.category}</Text>
+                        <View
+                            style={[
+                                styles.badge,
+                                { backgroundColor: colors.surface, borderColor: colors.border },
+                            ]}
+                        >
+                            <Text style={{ color: colors.textSecondary, fontSize: 12 }}>
+                                {event.category}
+                            </Text>
                         </View>
-                        <Text style={{ color: getStatusColor(), fontSize: 12, fontWeight: '500' }}>
-                            <Ionicons name="ellipse" size={8} color={getStatusColor()} /> {getStatusText()}
+                        <Text
+                            style={{
+                                color: getStatusColor(),
+                                fontSize: 12,
+                                fontWeight: '500',
+                            }}
+                        >
+                            <Ionicons name="ellipse" size={8} color={getStatusColor()} />{' '}
+                            {getStatusText()}
                         </Text>
                     </View>
 
@@ -141,35 +202,81 @@ export default function EventDetailScreen({ navigation, route }) {
                             size={16}
                             color={colors.textSecondary}
                         />
-                        <Text style={{ color: colors.textSecondary, fontSize: 13, marginLeft: 5 }}>
+                        <Text
+                            style={{
+                                color: colors.textSecondary,
+                                fontSize: 13,
+                                marginLeft: 5,
+                            }}
+                        >
                             {formatDate(event.date)}
                         </Text>
                     </View>
 
                     <View style={styles.infoRow}>
-                        <Ionicons name="time-outline" size={16} color={colors.textSecondary} />
-                        <Text style={{ color: colors.textSecondary, fontSize: 13, marginLeft: 5 }}>
+                        <Ionicons
+                            name="time-outline"
+                            size={16}
+                            color={colors.textSecondary}
+                        />
+                        <Text
+                            style={{
+                                color: colors.textSecondary,
+                                fontSize: 13,
+                                marginLeft: 5,
+                            }}
+                        >
                             {formatTime(event.time)}
                         </Text>
                     </View>
 
                     <View style={styles.infoRow}>
-                        <Ionicons name="business-outline" size={16} color={colors.textSecondary} />
-                        <Text style={{ color: colors.textSecondary, fontSize: 13, marginLeft: 5 }}>
+                        <Ionicons
+                            name="business-outline"
+                            size={16}
+                            color={colors.textSecondary}
+                        />
+                        <Text
+                            style={{
+                                color: colors.textSecondary,
+                                fontSize: 13,
+                                marginLeft: 5,
+                            }}
+                        >
                             {event.venueName}
                         </Text>
                     </View>
 
                     <View style={styles.infoRow}>
-                        <Ionicons name="person-outline" size={16} color={colors.textSecondary} />
-                        <Text style={{ color: colors.textSecondary, fontSize: 13, marginLeft: 5 }}>
+                        <Ionicons
+                            name="person-outline"
+                            size={16}
+                            color={colors.textSecondary}
+                        />
+                        <Text
+                            style={{
+                                color: colors.textSecondary,
+                                fontSize: 13,
+                                marginLeft: 5,
+                            }}
+                        >
                             {organizer?.name}
                         </Text>
                     </View>
 
                     <View style={styles.infoRow}>
-                        <Ionicons name="mail-outline" size={16} color={colors.textSecondary} />
-                        <Text style={{ color: colors.textSecondary, fontSize: 13, marginLeft: 5 }}>
+                        <Ionicons
+                            name="mail-outline"
+                            size={16}
+                            color={colors.textSecondary}
+                        />
+                        <Text
+                            style={{
+                                color: colors.textSecondary,
+                                fontSize: 13,
+                                marginLeft: 5,
+                            }}
+                        >
                             {organizer?.email}
                         </Text>
                     </View>
@@ -180,7 +287,13 @@ export default function EventDetailScreen({ navigation, route }) {
                             size={16}
                             color={colors.textSecondary}
                         />
-                        <Text style={{ color: colors.textSecondary, fontSize: 13, marginLeft: 5 }}>
+                        <Text
+                            style={{
+                                color: colors.textSecondary,
+                                fontSize: 13,
+                                marginLeft: 5,
+                            }}
+                        >
                             {event.address}
                         </Text>
                     </View>
@@ -202,7 +315,9 @@ export default function EventDetailScreen({ navigation, route }) {
 
                     <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
-                    <Text style={[styles.sectionTitle, { color: colors.text }]}>Location</Text>
+                    <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                        Location
+                    </Text>
                     <View
                         style={[
                             styles.mapPlaceholder,
@@ -233,22 +348,61 @@ export default function EventDetailScreen({ navigation, route }) {
                     </View>
 
                     {/* Total Seats, Available, Price*/}
-                    <View style={[styles.seatsRow, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+                    <View
+                        style={[
+                            styles.seatsRow,
+                            { backgroundColor: colors.surface, borderColor: colors.border },
+                        ]}
+                    >
                         <View style={{ alignItems: 'center' }}>
-                            <Text style={{ color: colors.text, fontWeight: '600', fontSize: 16 }}>{event.totalSeats}</Text>
-                            <Text style={{ color: colors.textSecondary, fontSize: 11 }}>Total Seats</Text>
+                            <Text
+                                style={{ color: colors.text, fontWeight: '600', fontSize: 16 }}
+                            >
+                                {event.totalSeats}
+                            </Text>
+                            <Text style={{ color: colors.textSecondary, fontSize: 11 }}>
+                                Total Seats
+                            </Text>
                         </View>
-                        <View style={[styles.verticalDivider, { backgroundColor: colors.border }]} />
+                        <View
+                            style={[
+                                styles.verticalDivider,
+                                { backgroundColor: colors.border },
+                            ]}
+                        />
                         <View style={{ alignItems: 'center' }}>
-                            <Text style={{ color: getStatusColor(), fontWeight: '600', fontSize: 16 }}>{event.availableSeats}</Text>
-                            <Text style={{ color: colors.textSecondary, fontSize: 11 }}>Available</Text>
+                            <Text
+                                style={{
+                                    color: getStatusColor(),
+                                    fontWeight: '600',
+                                    fontSize: 16,
+                                }}
+                            >
+                                {event.availableSeats}
+                            </Text>
+                            <Text style={{ color: colors.textSecondary, fontSize: 11 }}>
+                                Available
+                            </Text>
                         </View>
-                        <View style={[styles.verticalDivider, { backgroundColor: colors.border }]} />
+                        <View
+                            style={[
+                                styles.verticalDivider,
+                                { backgroundColor: colors.border },
+                            ]}
+                        />
                         <View style={{ alignItems: 'center' }}>
-                            <Text style={{ color: colors.primary, fontWeight: '600', fontSize: 16 }}>
+                            <Text
+                                style={{
+                                    color: colors.primary,
+                                    fontWeight: '600',
+                                    fontSize: 16,
+                                }}
+                            >
                                 {event.price === 0 ? 'Free' : `₹${event.price}`}
                             </Text>
-                            <Text style={{ color: colors.textSecondary, fontSize: 11 }}>Per Ticket</Text>
+                            <Text style={{ color: colors.textSecondary, fontSize: 11 }}>
+                                Per Ticket
+                            </Text>
                         </View>
                     </View>
 
@@ -274,46 +428,68 @@ export default function EventDetailScreen({ navigation, route }) {
                             { backgroundColor: colors.textSecondary },
                         ]}
                         onPress={() =>
-                            navigation.navigate("Reviews", {
+                            navigation.navigate('Reviews', {
                                 eventId: event.id,
                             })
                         }
                     />
                 ) : isOrganizer ? (
-                    <View style={styles.actionRow}>
-                        <Button
-                            title="Edit Event"
-                            style={[
-                                styles.actionButton,
-                                {
-                                    backgroundColor: colors.primary,
-                                    marginRight: 10,
-                                },
-                            ]}
-                            onPress={() =>
-                                navigation.navigate("Event Edit", {
-                                    mode: "edit",
-                                    eventId: event.id,
-                                })
-                            }
-                        />
+                    <View>
+                        <View style={styles.actionRow}>
+                            <Button
+                                title="Edit Event"
+                                style={[
+                                    styles.actionButton,
+                                    {
+                                        backgroundColor: isCancelled
+                                            ? colors.textSecondary
+                                            : colors.primary,
+                                        marginRight: 10,
+                                    },
+                                ]}
+                                onPress={() =>
+                                    navigation.navigate('Event Edit', {
+                                        mode: 'edit',
+                                        eventId: event.id,
+                                    })
+                                }
+                                disabled={isCancelled}
+                            />
 
-                        <Button
-                            title="Cancel Event"
-                            style={[
-                                styles.actionButton,
-                                {
-                                    backgroundColor: colors.danger,
-                                },
-                            ]}
-                        // onPress={}
-                        />
+                            <Button
+                                title="Cancel Event"
+                                style={[
+                                    styles.actionButton,
+                                    {
+                                        backgroundColor: isCancelled
+                                            ? colors.textSecondary
+                                            : colors.danger,
+                                    },
+                                ]}
+                                onPress={handleCancelEvent}
+                                disabled={isCancelled}
+                            />
+                        </View>
+                        {isCancelled && event.price > 0 && (
+                            <Button
+                                title={event.refundStatus === 'pending' ? "Refund All Users" : "Refund All Users (Processed)"}
+                                style={[
+                                    styles.bookButton,
+                                    {
+                                        backgroundColor: event.refundStatus === 'pending' ? '#FF9800' : colors.textSecondary,
+                                        marginTop: 10,
+                                    },
+                                ]}
+                                onPress={handleRefundUsers}
+                                disabled={event.refundStatus !== 'pending'}
+                            />
+                        )}
                     </View>
                 ) : (
                     <Button
                         title={
                             canBook
-                                ? `Book Now · ${event.price === 0 ? "Free" : `₹${event.price}`}`
+                                ? `Book Now · ${event.price === 0 ? 'Free' : `₹${event.price}`}`
                                 : getStatusText()
                         }
                         style={[
@@ -327,14 +503,14 @@ export default function EventDetailScreen({ navigation, route }) {
                         ]}
                         disabled={!canBook}
                         onPress={() =>
-                            navigation.navigate("Booking", {
+                            navigation.navigate('Booking', {
                                 eventId: event.id,
                             })
                         }
                     />
                 )}
             </View>
-        </View >
+        </View>
     );
 }
 
@@ -342,7 +518,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         marginBottom: 30,
-        marginTop: 30
+        marginTop: 30,
     },
     centered: {
         flex: 1,
@@ -401,7 +577,7 @@ const styles = StyleSheet.create({
     mapPlaceholder: {
         height: 200,
         borderRadius: 12,
-        overflow: "hidden",
+        overflow: 'hidden',
         borderWidth: 0.5,
         marginBottom: 16,
     },
@@ -428,7 +604,7 @@ const styles = StyleSheet.create({
     },
     actionRow: {
         flexDirection: 'row',
-        justifyContent: "space-between",
+        justifyContent: 'space-between',
         marginTop: 10,
     },
     actionButton: {

@@ -1,21 +1,34 @@
-import React, { useContext } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { useDispatch, useSelector } from "react-redux";
-import Button from "../../components/Button";
-import { ThemeContext } from "../../context/ThemeContext";
-import { logout } from "../../store/slices/authSlice";
-import { clearAuthData } from "../../services/storageService";
+import React, { useContext } from 'react';
+import {
+    View,
+    Text,
+    StyleSheet,
+    Image,
+    TouchableOpacity,
+    ScrollView,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import Button from '../../components/Button';
+import { ThemeContext } from '../../context/ThemeContext';
+import { logout } from '../../store/slices/authSlice';
+import {
+    clearAuthData,
+    clearBookingsData,
+} from '../../services/storageService';
+import { clearBookings } from '../../store/slices/bookingSlice';
 
 export default function ProfileScreen({ navigation }) {
     const { colors, toggleTheme } = useContext(ThemeContext);
     const { user } = useSelector((state) => state.auth);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const handleLogOut = async () => {
         try {
             await clearAuthData();
+            await clearBookingsData();
             dispatch(logout());
+            dispatch(clearBookings());
         } catch (err) {
             console.log(err);
         }
@@ -24,35 +37,18 @@ export default function ProfileScreen({ navigation }) {
     const InfoRow = ({ icon, label, value, colors }) => {
         return (
             <View style={styles.infoRow}>
-                <Ionicons
-                    name={icon}
-                    size={22}
-                    color={colors.primary}
-                />
+                <Ionicons name={icon} size={22} color={colors.primary} />
 
                 <View style={{ marginLeft: 14, flex: 1 }}>
-                    <Text
-                        style={[
-                            styles.label,
-                            { color: colors.textSecondary },
-                        ]}
-                    >
+                    <Text style={[styles.label, { color: colors.textSecondary }]}>
                         {label}
                     </Text>
 
-                    <Text
-                        style={[
-                            styles.value,
-                            { color: colors.text },
-                        ]}
-                    >
-                        {value}
-                    </Text>
+                    <Text style={[styles.value, { color: colors.text }]}>{value}</Text>
                 </View>
             </View>
         );
     };
-
 
     return (
         <ScrollView
@@ -69,32 +65,16 @@ export default function ProfileScreen({ navigation }) {
                     />
 
                     <View
-                        style={[
-                            styles.cameraIcon,
-                            { backgroundColor: colors.primary },
-                        ]}
+                        style={[styles.cameraIcon, { backgroundColor: colors.primary }]}
                     >
-                        <Ionicons
-                            name="camera"
-                            size={18}
-                            color="#fff"
-                        />
+                        <Ionicons name="camera" size={18} color="#fff" />
                     </View>
                 </TouchableOpacity>
 
-                <Text style={[styles.name, { color: colors.text }]}>
-                    {user?.name}
-                </Text>
+                <Text style={[styles.name, { color: colors.text }]}>{user?.name}</Text>
 
-                <View
-                    style={[
-                        styles.roleBadge,
-                        { backgroundColor: colors.primary },
-                    ]}
-                >
-                    <Text style={styles.roleText}>
-                        {user?.role?.toUpperCase()}
-                    </Text>
+                <View style={[styles.roleBadge, { backgroundColor: colors.primary }]}>
+                    <Text style={styles.roleText}>{user?.role?.toUpperCase()}</Text>
                 </View>
             </View>
 
@@ -133,21 +113,21 @@ export default function ProfileScreen({ navigation }) {
                 <Button
                     title="Edit Profile"
                     style={styles.button}
-                    onPress={() => navigation.navigate("Profile Edit")}
+                    onPress={() => navigation.navigate('Profile Edit')}
                 />
 
                 <Button
                     title="Change Email"
                     style={styles.button}
                     variant="outline"
-                    onPress={() => navigation.navigate("Profile Edit Email")}
+                    onPress={() => navigation.navigate('Profile Edit Email')}
                 />
 
                 <Button
                     title="Change Password"
                     style={styles.button}
                     variant="outline"
-                    onPress={() => navigation.navigate("Profile Edit Pass")}
+                    onPress={() => navigation.navigate('Profile Edit Pass')}
                 />
 
                 <Button
@@ -174,7 +154,7 @@ const styles = StyleSheet.create({
     },
 
     header: {
-        alignItems: "center",
+        alignItems: 'center',
         marginTop: 20,
     },
 
@@ -185,19 +165,19 @@ const styles = StyleSheet.create({
     },
 
     cameraIcon: {
-        position: "absolute",
+        position: 'absolute',
         bottom: 0,
         right: 0,
         width: 36,
         height: 36,
         borderRadius: 18,
-        justifyContent: "center",
-        alignItems: "center",
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
     name: {
         fontSize: 24,
-        fontWeight: "700",
+        fontWeight: '700',
         marginTop: 16,
     },
 
@@ -209,8 +189,8 @@ const styles = StyleSheet.create({
     },
 
     roleText: {
-        color: "#fff",
-        fontWeight: "600",
+        color: '#fff',
+        fontWeight: '600',
         fontSize: 12,
     },
 
@@ -222,8 +202,8 @@ const styles = StyleSheet.create({
     },
 
     infoRow: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
         marginBottom: 22,
     },
 
@@ -234,7 +214,7 @@ const styles = StyleSheet.create({
 
     value: {
         fontSize: 16,
-        fontWeight: "600",
+        fontWeight: '600',
     },
 
     button: {

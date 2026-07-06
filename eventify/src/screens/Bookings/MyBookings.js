@@ -14,14 +14,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ThemeContext } from '../../context/ThemeContext';
 import { setBookings } from '../../store/slices/bookingSlice';
 import { formatDate } from '../../utils/date';
+import { formatStatus } from '../../utils/string';
 import axios from 'axios';
 import { API_BASE_URL } from '../../utils/constants';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function MyBookings({ navigation }) {
   const { colors } = useContext(ThemeContext);
   const dispatch = useDispatch();
 
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useAuth();
   const bookings = useSelector((state) => state.bookings.bookings);
   const [loading, setLoading] = useState(true);
 
@@ -52,6 +54,15 @@ export default function MyBookings({ navigation }) {
   const BookingCard = ({ item }) => {
     const eventTitle = item.event?.title || 'Unknown Event';
     const eventDate = item.event?.date ? formatDate(item.event.date) : 'N/A';
+    const status = item.status;
+    const statusColor =
+      status === 'confirmed'
+        ? '#4CAF50'
+        : status === 'cancelled' || status === 'cancelled_by_organizer'
+          ? colors.danger
+          : status === 'used'
+            ? colors.textSecondary
+            : colors.primary;
 
     return (
       <TouchableOpacity
@@ -66,12 +77,30 @@ export default function MyBookings({ navigation }) {
         activeOpacity={0.7}
       >
         <View style={styles.cardContent}>
-          <Text
-            style={[styles.eventTitle, { color: colors.text }]}
-            numberOfLines={1}
-          >
-            {eventTitle}
-          </Text>
+          <View style={styles.cardHeaderRow}>
+            <Text
+              style={[styles.eventTitle, { color: colors.text }]}
+              numberOfLines={1}
+            >
+              {eventTitle}
+            </Text>
+            <View
+              style={[
+                styles.statusBadge,
+                {
+                  backgroundColor: statusColor + '15',
+                  borderColor: statusColor,
+                },
+              ]}
+            >
+              <View
+                style={[styles.statusDot, { backgroundColor: statusColor }]}
+              />
+              <Text style={[styles.statusText, { color: statusColor }]}>
+                {formatStatus(status)}
+              </Text>
+            </View>
+          </View>
 
           <Text style={[styles.detailText, { color: colors.textSecondary }]}>
             No of Tickets: {item.ticketCount}
@@ -170,10 +199,35 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
+  cardHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
   eventTitle: {
     fontSize: 17,
     fontWeight: '700',
-    marginBottom: 6,
+    flex: 1,
+    marginRight: 10,
+  },
+  statusBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: 4,
+  },
+  statusDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
+  statusText: {
+    fontSize: 11,
+    fontWeight: '600',
   },
   detailText: {
     fontSize: 13,
