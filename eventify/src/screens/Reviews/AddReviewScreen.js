@@ -12,17 +12,17 @@ import {
   Keyboard,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemeContext } from '../../context/ThemeContext';
 import { API_BASE_URL } from '../../utils/constants';
 import Button from '../../components/Button';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function AddReviewScreen({ navigation, route }) {
   const { eventId, bookingId } = route.params;
   const { colors } = useContext(ThemeContext);
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useAuth();
 
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');

@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import QRCode from 'react-native-qrcode-svg';
 import MapView, { Marker } from 'react-native-maps';
 import { ThemeContext } from '../../context/ThemeContext';
@@ -23,10 +23,12 @@ import { API_BASE_URL } from '../../utils/constants';
 import Button from '../../components/Button';
 import { formatDate, formatTime } from '../../utils/date';
 import { formatStatus } from '../../utils/string';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function BookingDetailsScreen({ route, navigation }) {
   const { colors } = useContext(ThemeContext);
   const dispatch = useDispatch();
+  const { user } = useAuth();
   const { bookingId } = route.params || {};
 
   const [booking, setBooking] = useState(null);
@@ -252,39 +254,48 @@ export default function BookingDetailsScreen({ route, navigation }) {
               </View>
             </View>
 
-            {booking.refundStatus && booking.refundStatus !== 'not_applicable' && (
-              <View style={[styles.statusRow, { marginTop: 8 }]}>
-                <Text
-                  style={[styles.statusLabel, { color: colors.textSecondary }]}
-                >
-                  Refund Status:{' '}
-                </Text>
-                <View
-                  style={[
-                    styles.statusBadge,
-                    {
-                      backgroundColor: getRefundStatusColor(booking.refundStatus) + '20',
-                      borderColor: getRefundStatusColor(booking.refundStatus),
-                    },
-                  ]}
-                >
-                  <View
-                    style={[
-                      styles.statusDot,
-                      { backgroundColor: getRefundStatusColor(booking.refundStatus) },
-                    ]}
-                  />
+            {booking.refundStatus &&
+              booking.refundStatus !== 'not_applicable' && (
+                <View style={[styles.statusRow, { marginTop: 8 }]}>
                   <Text
                     style={[
-                      styles.statusText,
-                      { color: getRefundStatusColor(booking.refundStatus) },
+                      styles.statusLabel,
+                      { color: colors.textSecondary },
                     ]}
                   >
-                    {formatStatus(booking.refundStatus)}
+                    Refund Status:{' '}
                   </Text>
+                  <View
+                    style={[
+                      styles.statusBadge,
+                      {
+                        backgroundColor:
+                          getRefundStatusColor(booking.refundStatus) + '20',
+                        borderColor: getRefundStatusColor(booking.refundStatus),
+                      },
+                    ]}
+                  >
+                    <View
+                      style={[
+                        styles.statusDot,
+                        {
+                          backgroundColor: getRefundStatusColor(
+                            booking.refundStatus
+                          ),
+                        },
+                      ]}
+                    />
+                    <Text
+                      style={[
+                        styles.statusText,
+                        { color: getRefundStatusColor(booking.refundStatus) },
+                      ]}
+                    >
+                      {formatStatus(booking.refundStatus)}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            )}
+              )}
 
             <Text style={[styles.eventTitle, { color: colors.text }]}>
               {eventTitle}

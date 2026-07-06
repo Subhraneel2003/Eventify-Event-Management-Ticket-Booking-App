@@ -9,17 +9,17 @@ import {
   Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemeContext } from '../../context/ThemeContext';
 import { API_BASE_URL } from '../../utils/constants';
 import { formatDate } from '../../utils/date';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function ReviewsScreen({ navigation, route }) {
   const { eventId } = route.params;
   const { colors } = useContext(ThemeContext);
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useAuth();
 
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -49,8 +49,8 @@ export default function ReviewsScreen({ navigation, route }) {
   const averageRating =
     reviews.length > 0
       ? (
-        reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
-      ).toFixed(1)
+          reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+        ).toFixed(1)
       : 0;
 
   const renderStars = (rating, size = 14) => {

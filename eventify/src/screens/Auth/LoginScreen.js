@@ -18,16 +18,15 @@ import { ThemeContext } from '../../context/ThemeContext';
 import axios from 'axios';
 import { API_BASE_URL } from '../../utils/constants';
 import { generateToken } from '../../utils/tokenManager';
-import { useDispatch } from 'react-redux';
-import { login } from '../../store/slices/authSlice';
 import { saveAuthData } from '../../services/storageService';
+import { useAuth } from '../../hooks/useAuth';
 
 const LoginScreen = ({ navigation }) => {
   const { colors } = useContext(ThemeContext);
   const { height } = useWindowDimensions();
   const [showPassword, setShowPassword] = useState(false);
 
-  const dispatch = useDispatch();
+  const { login } = useAuth();
 
   const initialValues = {
     email: '',
@@ -55,7 +54,7 @@ const LoginScreen = ({ navigation }) => {
       }
 
       const token = generateToken(user.id);
-      dispatch(login({ user, token }));
+      login({ user, token });
 
       // save to AsyncStorage
       await saveAuthData(user, token);
