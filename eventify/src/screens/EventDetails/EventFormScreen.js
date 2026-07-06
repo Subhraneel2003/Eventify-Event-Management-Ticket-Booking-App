@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import * as Location from "expo-location";
 import MapView, { Marker } from "react-native-maps";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useAuth } from '../../hooks/useAuth';
 
 export default function EventFormScreen({ route, navigation }) {
     const { mode, eventId } = route.params;
@@ -21,7 +22,7 @@ export default function EventFormScreen({ route, navigation }) {
     const [categoryModalVisible, setCategoryModalVisible] = useState(false);
     const [statusModalVisible, setStatusModalVisible] = useState(false)
     const event = useSelector(state => state.events.events.find(e => e.id === eventId))
-    const { user } = useSelector(state => state.auth)
+    const { user } = useAuth()
     const statusItems = ["Completed", "Upcoming", "Cancelled"]
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);

@@ -10,10 +10,11 @@ import { profileEditValidationSchema } from '../../validations/editProfileDetail
 import { ThemeContext } from '../../context/ThemeContext'
 import { Ionicons } from '@expo/vector-icons'
 import { pickImage } from '../../services/imagePickerService'
+import { useAuth } from '../../hooks/useAuth'
 
 export default function EditProfileScreen({ navigation }) {
     const { colors } = useContext(ThemeContext)
-    const { user } = useSelector(state => state.auth)
+    const { user } = useAuth()
     const dispatch = useDispatch()
     const [profileImage, setProfileImage] = useState(user?.profileImage)
 

@@ -9,10 +9,11 @@ import Button from '../../components/Button'
 import { ThemeContext } from '../../context/ThemeContext'
 import { Ionicons } from '@expo/vector-icons'
 import { editPassValidationSchema } from '../../validations/editPassValidation'
+import { useAuth } from '../../hooks/useAuth'
 
 export default function EditProfileScreen({ navigation }) {
     const { colors } = useContext(ThemeContext)
-    const { user } = useSelector(state => state.auth)
+    const { user } = useAuth()
     const dispatch = useDispatch()
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
