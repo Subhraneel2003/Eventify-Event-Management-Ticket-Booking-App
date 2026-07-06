@@ -306,7 +306,7 @@ export default function EventDetailScreen({ navigation, route }) {
                                     backgroundColor: colors.danger,
                                 },
                             ]}
-                            // onPress={}
+                        // onPress={}
                         />
                     </View>
                 ) : (

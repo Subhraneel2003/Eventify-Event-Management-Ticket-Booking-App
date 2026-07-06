@@ -62,7 +62,7 @@ export default function ProfileScreen({ navigation }) {
         >
 
             <View style={styles.header}>
-                <TouchableOpacity activeOpacity={0.8} onPress={()=>navigation.navigate("Profile Image", {imageUri: user?.profileImage})}>
+                <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate("Profile Image", { imageUri: user?.profileImage })}>
                     <Image
                         source={{ uri: user?.profileImage }}
                         style={styles.avatar}
@@ -160,7 +160,6 @@ export default function ProfileScreen({ navigation }) {
                     ]}
                     onPress={() => {
                         handleLogOut()
-                        toggleTheme()
                     }}
                 />
             </View>
