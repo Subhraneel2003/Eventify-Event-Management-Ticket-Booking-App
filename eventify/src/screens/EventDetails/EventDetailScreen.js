@@ -436,41 +436,44 @@ export default function EventDetailScreen({ navigation, route }) {
                     />
                 ) : isOrganizer ? (
                     <View>
-                        <View style={styles.actionRow}>
-                            <Button
-                                title="Edit Event"
-                                style={[
-                                    styles.actionButton,
-                                    {
-                                        backgroundColor: isCancelled
-                                            ? colors.textSecondary
-                                            : colors.primary,
-                                        marginRight: 10,
-                                    },
-                                ]}
-                                onPress={() =>
-                                    navigation.navigate('Event Edit', {
-                                        mode: 'edit',
-                                        eventId: event.id,
-                                    })
-                                }
-                                disabled={isCancelled}
-                            />
+                        {!isCancelled ? (
+                            <View style={styles.actionRow}>
+                                <Button
+                                    title="Edit Event"
+                                    style={[
+                                        styles.actionButton,
+                                        {
+                                            backgroundColor: isCancelled
+                                                ? colors.textSecondary
+                                                : colors.primary,
+                                            marginRight: 10,
+                                        },
+                                    ]}
+                                    onPress={() =>
+                                        navigation.navigate('Event Edit', {
+                                            mode: 'edit',
+                                            eventId: event.id,
+                                        })
+                                    }
+                                    disabled={isCancelled}
+                                />
 
-                            <Button
-                                title="Cancel Event"
-                                style={[
-                                    styles.actionButton,
-                                    {
-                                        backgroundColor: isCancelled
-                                            ? colors.textSecondary
-                                            : colors.danger,
-                                    },
-                                ]}
-                                onPress={handleCancelEvent}
-                                disabled={isCancelled}
-                            />
-                        </View>
+                                <Button
+                                    title="Cancel Event"
+                                    style={[
+                                        styles.actionButton,
+                                        {
+                                            backgroundColor: isCancelled
+                                                ? colors.textSecondary
+                                                : colors.danger,
+                                        },
+                                    ]}
+                                    onPress={handleCancelEvent}
+                                    disabled={isCancelled}
+                                />
+                            </View>) : null
+                        }
+
                         {isCancelled && event.price > 0 && (
                             <Button
                                 title={event.refundStatus === 'pending' ? "Refund All Users" : "Refund All Users (Processed)"}
@@ -511,7 +514,7 @@ export default function EventDetailScreen({ navigation, route }) {
                     />
                 )}
             </View>
-        </View>
+        </View >
     );
 }
 

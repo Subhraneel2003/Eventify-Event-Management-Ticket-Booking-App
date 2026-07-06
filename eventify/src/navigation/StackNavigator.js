@@ -15,11 +15,12 @@ import EditProfileScreen from '../screens/Profile/EditProfileScreen';
 import EditEmailScreen from '../screens/Profile/EditEmailScreen';
 import EditPassScreen from '../screens/Profile/EditPassScreen';
 import ImageProfileScreen from '../screens/Profile/ImageProfileScreen';
+import { useAuth } from '../hooks/useAuth';
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
-  const { token, loading } = useSelector((state) => state.auth);
+  const { token, loading } = useAuth()
   if (loading) {
     // checking in AsyncStorage for token
     return (
@@ -46,7 +47,7 @@ const StackNavigator = () => {
           <Stack.Screen name="Profile Edit" component={EditProfileScreen} />
           <Stack.Screen name="Profile Edit Email" component={EditEmailScreen} />
           <Stack.Screen name="Profile Edit Pass" component={EditPassScreen} />
-          <Stack.Screen name="Profile Image" component={ImageProfileScreen}/>
+          <Stack.Screen name="Profile Image" component={ImageProfileScreen} />
         </>
       ) : (
         <>

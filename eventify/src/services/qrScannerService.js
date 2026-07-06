@@ -8,12 +8,24 @@ export const parseQRdata = (qrData) => {
     }
 }
 
-export const validateBookingQR = (qrData, bookings) => {
+export const validateBookingQR = (qrData, bookings, currentUserId, events) => {
     const booking = bookings.find((b) =>
         b.id === qrData.bookingId && b.qrCode === qrData.qrCode)
 
+    const event = events.find(e => e.id === booking.eventId);
+
     if (!booking) {
         throw new Error("Booking Doesn't exist")
+    }
+    const today = new Date().toISOString().split("T")[0];
+    const eventDate = event.date
+
+    if (event.organizerId !== currentUserId) {
+        throw new Error("Only the event organizer can scan this ticket. You are not authorized to validate this ticket.");
+    }
+
+    if (today !== eventDate) {
+        throw new Error("This ticket is not valid today.");
     }
 
     if (booking.status === "used") {

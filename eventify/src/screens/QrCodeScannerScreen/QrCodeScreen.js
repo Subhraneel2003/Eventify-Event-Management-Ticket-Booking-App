@@ -6,12 +6,15 @@ import { markBookingAsUsed, parseQRdata, validateBookingQR } from '../../service
 import { useDispatch, useSelector } from 'react-redux';
 import { validateBooking } from '../../store/slices/bookingSlice';
 import { getAllBookings } from '../../api/bookingService';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function QrCodeScreen({ navigation }) {
     const [permission, requestPermission] = useCameraPermissions()
     const [scanned, setScanned] = useState(false)
     const dispatch = useDispatch()
     const [bookings, setBookings] = useState([]);
+    const { user } = useAuth()
+    const events = useSelector(state => state.events.events);
 
     useEffect(() => {
         loadBookings();
@@ -45,7 +48,7 @@ export default function QrCodeScreen({ navigation }) {
         setScanned(true)
         try {
             const parsedData = parseQRdata(data)
-            const booking = validateBookingQR(parsedData, bookings)
+            const booking = validateBookingQR(parsedData, bookings, user?.id, events)
             const updatedBooking = await markBookingAsUsed(booking.id)
             setBookings((prev) =>
                 prev.map((b) =>

@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, ScrollView, View, Text, StyleSheet, Platform, useWindowDimensions, Alert, TouchableOpacity, Modal } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, View, Text, StyleSheet, Platform, useWindowDimensions, Alert, TouchableOpacity, Modal, Image } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 import { Formik } from 'formik';
 import { eventEditValidation } from '../../validations/eventEditValidation';
@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import * as Location from "expo-location";
 import MapView, { Marker } from "react-native-maps";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { pickImage } from '../../services/imagePickerService'
 import { useAuth } from '../../hooks/useAuth';
 
 export default function EventFormScreen({ route, navigation }) {
@@ -24,6 +25,7 @@ export default function EventFormScreen({ route, navigation }) {
     const event = useSelector(state => state.events.events.find(e => e.id === eventId))
     const { user } = useAuth()
     const statusItems = ["Completed", "Upcoming", "Cancelled"]
+    const [coverImage, setCoverImage] = useState(event?.coverImage)
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
     const [region, setRegion] = useState({
@@ -170,6 +172,34 @@ export default function EventFormScreen({ route, navigation }) {
         }
     }
 
+    const showImagePickerOptions = () => {
+        Alert.alert(
+            "Cover Image",
+            "Choose Cover Image for Event",
+            [
+                {
+                    text: "Take Photo",
+                    onPress: () => handlePickImage("camera"),
+                },
+                {
+                    text: "Choose From Library",
+                    onPress: () => handlePickImage("gallery"),
+                },
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
+            ]
+        );
+    };
+
+    const handlePickImage = async (type) => {
+        const imageUri = await pickImage(type)
+        if (imageUri) {
+            setCoverImage(imageUri)
+        }
+    }
+
     return (
         <KeyboardAvoidingView
             style={[styles.flex, { backgroundColor: colors.background }]}
@@ -188,6 +218,29 @@ export default function EventFormScreen({ route, navigation }) {
                     }
                 </Text>
                 <View style={[styles.card, { backgroundColor: colors.surface }]}>
+
+                    <View style={styles.avatarContainer}>
+                        <TouchableOpacity activeOpacity={0.8} onPress={showImagePickerOptions}>
+                            <Image
+                                source={{ uri: coverImage }}
+                                style={styles.avatar}
+                            />
+
+                            <View
+                                style={[
+                                    styles.cameraIcon,
+                                    { backgroundColor: colors.primary },
+                                ]}
+                            >
+                                <Ionicons
+                                    name="pencil-outline"
+                                    size={18}
+                                    color="#fff"
+                                />
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+
                     <Formik
                         initialValues={mode === "edit" ? {
                             title: event.title,
@@ -568,6 +621,27 @@ const styles = StyleSheet.create({
         shadowRadius: 12,
         elevation: 4,
         marginHorizontal: 4,
+    },
+    avatarContainer: {
+        alignItems: "center",
+        marginBottom: 20,
+    },
+    avatar: {
+        width: 120,
+        height: 120,
+        borderRadius: 60,
+        borderColor: "black",
+        borderWidth: 2,
+    },
+    cameraIcon: {
+        position: "absolute",
+        bottom: 0,
+        right: 0,
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        justifyContent: "center",
+        alignItems: "center",
     },
     dropdownWrapper: {
         marginBottom: 16,
