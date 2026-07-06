@@ -67,15 +67,13 @@ export default function QrCodeScreen({ navigation }) {
             Alert.alert(
                 "Validation Failed",
                 err.message,
-                [
-                    {
-                        text: "OK",
-                        onPress: () => {
-                            setScanned(false);
-                            navigation.goBack()
-                        }
+                [{
+                    text: "OK",
+                    onPress: () => {
+                        setScanned(false);
+                        navigation.goBack()
                     }
-                ]
+                }]
             );
         }
     }
