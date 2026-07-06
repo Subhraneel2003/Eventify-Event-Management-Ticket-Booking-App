@@ -7,7 +7,7 @@ import { ThemeContext } from '../context/ThemeContext';
 import TabNavigator from './TabNavigator';
 import AboutScreen from '../screens/About/AboutScreen';
 import { useSelector } from 'react-redux';
-import QrCodeScreen from '../screens/QrCodeScannerScreen/QrCodeScreen';
+import QrCodeScreen from '../screens/QrCodeScannerScreen.js/QrCodeScreen';
 import { useAuth } from '../hooks/useAuth';
 
 
