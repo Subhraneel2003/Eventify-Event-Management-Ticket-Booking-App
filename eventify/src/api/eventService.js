@@ -76,32 +76,62 @@ export const updateEventSeats = async (id, ticketCount, status) => {
 
 export const updateEventsInfo = async (id, value) => {
   try {
-    const res = await api.patch(`/events/${id}`, value)
-    return res.data
-  }
-  catch (err) {
+    const res = await api.patch(`/events/${id}`, value);
+    return res.data;
+  } catch (err) {
     throw handleError(err, 'updateEventsInfo');
   }
-}
+};
 
 export const addEvent = async (eventData) => {
-  try{
-    const res = await api.post('/events', eventData)
-    return res.data
-  }
-  catch(err)
-  {
+  try {
+    const res = await api.post('/events', eventData);
+    return res.data;
+  } catch (err) {
     throw handleError(err, 'addEvent');
   }
-}
+};
 
-// export const deleteEvent = async (id) =>{
-//   try{
-//     const res=api.delete(`/events/${id}`)
-//     return res.data
-//   }
-//   catch(err)
-//   {
-//     throw handleError(err, 'deleteEvent')
-//   }
-// } 
+export const cancelEvent = async (eventId, isFree) => {
+  try {
+    await api.patch(`/events/${eventId}`, {
+      status: 'cancelled',
+      refundStatus: isFree ? 'not_applicable' : 'pending',
+    });
+
+    const { data: bookings } = await api.get(`/bookings?eventId=${eventId}`);
+
+    const updates = bookings
+      .filter((b) => b.status === 'confirmed')
+      .map((b) =>
+        api.patch(`/bookings/${b.id}`, {
+          status: 'cancelled_by_organizer',
+          refundStatus: b.totalAmount > 0 ? 'pending' : 'not_applicable',
+        })
+      );
+
+    await Promise.all(updates);
+  } catch (err) {
+    throw handleError(err, 'cancelEvent');
+  }
+};
+
+export const refundUsersForEventCancel = async (eventId) => {
+  try {
+    const { data: bookings } = await api.get(`/bookings?eventId=${eventId}`);
+
+    const updates = bookings
+      .filter((b) => b.status === 'cancelled_by_organizer' && b.refundStatus === 'pending')
+      .map((b) =>
+        api.patch(`/bookings/${b.id}`, {
+          refundStatus: 'issued',
+        })
+      );
+
+    await Promise.all(updates);
+
+    await api.patch(`/events/${eventId}`, { refundStatus: 'issued' });
+  } catch (err) {
+    throw handleError(err, 'refundUsersForEventCancel');
+  }
+};
