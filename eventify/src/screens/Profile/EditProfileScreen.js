@@ -11,29 +11,26 @@ import { ThemeContext } from '../../context/ThemeContext'
 import { Ionicons } from '@expo/vector-icons'
 import { pickImage } from '../../services/imagePickerService'
 import { useAuth } from '../../hooks/useAuth'
+import { uploadImage } from '../../utils/cloudinary'
 
 export default function EditProfileScreen({ navigation }) {
     const { colors } = useContext(ThemeContext)
     const { user } = useAuth()
     const dispatch = useDispatch()
-    const [profileImage, setProfileImage] = useState(user?.profileImage)
 
     const handleUpdate = async (values) => {
         const hasChanged =
             values.name !== user?.name ||
             values.phone !== user?.phone ||
-            profileImage !== user?.profileImage;
+            values.profileImage !== user?.profileImage;
 
         try {
             if (!hasChanged) {
                 Alert.alert("No Changes", "No changed were made")
                 return
             }
-            const payload = {
-                ...values,
-                profileImage
-            }
-            const updatedValue = await updateProfile(user?.id, payload)
+
+            const updatedValue = await updateProfile(user?.id, values)
             dispatch(updateUser(updatedValue))
             Alert.alert("Success", "Your Info Successfully Updated")
             navigation.goBack()
@@ -43,18 +40,18 @@ export default function EditProfileScreen({ navigation }) {
         }
     }
 
-    const showImagePickerOptions = () => {
+    const showImagePickerOptions = (setFieldValue, setFieldTouched) => {
         Alert.alert(
             "Profile Image",
             "Choose Profile Image",
             [
                 {
                     text: "Take Photo",
-                    onPress: () => handlePickImage("camera"),
+                    onPress: () => handlePickImage("camera", setFieldValue, setFieldTouched),
                 },
                 {
                     text: "Choose From Library",
-                    onPress: () => handlePickImage("gallery"),
+                    onPress: () => handlePickImage("gallery", setFieldValue, setFieldTouched),
                 },
                 {
                     text: "Cancel",
@@ -64,12 +61,16 @@ export default function EditProfileScreen({ navigation }) {
         );
     };
 
-    const handlePickImage = async (type) => {
-        const imageUri = await pickImage(type)
+    const handlePickImage = async (type, setFieldValue, setFieldTouched) => {
+        const uri = await pickImage(type);
+        if (!uri) return;
+
+        const imageUri = await uploadImage(uri);
         if (imageUri) {
-            setProfileImage(imageUri)
+            setFieldValue("profileImage", imageUri);
+            setFieldTouched("profileImage", true);
         }
-    }
+    };
 
     return (
         <KeyboardAvoidingView
@@ -92,31 +93,10 @@ export default function EditProfileScreen({ navigation }) {
 
                 <View style={[styles.card, { backgroundColor: colors.surface }]}>
 
-                    <View style={styles.avatarContainer}>
-                        <TouchableOpacity activeOpacity={0.8} onPress={showImagePickerOptions}>
-                            <Image
-                                source={{ uri: profileImage }}
-                                style={styles.avatar}
-                            />
-
-                            <View
-                                style={[
-                                    styles.cameraIcon,
-                                    { backgroundColor: colors.primary },
-                                ]}
-                            >
-                                <Ionicons
-                                    name="pencil-outline"
-                                    size={18}
-                                    color="#fff"
-                                />
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-
                     <Formik initialValues={{
                         name: user.name,
-                        phone: user.phone
+                        phone: user.phone,
+                        profileImage: user.profileImage
                     }}
                         validationSchema={profileEditValidationSchema}
                         onSubmit={handleUpdate}
@@ -130,8 +110,42 @@ export default function EditProfileScreen({ navigation }) {
                             errors,
                             touched,
                             isSubmitting,
+                            setFieldTouched
                         }) => (
                             <View>
+                                <View style={styles.avatarContainer}>
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => showImagePickerOptions(setFieldValue, setFieldTouched)}>
+                                        <Image
+                                            source={{ uri: values.profileImage }}
+                                            style={styles.avatar}
+                                        />
+
+                                        <View
+                                            style={[
+                                                styles.cameraIcon,
+                                                { backgroundColor: colors.primary },
+                                            ]}
+                                        >
+                                            <Ionicons
+                                                name="pencil-outline"
+                                                size={18}
+                                                color="#fff"
+                                            />
+                                        </View>
+                                    </TouchableOpacity>
+                                    {touched.profileImage && errors.profileImage && (
+                                        <Text
+                                            style={{
+                                                color: colors.danger,
+                                                textAlign: "center",
+                                                marginBottom: 12,
+                                            }}
+                                        >
+                                            {errors.profileImage}
+                                        </Text>
+                                    )}
+                                </View>
+
                                 <Input
                                     label="Your Name"
                                     placeholder="Enter Your Name"
