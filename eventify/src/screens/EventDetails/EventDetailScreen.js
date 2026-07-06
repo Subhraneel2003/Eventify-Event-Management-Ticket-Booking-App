@@ -23,6 +23,7 @@ import { useSelector } from 'react-redux';
 import Button from '../../components/Button';
 import { fetchUserById } from '../../api/userService';
 import { formatDate, formatTime } from '../../utils/date';
+import { useAuth } from '../../hooks/useAuth';
 
 const { width } = Dimensions.get('window');
 export default function EventDetailScreen({ navigation, route }) {
@@ -31,7 +32,7 @@ export default function EventDetailScreen({ navigation, route }) {
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { user } = useSelector((state) => state.auth);
+    const { user } = useAuth()
     const [organizer, setOrganizer] = useState(null);
 
     useEffect(() => {

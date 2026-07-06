@@ -17,10 +17,11 @@ import {
     clearBookingsData,
 } from '../../services/storageService';
 import { clearBookings } from '../../store/slices/bookingSlice';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function ProfileScreen({ navigation }) {
     const { colors, toggleTheme } = useContext(ThemeContext);
-    const { user } = useSelector((state) => state.auth);
+    const { user } = useAuth()
     const dispatch = useDispatch();
 
     const handleLogOut = async () => {

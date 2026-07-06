@@ -10,6 +10,7 @@ import { fetchCategories } from '../../api/categoryService'
 import { Ionicons } from '@expo/vector-icons';
 import { useDebounce } from '../../hooks/useDebounce'
 import Button from '../../components/Button'
+import { useAuth } from '../../hooks/useAuth'
 
 export default function EventListScreen({ navigation }) {
     const dispatch = useDispatch()
@@ -20,7 +21,7 @@ export default function EventListScreen({ navigation }) {
     const [categories, setCategories] = useState([])
     const [categoryModalVisible, setCategoryModalVisible] = useState(false)
     const debouncedSearch = useDebounce(search, 500)
-    const { user } = useSelector(state => state.auth)
+    const { user } = useAuth()
     const categoryItems = [{ id: 'ALL', name: 'ALL' }, ...categories]
 
     useEffect(() => {

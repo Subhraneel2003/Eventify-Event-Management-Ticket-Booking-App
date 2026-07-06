@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import {View, Text, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity, Alert,} from "react-native";
+import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity, Alert, } from "react-native";
 import { Formik } from "formik";
 import { Ionicons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,10 +10,11 @@ import { ThemeContext } from "../../context/ThemeContext";
 import { updateProfile } from "../../api/userService";
 import { updateUser } from "../../store/slices/authSlice";
 import { emailEditValidationSchema } from "../../validations/editEmailValidation";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function EditEmailScreen({ navigation }) {
   const { colors } = useContext(ThemeContext);
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useAuth()
   const dispatch = useDispatch();
 
   const handleUpdateEmail = async (values) => {

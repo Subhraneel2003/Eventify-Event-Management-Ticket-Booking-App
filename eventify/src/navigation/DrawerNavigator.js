@@ -8,12 +8,13 @@ import TabNavigator from './TabNavigator';
 import AboutScreen from '../screens/About/AboutScreen';
 import { useSelector } from 'react-redux';
 import QrCodeScreen from '../screens/QrCodeScannerScreen/QrCodeScreen';
+import { useAuth } from '../hooks/useAuth';
 
 
 const Drawer = createDrawerNavigator()
 export default function DrawerNavigator() {
     const { colors } = useContext(ThemeContext)
-    const { user } = useSelector(state => state.auth)
+    const { user } = useAuth()
     return (
         <Drawer.Navigator screenOptions={{
             drawerStyle: { backgroundColor: colors.surface },
