@@ -3,8 +3,7 @@ import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { ThemeContext } from '../../context/ThemeContext';
 import { useDispatch } from 'react-redux';
 import {
-  clearAuthData,
-  clearBookingsData,
+  clearAsyncStorageData,
   getAuthData,
 } from '../../services/storageService';
 import { clearBookings } from '../../store/slices/bookingSlice';
@@ -22,8 +21,7 @@ const SplashScreen = () => {
         const { token, user } = await getAuthData();
 
         if (!token || !user || !isTokenValid(token)) {
-          await clearAuthData();
-          await clearBookingsData();
+          await clearAsyncStorageData();
           logout();
           dispatch(clearBookings());
           return;
@@ -32,6 +30,7 @@ const SplashScreen = () => {
         login({ user, token });
       } catch (err) {
         console.error('Auth check failed:', err);
+        await clearAsyncStorageData();
         logout();
         dispatch(clearBookings());
       } finally {
