@@ -12,24 +12,24 @@ import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../components/Button';
 import { ThemeContext } from '../../context/ThemeContext';
 import { logout } from '../../store/slices/authSlice';
-import {
-    clearAuthData,
-    clearBookingsData,
-} from '../../services/storageService';
+import { clearAsyncStorageData } from '../../services/storageService';
 import { clearBookings } from '../../store/slices/bookingSlice';
 import { useAuth } from '../../hooks/useAuth';
 
 export default function ProfileScreen({ navigation }) {
-    const { colors, toggleTheme } = useContext(ThemeContext);
-    const { user } = useAuth()
+    const { colors, toggleTheme, isDark } = useContext(ThemeContext);
+    const { user } = useAuth();
     const dispatch = useDispatch();
 
     const handleLogOut = async () => {
         try {
-            await clearAuthData();
-            await clearBookingsData();
+            await clearAsyncStorageData();
             dispatch(logout());
             dispatch(clearBookings());
+
+            if (isDark) {
+                toggleTheme();
+            }
         } catch (err) {
             console.log(err);
         }
@@ -57,13 +57,16 @@ export default function ProfileScreen({ navigation }) {
             contentContainerStyle={{ paddingBottom: 40 }}
             showsVerticalScrollIndicator={false}
         >
-
             <View style={styles.header}>
-                <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate("Profile Image", { imageUri: user?.profileImage })}>
-                    <Image
-                        source={{ uri: user?.profileImage }}
-                        style={styles.avatar}
-                    />
+                <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() =>
+                        navigation.navigate('Profile Image', {
+                            imageUri: user?.profileImage,
+                        })
+                    }
+                >
+                    <Image source={{ uri: user?.profileImage }} style={styles.avatar} />
 
                     <View
                         style={[styles.cameraIcon, { backgroundColor: colors.primary }]}
@@ -140,7 +143,7 @@ export default function ProfileScreen({ navigation }) {
                         },
                     ]}
                     onPress={() => {
-                        handleLogOut()
+                        handleLogOut();
                     }}
                 />
             </View>
