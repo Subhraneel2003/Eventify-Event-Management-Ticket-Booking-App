@@ -115,21 +115,17 @@ export default function EventListScreen({ navigation }) {
         );
     }
 
-    const isOrganizer = user?.role === "organizer" && user?.id === event?.organizerId
-    const isOrganizerAddNewEvent = user?.role === "organizer"
+    const isOrganizer = user?.role === "organizer"
+    const isAdmin = user?.role === "admin"
+
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
             <View style={styles.header}>
                 <Text style={[styles.greeting, { color: colors.textSecondary }]}>
                     Welcome back,
                 </Text>
-
                 <Text style={[styles.userName, { color: colors.text }]}>
-                    {user?.name} <Ionicons
-                        name="happy-outline"
-                        size={30}
-                        color={colors.text}
-                    />
+                    {user?.name}
                 </Text>
             </View>
 
@@ -175,17 +171,35 @@ export default function EventListScreen({ navigation }) {
 
             <FlatList data={filteredEvents} keyExtractor={(item) => item.id.toString()}
                 ListHeaderComponent={
-                    isOrganizerAddNewEvent ? (
-                        <Button
-                            title="Add New Event"
-                            onPress={() =>
-                                navigation.navigate("Event Edit", {
-                                    mode: "create",
-                                })
-                            }
-                            style={{ marginBottom: 15 }}
-                        />
-                    ) : null
+                    <>
+                        {isAdmin && (
+                            <View style={styles.adminRow}>
+                                <Button
+                                    title="Event Dashboard"
+                                    onPress={() => navigation.navigate("Admin Dashboard")}
+                                    style={{ flex: 1, marginRight: 8 }}
+                                />
+
+                                <Button
+                                    title="Categories"
+                                    onPress={() => navigation.navigate("Admin Categories")}
+                                    style={{ flex: 1 }}
+                                />
+                            </View>
+                        )}
+
+                        {(isOrganizer || isAdmin) && (
+                            <Button
+                                title="Add New Event"
+                                onPress={() =>
+                                    navigation.navigate("Event Edit", {
+                                        mode: "create",
+                                    })
+                                }
+                                style={{ marginBottom: 15 }}
+                            />
+                        )}
+                    </>
                 }
                 renderItem={({ item }) => (
                     <EventCard event={item} onPress={() => navigation.navigate("Event Details", { eventId: item.id })} />
@@ -212,6 +226,11 @@ const styles = StyleSheet.create({
     greeting: {
         fontSize: 16,
         fontWeight: "500",
+    },
+
+    adminRow: {
+        flexDirection: "row",
+        marginBottom: 10,
     },
 
     userName: {

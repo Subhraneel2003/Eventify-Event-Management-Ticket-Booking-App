@@ -16,6 +16,9 @@ import EditEmailScreen from '../screens/Profile/EditEmailScreen';
 import EditPassScreen from '../screens/Profile/EditPassScreen';
 import ImageProfileScreen from '../screens/Profile/ImageProfileScreen';
 import { useAuth } from '../hooks/useAuth';
+import AdminScreen from '../screens/Admin/AdminScreen';
+import AdminDashboardScreen from '../screens/Admin/AdminDashboardScreen';
+import AdminCategoryScreen from '../screens/Admin/AdminCategoryScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -48,6 +51,9 @@ const StackNavigator = () => {
           <Stack.Screen name="Profile Edit Email" component={EditEmailScreen} />
           <Stack.Screen name="Profile Edit Pass" component={EditPassScreen} />
           <Stack.Screen name="Profile Image" component={ImageProfileScreen} />
+          <Stack.Screen name="Admin View" component={AdminScreen} />
+          <Stack.Screen name="Admin Dashboard" component={AdminDashboardScreen} />
+          <Stack.Screen name="Admin Categories" component={AdminCategoryScreen} />
         </>
       ) : (
         <>

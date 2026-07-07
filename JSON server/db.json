@@ -82,7 +82,7 @@
     },
     {
       "id": "9",
-      "name": "Admin User",
+      "name": "Hari Prasad Mukherjee ",
       "email": "admin@eventify.com",
       "password": "Admin@123",
       "role": "admin",
@@ -335,28 +335,6 @@
       "totalSeats": 2000,
       "availableSeats": 0,
       "createdAt": "2026-05-20T08:00:00.000Z"
-    },
-    {
-      "title": "Total Mess",
-      "description": "jsidjfndjiridissnsjsjdjdj",
-      "category": "Technology",
-      "status": "cancelled",
-      "date": "2026-07-07",
-      "time": "17:46",
-      "venueName": "Eden gardens ",
-      "address": "Eden gardens kolkata ",
-      "coverImage": "https://res.cloudinary.com/bkdv5fye/image/upload/v1783340922/rvkm0hvr9zsjrkcpyvr5.jpg",
-      "price": 2000,
-      "totalSeats": 200,
-      "availableSeats": 150,
-      "location": {
-        "latitude": 22.5645788,
-        "longitude": 88.34331480000002
-      },
-      "organizerId": "3",
-      "createdAt": "2026-07-06T12:19:19.158Z",
-      "id": "3pIqojA",
-      "refundStatus": "issued"
     }
   ],
   "bookings": [

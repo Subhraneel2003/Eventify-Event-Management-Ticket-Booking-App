@@ -20,3 +20,17 @@ export const getAllBookings = async () => {
         throw handleError(err, 'getAllBookings')
     }
 }
+
+export const fetchBookingsByEventId = async (eventId) => {
+    try {
+        const res = await api.get("/bookings", {
+            params: {
+                eventId,
+            }
+        })
+        return res.data
+    }
+    catch (err) {
+        throw handleError(err, 'fetchBookingsByEventId')
+    }
+}
