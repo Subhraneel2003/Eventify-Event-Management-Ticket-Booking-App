@@ -9,10 +9,9 @@ import {
   Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import axios from 'axios';
+import api from '../../api/apiClient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemeContext } from '../../context/ThemeContext';
-import { API_BASE_URL } from '../../utils/constants';
 import { formatDate } from '../../utils/date';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -31,8 +30,8 @@ export default function ReviewsScreen({ navigation, route }) {
         setLoading(true);
         setError(null);
 
-        const reviewsRes = await axios.get(
-          `${API_BASE_URL}/reviews?eventId=${eventId}&_sort=createdAt&_order=desc&_expand=user`
+        const reviewsRes = await api.get(
+          `/reviews?eventId=${eventId}&_sort=createdAt&_order=desc&_expand=user`
         );
 
         setReviews(reviewsRes.data);

@@ -15,8 +15,7 @@ import { ThemeContext } from '../../context/ThemeContext';
 import { setBookings } from '../../store/slices/bookingSlice';
 import { formatDate } from '../../utils/date';
 import { formatStatus } from '../../utils/string';
-import axios from 'axios';
-import { API_BASE_URL } from '../../utils/constants';
+import api from '../../api/apiClient';
 import { useAuth } from '../../hooks/useAuth';
 
 export default function MyBookingsScreen({ navigation }) {
@@ -30,8 +29,8 @@ export default function MyBookingsScreen({ navigation }) {
   const fetchBookings = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `${API_BASE_URL}/bookings?userId=${user.id}&_expand=event&_sort=bookingDate&_order=desc`
+      const response = await api.get(
+        `/bookings?userId=${user.id}&_expand=event&_sort=bookingDate&_order=desc`
       );
       dispatch(setBookings(response.data));
     } catch (error) {

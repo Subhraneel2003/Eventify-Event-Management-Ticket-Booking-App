@@ -15,8 +15,7 @@ import { loginValidationSchema } from '../../validations/loginValidation';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { ThemeContext } from '../../context/ThemeContext';
-import axios from 'axios';
-import { API_BASE_URL } from '../../utils/constants';
+import api from '../../api/apiClient';
 import { generateToken } from '../../utils/tokenManager';
 import { saveAuthData } from '../../services/storageService';
 import { useAuth } from '../../hooks/useAuth';
@@ -36,7 +35,7 @@ const LoginScreen = ({ navigation }) => {
   const handleLogin = async (values, { setSubmitting }) => {
     try {
       const email = values.email.trim().toLowerCase();
-      const response = await axios.get(`${API_BASE_URL}/users`, {
+      const response = await api.get('/users', {
         params: { email },
       });
       const user = response.data[0];

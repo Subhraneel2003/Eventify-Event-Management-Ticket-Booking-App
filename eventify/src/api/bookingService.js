@@ -1,9 +1,5 @@
-import axios from "axios"
-import { API_BASE_URL } from "../utils/constants"
-
-const api = axios.create({
-    baseURL: API_BASE_URL
-})
+import api from './apiClient';
+import { handleError } from '../errorHandling/handleError';
 
 export const updateBookingStatus = async (id, status) => {
     try {
