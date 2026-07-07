@@ -114,6 +114,8 @@ export default function EventDetailScreen({ navigation, route }) {
     const isOrganizer =
         user?.role === 'organizer' && user?.id === event?.organizerId;
 
+    const isAdmin = user?.role === 'admin'
+
     if (loading) {
         return (
             <View style={[styles.centered, { backgroundColor: colors.background }]}>
@@ -408,7 +410,7 @@ export default function EventDetailScreen({ navigation, route }) {
                     </View>
 
                     {/* Bottom padding for sticky button */}
-                    <View style={{ height: 100 }} />
+                    <View style={{ height: isAdmin ? 150 : 100 }} />
                 </View>
             </ScrollView>
 
@@ -421,12 +423,28 @@ export default function EventDetailScreen({ navigation, route }) {
                     },
                 ]}
             >
+                {isAdmin && (
+                    <Button
+                        title="View Users"
+                        style={[
+                            styles.bookButton,
+                            { backgroundColor: colors.textSecondary },
+                        ]}
+                        onPress={() =>
+                            navigation.navigate('Admin View', {
+                                eventId: event.id,
+                                eventTitle: event.title
+                            })
+                        }
+                    />
+                )}
+
                 {isCompleted ? (
                     <Button
                         title="Check Reviews"
                         style={[
                             styles.bookButton,
-                            { backgroundColor: colors.textSecondary },
+                            { backgroundColor: colors.textSecondary, marginTop: 10 },
                         ]}
                         onPress={() =>
                             navigation.navigate('Reviews', {
@@ -434,7 +452,7 @@ export default function EventDetailScreen({ navigation, route }) {
                             })
                         }
                     />
-                ) : isOrganizer ? (
+                ) : (isOrganizer || isAdmin) ? (
                     <View>
                         {!isCancelled ? (
                             <View style={styles.actionRow}>

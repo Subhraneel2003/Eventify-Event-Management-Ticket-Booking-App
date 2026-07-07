@@ -10,5 +10,13 @@ export const fetchCategories = async () => {
         throw handleError(err, 'fetchCategories');
 
     }
-
 }
+
+export const createCategory = async (category) => {
+    try {
+        const res = await api.post("/categories", category);
+        return res.data;
+    } catch (err) {
+        throw handleError(err, "createCategory");
+    }
+};
