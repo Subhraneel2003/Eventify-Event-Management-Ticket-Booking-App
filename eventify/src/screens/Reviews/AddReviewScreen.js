@@ -12,10 +12,9 @@ import {
   Keyboard,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import axios from 'axios';
+import api from '../../api/apiClient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemeContext } from '../../context/ThemeContext';
-import { API_BASE_URL } from '../../utils/constants';
 import Button from '../../components/Button';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -50,7 +49,7 @@ export default function AddReviewScreen({ navigation, route }) {
         createdAt: new Date().toISOString(),
       };
 
-      await axios.post(`${API_BASE_URL}/reviews`, newReview);
+      await api.post('/reviews', newReview);
 
       Alert.alert('Success', 'Thank you! Your review has been submitted.', [
         {
