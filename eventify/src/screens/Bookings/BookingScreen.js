@@ -14,9 +14,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchEventById, updateEventSeats } from '../../api/eventService';
 import { ThemeContext } from '../../context/ThemeContext';
 import { addBooking } from '../../store/slices/bookingSlice';
-import axios from 'axios';
+import api from '../../api/apiClient';
 import * as Crypto from 'expo-crypto';
-import { API_BASE_URL } from '../../utils/constants';
 import { saveBookings } from '../../services/storageService';
 import { formatDate, formatTime } from '../../utils/date';
 import {
@@ -105,11 +104,11 @@ export default function BookingScreen({ navigation, route }) {
         qrCode: '',
       };
 
-      const response = await axios.post(`${API_BASE_URL}/bookings`, booking);
+      const response = await api.post('/bookings', booking);
       const createdBooking = response.data;
 
-      const updatedBooking = await axios.patch(
-        `${API_BASE_URL}/bookings/${createdBooking.id}`,
+      const updatedBooking = await api.patch(
+        `/bookings/${createdBooking.id}`,
         {
           qrCode: Crypto.randomUUID(),
         }

@@ -18,8 +18,7 @@ import { ThemeContext } from '../../context/ThemeContext';
 import { cancelBooking } from '../../store/slices/bookingSlice';
 import { fetchEventById, updateEventSeats } from '../../api/eventService';
 import { getQRData } from '../../utils/qrManager';
-import axios from 'axios';
-import { API_BASE_URL } from '../../utils/constants';
+import api from '../../api/apiClient';
 import Button from '../../components/Button';
 import { formatDate, formatTime } from '../../utils/date';
 import { formatStatus } from '../../utils/string';
@@ -50,7 +49,7 @@ export default function BookingDetailsScreen({ route, navigation }) {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get(`${API_BASE_URL}/bookings/${bookingId}`);
+      const response = await api.get(`/bookings/${bookingId}`);
       const bookingData = response.data;
       setBooking(bookingData);
 
@@ -151,7 +150,7 @@ export default function BookingDetailsScreen({ route, navigation }) {
   const confirmCancel = async () => {
     try {
       setCancelling(true);
-      await axios.patch(`${API_BASE_URL}/bookings/${id}`, {
+      await api.patch(`/bookings/${id}`, {
         status: 'cancelled',
       });
 

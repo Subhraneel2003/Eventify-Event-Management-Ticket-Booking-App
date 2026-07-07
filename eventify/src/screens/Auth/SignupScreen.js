@@ -16,8 +16,7 @@ import { signupValidationSchema } from '../../validations/signupValidation';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { ThemeContext } from '../../context/ThemeContext';
-import axios from 'axios';
-import { API_BASE_URL } from '../../utils/constants';
+import api from '../../api/apiClient';
 
 const SignupScreen = ({ navigation }) => {
   const { colors } = useContext(ThemeContext);
@@ -35,7 +34,7 @@ const SignupScreen = ({ navigation }) => {
   const handleSignup = async (values, { setSubmitting }) => {
     try {
       const email = values.email.trim().toLowerCase();
-      const existingUser = await axios.get(`${API_BASE_URL}/users`, {
+      const existingUser = await api.get('/users', {
         params: { email },
       });
 
@@ -55,7 +54,7 @@ const SignupScreen = ({ navigation }) => {
         createdAt: new Date().toISOString(),
       };
 
-      await axios.post(`${API_BASE_URL}/users`, user);
+      await api.post('/users', user);
       navigation.navigate('Login');
     } catch (error) {
       Alert.alert(
