@@ -61,7 +61,7 @@ export default function SettingsScreen({ navigation }) {
             </Text>
           </View>
 
-          <Switch value={isEnabled} onValueChange={handleToggleSwitch} />
+          <Switch testID="theme-switch" value={isEnabled} onValueChange={handleToggleSwitch} />
         </View>
       </View>
 

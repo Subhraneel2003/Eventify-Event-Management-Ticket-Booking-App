@@ -8,7 +8,7 @@ import TabNavigator from './TabNavigator';
 import AboutScreen from '../screens/About/AboutScreen';
 import { useSelector } from 'react-redux';
 import { useAuth } from '../hooks/useAuth';
-import QrCodeScreen from '../screens/QrCodeScannerScreen/QrCodeScreen';
+import QrCodeScreen from '../screens/QrCodeScanner/QrCodeScreen';
 
 
 const Drawer = createDrawerNavigator()

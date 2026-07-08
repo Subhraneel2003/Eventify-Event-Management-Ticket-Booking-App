@@ -7,6 +7,7 @@ export default function ProfileImageScreen({ route, navigation }) {
     return (
         <View style={styles.container}>
             <TouchableOpacity
+                testID="close-button"
                 style={styles.close}
                 onPress={() => navigation.goBack()}
             >
@@ -14,6 +15,7 @@ export default function ProfileImageScreen({ route, navigation }) {
             </TouchableOpacity>
 
             <Image
+                testID="profile-image"
                 source={{ uri: imageUri }}
                 style={styles.image}
                 resizeMode="contain"
