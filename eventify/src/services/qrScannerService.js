@@ -12,11 +12,16 @@ export const validateBookingQR = (qrData, bookings, currentUserId, events) => {
     const booking = bookings.find((b) =>
         b.id === qrData.bookingId && b.qrCode === qrData.qrCode)
 
-    const event = events.find(e => e.id === booking.eventId);
-
     if (!booking) {
         throw new Error("Booking Doesn't exist")
     }
+
+    const event = events.find((e) => e.id === booking.eventId);
+
+    if (!event) {
+        throw new Error("Event not found")
+    }
+
     const today = new Date().toISOString().split("T")[0];
     const eventDate = event.date
 

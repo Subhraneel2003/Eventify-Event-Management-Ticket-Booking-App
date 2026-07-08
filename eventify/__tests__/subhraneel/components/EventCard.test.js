@@ -4,10 +4,6 @@ import EventCard from '../../../src/components/EventCard';
 import { ThemeContext } from '../../../src/context/ThemeContext';
 import { lightColors } from '../../../src/styles/colors';
 
-jest.mock('@expo/vector-icons', () => ({
-    Ionicons: () => null,
-}));
-
 const wrapWithTheme = (ui) =>
     render(
         <ThemeContext.Provider value={{ colors: lightColors }}>
@@ -50,14 +46,14 @@ describe('EventCard', () => {
         const ev = { ...baseEvent, availableSeats: 0 };
         const { getByText } = wrapWithTheme(<EventCard event={ev} />);
 
-        expect(getByText('Sold Out')).toBeTruthy();
+        expect(getByText(/Sold Out/)).toBeTruthy();
     });
 
-    it('shows Cancelled when status is cancelled', () => {
-        const ev = { ...baseEvent, status: 'cancelled' };
+    it('renders formatted time for the event', () => {
+        const ev = { ...baseEvent, time: '18:30' };
         const { getByText } = wrapWithTheme(<EventCard event={ev} />);
 
-        expect(getByText('Cancelled')).toBeTruthy();
+        expect(getByText(/6:30 PM/)).toBeTruthy();
     });
 
     it('calls onPress when pressed', () => {

@@ -140,6 +140,7 @@ export default function EventBookingsScreen({ route, navigation }) {
                 resizeMode="cover"
             />
             <TouchableOpacity
+                testID="admin-back-button"
                 style={styles.backButton}
                 onPress={() => navigation.goBack()}
             >
