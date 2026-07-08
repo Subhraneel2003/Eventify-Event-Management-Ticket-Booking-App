@@ -31,7 +31,6 @@ export default function BookingDetailsScreen({ route, navigation }) {
   const { bookingId } = route.params || {};
 
   const [booking, setBooking] = useState(null);
-  const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [cancelModalVisible, setCancelModalVisible] = useState(false);
@@ -39,24 +38,19 @@ export default function BookingDetailsScreen({ route, navigation }) {
 
   useEffect(() => {
     if (bookingId) {
-      loadBookingAndEvent();
+      loadBooking();
     } else {
       setLoading(false);
     }
   }, [bookingId]);
 
-  const loadBookingAndEvent = async () => {
+  const loadBooking = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get(`/bookings/${bookingId}`);
+      const response = await api.get(`/bookings/${bookingId}?_expand=event`);
       const bookingData = response.data;
       setBooking(bookingData);
-
-      if (bookingData?.eventId) {
-        const eventData = await fetchEventById(bookingData.eventId);
-        setEvent(eventData);
-      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -78,7 +72,7 @@ export default function BookingDetailsScreen({ route, navigation }) {
         <Text style={{ color: colors.danger, fontSize: 14 }}>
           Something went wrong: {error}
         </Text>
-        <TouchableOpacity onPress={loadBookingAndEvent}>
+        <TouchableOpacity onPress={loadBooking}>
           <Text style={{ color: colors.primary, marginTop: 10 }}>Retry</Text>
         </TouchableOpacity>
       </View>
@@ -111,13 +105,13 @@ export default function BookingDetailsScreen({ route, navigation }) {
 
   const qrData = getQRData(id, eventId, userId, qrCode);
 
-  const eventTitle = event?.title || 'Unknown Event';
-  const venueName = event?.venueName || 'N/A';
-  const date = event?.date || 'N/A';
-  const time = event?.time || 'N/A';
-  const price = event?.price ?? 0;
-  const venueLatitude = event?.location?.latitude;
-  const venueLongitude = event?.location?.longitude;
+  const eventTitle = booking.event?.title || 'Unknown Event';
+  const venueName = booking.event?.venueName || 'N/A';
+  const date = booking.event?.date || 'N/A';
+  const time = booking.event?.time || 'N/A';
+  const price = booking.event?.price ?? 0;
+  const venueLatitude = booking.event?.location?.latitude;
+  const venueLongitude = booking.event?.location?.longitude;
 
   const statusColor =
     status === 'confirmed'
