@@ -24,26 +24,26 @@ export default function ReviewsScreen({ navigation, route }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+  const fetchReviews = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-        const reviewsRes = await api.get(
-          `/reviews?eventId=${eventId}&_sort=createdAt&_order=desc&_expand=user`
-        );
+      const reviewsRes = await api.get(
+        `/reviews?eventId=${eventId}&_sort=createdAt&_order=desc&_expand=user`
+      );
 
-        setReviews(reviewsRes.data);
-      } catch (err) {
-        setError(err.message || 'Failed to load reviews.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchReviews();
+      setReviews(reviewsRes.data);
+    } catch (err) {
+      setError(err.message || 'Failed to load reviews.');
+    } finally {
+      setLoading(false);
+    }
   }, [eventId]);
+
+  useEffect(() => {
+    fetchReviews();
+  }, [fetchReviews]);
 
   const averageRating =
     reviews.length > 0
