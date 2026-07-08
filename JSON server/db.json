@@ -144,7 +144,7 @@
       "coverImage": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f",
       "price": 2499,
       "totalSeats": 5000,
-      "availableSeats": 1230,
+      "availableSeats": 1229,
       "createdAt": "2026-03-01T10:00:00.000Z"
     },
     {
@@ -165,7 +165,7 @@
       "coverImage": "https://images.unsplash.com/photo-1511578314322-379afb476865",
       "price": 4999,
       "totalSeats": 1200,
-      "availableSeats": 340,
+      "availableSeats": 339,
       "createdAt": "2026-02-15T08:00:00.000Z"
     },
     {
@@ -489,6 +489,26 @@
       "status": "cancelled",
       "qrCode": "cb1b1928-7304-4aa0-8106-9bddd2eb831b",
       "id": "eW4KIYK"
+    },
+    {
+      "userId": "1",
+      "eventId": "1",
+      "ticketCount": 1,
+      "totalAmount": 2499,
+      "bookingDate": "2026-07-08T10:05:58.041Z",
+      "status": "confirmed",
+      "qrCode": "36f74712-8143-40de-89b6-53f7f9cf543c",
+      "id": "fFka5r5"
+    },
+    {
+      "userId": "3",
+      "eventId": "2",
+      "ticketCount": 1,
+      "totalAmount": 4999,
+      "bookingDate": "2026-07-08T10:06:57.880Z",
+      "status": "confirmed",
+      "qrCode": "4d065f92-74aa-4c3d-b085-4d1e423434a1",
+      "id": "x9Vly_n"
     }
   ],
   "reviews": [
