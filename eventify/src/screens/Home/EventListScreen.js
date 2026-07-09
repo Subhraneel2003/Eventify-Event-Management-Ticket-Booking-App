@@ -20,7 +20,7 @@ export default function EventListScreen({ navigation }) {
     const [category, setCategory] = useState("ALL")
     const [categories, setCategories] = useState([])
     const [categoryModalVisible, setCategoryModalVisible] = useState(false)
-    const debouncedSearch = useDebounce(search, 500)
+    const debouncedSearch = useDebounce(search, 700)
     const { user } = useAuth()
     const categoryItems = useMemo(
         () => [{ id: "ALL", name: "ALL" }, ...categories],
