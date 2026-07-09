@@ -40,7 +40,7 @@ Make sure you have the following installed:
 1. Clone the repository
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Subhraneel2003/Eventify-Event-Management-Ticket-Booking-App.git
 cd Eventify-Event-Management-Ticket-Booking-App
 ```
 
