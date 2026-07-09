@@ -67,7 +67,8 @@ jest.spyOn(Alert, 'alert');
 
 const mockGoBack = jest.fn();
 const mockNavigate = jest.fn();
-const navigation = { goBack: mockGoBack, navigate: mockNavigate };
+const mockReplace = jest.fn();
+const navigation = { goBack: mockGoBack, navigate: mockNavigate, replace: mockReplace };
 
 const mockEvent = {
   id: 'e1',
@@ -216,7 +217,7 @@ describe('BookingScreen', () => {
           status: 'confirmed',
         })
       );
-      expect(mockNavigate).toHaveBeenCalledWith('BookingDetails', {
+      expect(mockReplace).toHaveBeenCalledWith('BookingDetails', {
         bookingId: 'b1',
       });
     });

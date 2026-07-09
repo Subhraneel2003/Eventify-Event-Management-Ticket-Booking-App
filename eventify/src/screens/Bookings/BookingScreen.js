@@ -135,7 +135,7 @@ export default function BookingScreen({ navigation, route }) {
         console.log('Error scheduling event reminder notification:', err);
       }
 
-      navigation.navigate('BookingDetails', {
+      navigation.replace('BookingDetails', {
         bookingId: createdBooking.id,
       });
     } catch (error) {
