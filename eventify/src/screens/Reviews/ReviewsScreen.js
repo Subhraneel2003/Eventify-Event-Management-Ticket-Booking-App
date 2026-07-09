@@ -1,4 +1,11 @@
-import React, { useContext, useEffect, useState, useCallback, useMemo, memo } from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  memo,
+} from 'react';
 import {
   View,
   Text,
@@ -54,35 +61,19 @@ export default function ReviewsScreen({ navigation, route }) {
     () =>
       reviews.length > 0
         ? (
-          reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
-        ).toFixed(1)
+            reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+          ).toFixed(1)
         : 0,
     [reviews]
   );
 
-  const handleGoBack = useCallback(() => navigation.goBack(), [navigation]);
+  const handleGoBack = () => navigation.goBack();
 
   const renderItem = useCallback(
     ({ item }) => (
       <ReviewCard item={item} colors={colors} currentUserId={user?.id} />
     ),
     [colors, user?.id]
-  );
-
-  const keyExtractor = useCallback(
-    (item) => item.id.toString(),
-    []
-  );
-
-  const listHeader = useMemo(
-    () => (
-      <SummaryHeader
-        averageRating={averageRating}
-        reviewCount={reviews.length}
-        colors={colors}
-      />
-    ),
-    [averageRating, reviews.length, colors]
   );
 
   const renderBody = () => {
@@ -102,9 +93,7 @@ export default function ReviewsScreen({ navigation, route }) {
             size={48}
             color={colors.textSecondary}
           />
-          <Text
-            style={[styles.errorText, { color: colors.textSecondary }]}
-          >
+          <Text style={[styles.errorText, { color: colors.textSecondary }]}>
             Failed to load reviews
           </Text>
           <TouchableOpacity onPress={fetchReviews} style={retryMargin}>
@@ -137,9 +126,15 @@ export default function ReviewsScreen({ navigation, route }) {
     return (
       <FlatList
         data={reviews}
-        keyExtractor={keyExtractor}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
-        ListHeaderComponent={listHeader}
+        ListHeaderComponent={
+          <SummaryHeader
+            averageRating={averageRating}
+            reviewCount={reviews.length}
+            colors={colors}
+          />
+        }
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={ItemSeparator}
@@ -153,10 +148,7 @@ export default function ReviewsScreen({ navigation, route }) {
       edges={['top', 'left', 'right']}
     >
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity
-          style={styles.backBtn}
-          onPress={handleGoBack}
-        >
+        <TouchableOpacity style={styles.backBtn} onPress={handleGoBack}>
           <Ionicons name="arrow-back" size={22} color={colors.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.text }]}>
