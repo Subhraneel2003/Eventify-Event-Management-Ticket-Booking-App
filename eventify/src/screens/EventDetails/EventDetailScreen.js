@@ -9,6 +9,7 @@ import {
     Dimensions,
     Alert,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import MapView, { Marker } from 'react-native-maps';
 import React, { useEffect, useState, useContext } from 'react';
 import { Ionicons } from '@expo/vector-icons';
@@ -35,9 +36,11 @@ export default function EventDetailScreen({ navigation, route }) {
     const { user } = useAuth()
     const [organizer, setOrganizer] = useState(null);
 
-    useEffect(() => {
-        loadEvent();
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            loadEvent();
+        }, [eventId])
+    );
 
     const loadEvent = async () => {
         try {
