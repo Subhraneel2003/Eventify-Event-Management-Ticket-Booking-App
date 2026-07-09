@@ -95,7 +95,7 @@ describe('eventService', () => {
 
         const bookings = [
             { id: 'b1', status: 'confirmed', totalAmount: 50 },
-            { id: 'b2', status: 'confirmed', totalAmount: 0 },
+            { id: 'b2', status: 'confirmed', totalAmount: 100 },
             { id: 'b3', status: 'pending', totalAmount: 20 },
         ];
         api.patch.mockClear();
@@ -108,7 +108,7 @@ describe('eventService', () => {
         });
         expect(api.patch).toHaveBeenCalledWith('/bookings/b2', {
             status: 'cancelled_by_organizer',
-            refundStatus: 'not_applicable',
+            refundStatus: 'pending',
         });
         expect(api.patch).not.toHaveBeenCalledWith(
             '/bookings/b3',
