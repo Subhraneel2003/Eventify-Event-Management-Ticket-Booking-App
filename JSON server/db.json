@@ -128,22 +128,22 @@
   "events": [
     {
       "id": "1",
-      "title": "Sunburn Music Festival 2026",
+      "title": "Sunburn Music Festival 2-0-2-6",
       "description": "A high-energy electronic dance music festival featuring top DJs from around the world, food stalls, and light shows.",
       "category": "Music",
       "organizerId": "3",
       "status": "upcoming",
       "date": "2026-07-06",
-      "time": "17:05",
+      "time": "17:00",
       "venueName": "DY Patil Stadium",
       "address": "Sector 7, Nerul, Navi Mumbai, Maharashtra",
       "location": {
-        "latitude": 19.033,
-        "longitude": 73.0297
+        "latitude": 19.042393399999998,
+        "longitude": 73.0265071
       },
       "coverImage": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f",
-      "price": 2499,
-      "totalSeats": 5000,
+      "price": 2399,
+      "totalSeats": 4999,
       "availableSeats": 1224,
       "createdAt": "2026-03-01T10:00:00.000Z"
     },
