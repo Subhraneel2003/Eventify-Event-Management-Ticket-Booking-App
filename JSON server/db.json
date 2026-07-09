@@ -144,7 +144,7 @@
       "coverImage": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f",
       "price": 2499,
       "totalSeats": 5000,
-      "availableSeats": 1229,
+      "availableSeats": 1226,
       "createdAt": "2026-03-01T10:00:00.000Z"
     },
     {
@@ -165,7 +165,7 @@
       "coverImage": "https://images.unsplash.com/photo-1511578314322-379afb476865",
       "price": 4999,
       "totalSeats": 1200,
-      "availableSeats": 339,
+      "availableSeats": 338,
       "createdAt": "2026-02-15T08:00:00.000Z"
     },
     {
@@ -249,7 +249,7 @@
       "coverImage": "https://images.unsplash.com/photo-1515169067868-5387ec356754",
       "price": 0,
       "totalSeats": 150,
-      "availableSeats": 42,
+      "availableSeats": 41,
       "createdAt": "2026-05-01T13:20:00.000Z"
     },
     {
@@ -335,6 +335,27 @@
       "totalSeats": 2000,
       "availableSeats": 0,
       "createdAt": "2026-05-20T08:00:00.000Z"
+    },
+    {
+      "id": "11",
+      "title": "Kolkata Tech Summit 2026",
+      "description": "A one-day technology conference featuring expert talks on AI, cloud computing, cybersecurity, and software engineering, along with networking sessions and hands-on workshops.",
+      "category": "Technology",
+      "organizerId": "7",
+      "status": "upcoming",
+      "date": "2026-07-09",
+      "time": "10:00",
+      "venueName": "Biswa Bangla Convention Centre",
+      "address": "New Town, Kolkata, West Bengal",
+      "location": {
+        "latitude": 22.5797,
+        "longitude": 88.4699
+      },
+      "coverImage": "https://images.unsplash.com/photo-1540575467063-178a50c2df87",
+      "price": 799,
+      "totalSeats": 500,
+      "availableSeats": 497,
+      "createdAt": "2026-07-09T08:00:00.000Z"
     }
   ],
   "bookings": [
@@ -509,6 +530,66 @@
       "status": "confirmed",
       "qrCode": "4d065f92-74aa-4c3d-b085-4d1e423434a1",
       "id": "x9Vly_n"
+    },
+    {
+      "userId": "1",
+      "eventId": "6",
+      "ticketCount": 1,
+      "totalAmount": 0,
+      "bookingDate": "2026-07-09T10:11:19.516Z",
+      "status": "confirmed",
+      "qrCode": "f74d5533-cb60-47f5-8783-53f36e443314",
+      "id": "Z6E7cwm"
+    },
+    {
+      "userId": "1",
+      "eventId": "11",
+      "ticketCount": 1,
+      "totalAmount": 799,
+      "bookingDate": "2026-07-09T10:21:42.201Z",
+      "status": "confirmed",
+      "qrCode": "e12baca7-b216-4b76-9dae-0cdf3bbdbfeb",
+      "id": "WCQjZ1J"
+    },
+    {
+      "userId": "7",
+      "eventId": "2",
+      "ticketCount": 1,
+      "totalAmount": 4999,
+      "bookingDate": "2026-07-09T10:22:44.947Z",
+      "status": "confirmed",
+      "qrCode": "7dedd492-4b3f-4938-903a-846f1849c70c",
+      "id": "eg9ZE-5"
+    },
+    {
+      "userId": "7",
+      "eventId": "1",
+      "ticketCount": 1,
+      "totalAmount": 2499,
+      "bookingDate": "2026-07-09T10:39:26.605Z",
+      "status": "confirmed",
+      "qrCode": "7f9a0d7e-64ee-4475-ab8a-2a2fa4f0a292",
+      "id": "XkhbmwS"
+    },
+    {
+      "userId": "7",
+      "eventId": "1",
+      "ticketCount": 1,
+      "totalAmount": 2499,
+      "bookingDate": "2026-07-09T10:45:06.258Z",
+      "status": "confirmed",
+      "qrCode": "75b9d8c2-a485-4bed-9743-5e35dacbe316",
+      "id": "Oannva7"
+    },
+    {
+      "userId": "7",
+      "eventId": "1",
+      "ticketCount": 1,
+      "totalAmount": 2499,
+      "bookingDate": "2026-07-09T10:45:31.538Z",
+      "status": "confirmed",
+      "qrCode": "cbc86c36-9497-4734-bf8f-9d9af146cde6",
+      "id": "W6MaPV8"
     }
   ],
   "reviews": [
