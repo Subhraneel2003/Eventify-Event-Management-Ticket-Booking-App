@@ -21,8 +21,12 @@ export default function QrCodeScreen({ navigation }) {
     }, []);
 
     const loadBookings = async () => {
-        const data = await getAllBookings();
-        setBookings(data);
+        try {
+            const data = await getAllBookings();
+            setBookings(data);
+        } catch (err) {
+            Alert.alert("Error", "Unable to load bookings.");
+        }
     };
 
     if (!permission) {

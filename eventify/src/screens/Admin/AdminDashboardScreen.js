@@ -13,6 +13,7 @@ import { ThemeContext } from '../../context/ThemeContext';
 import { useSelector } from 'react-redux';
 import { getAllUsers } from '../../api/userService';
 import { getAllBookings } from '../../api/bookingService';
+import { DashboardCard } from '../../components/Dashboard';
 
 export default function AdminDashboardScreen({ navigation }) {
     const { colors } = useContext(ThemeContext);
@@ -70,40 +71,6 @@ export default function AdminDashboardScreen({ navigation }) {
             setLoading(false);
         }
     };
-
-    const DashboardCard = ({ title, value, icon, color }) => (
-        <View
-            style={[
-                styles.card,
-                {
-                    backgroundColor: colors.surface,
-                    borderColor: colors.border,
-                },
-            ]}
-        >
-            <View
-                style={[
-                    styles.iconContainer,
-                    { backgroundColor: color + "20" },
-                ]}
-            >
-                <Ionicons name={icon} size={26} color={color} />
-            </View>
-
-            <Text style={[styles.value, { color: colors.text }]}>
-                {value}
-            </Text>
-
-            <Text
-                style={[
-                    styles.title,
-                    { color: colors.textSecondary },
-                ]}
-            >
-                {title}
-            </Text>
-        </View>
-    );
 
     if (loading) {
         return (
@@ -234,43 +201,5 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         flexWrap: "wrap",
         justifyContent: "space-between",
-    },
-
-    card: {
-        width: "48%",
-        borderRadius: 18,
-        paddingVertical: 22,
-        paddingHorizontal: 16,
-        marginBottom: 16,
-        alignItems: "center",
-        borderWidth: 1,
-        elevation: 3,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 3,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-    },
-
-    iconContainer: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        justifyContent: "center",
-        alignItems: "center",
-        marginBottom: 14,
-    },
-
-    value: {
-        fontSize: 24,
-        fontWeight: "700",
-    },
-
-    title: {
-        marginTop: 6,
-        fontSize: 14,
-        textAlign: "center",
     },
 });

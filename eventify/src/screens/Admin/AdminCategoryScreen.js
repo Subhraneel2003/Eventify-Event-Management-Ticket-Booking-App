@@ -51,7 +51,7 @@ export default function AdminCategoryScreen() {
                 name: categoryName,
             });
 
-            setCategories([...categories, newCategory]);
+            setCategories(prev => [...prev, newCategory]);
             setCategoryName("");
 
             Alert.alert("Success", "Category added successfully");

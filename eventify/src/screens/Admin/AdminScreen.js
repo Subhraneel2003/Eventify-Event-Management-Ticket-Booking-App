@@ -1,5 +1,5 @@
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, Image, Dimensions, } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { fetchBookingsByEventId } from "../../api/bookingService";
 import { getAllUsers } from "../../api/userService";
 import { Ionicons } from "@expo/vector-icons";
@@ -12,7 +12,10 @@ export default function EventBookingsScreen({ route, navigation }) {
     const [loading, setLoading] = useState(true);
     const [bookingData, setBookingData] = useState([]);
     const events = useSelector(state => state.events.events);
-    const event = events.find(e => e.id === eventId);
+    const event = useMemo(
+        () => events.find(e => e.id === eventId),
+        [events, eventId]
+    );
 
     useEffect(() => {
         loadBookings();

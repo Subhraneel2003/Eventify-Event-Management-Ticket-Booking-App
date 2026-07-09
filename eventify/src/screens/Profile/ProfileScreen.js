@@ -15,6 +15,7 @@ import { logout } from '../../store/slices/authSlice';
 import { clearAsyncStorageData } from '../../services/storageService';
 import { clearBookings } from '../../store/slices/bookingSlice';
 import { useAuth } from '../../hooks/useAuth';
+import { InfoRow } from '../../components/InfoRow';
 
 export default function ProfileScreen({ navigation }) {
     const { colors, toggleTheme, isDark } = useContext(ThemeContext);
@@ -33,22 +34,6 @@ export default function ProfileScreen({ navigation }) {
         } catch (err) {
             console.log(err);
         }
-    };
-
-    const InfoRow = ({ icon, label, value, colors }) => {
-        return (
-            <View style={styles.infoRow}>
-                <Ionicons name={icon} size={22} color={colors.primary} />
-
-                <View style={{ marginLeft: 14, flex: 1 }}>
-                    <Text style={[styles.label, { color: colors.textSecondary }]}>
-                        {label}
-                    </Text>
-
-                    <Text style={[styles.value, { color: colors.text }]}>{value}</Text>
-                </View>
-            </View>
-        );
     };
 
     return (
@@ -95,21 +80,18 @@ export default function ProfileScreen({ navigation }) {
                     icon="mail-outline"
                     label="Email"
                     value={user?.email}
-                    colors={colors}
                 />
 
                 <InfoRow
                     icon="call-outline"
                     label="Phone"
                     value={user?.phone}
-                    colors={colors}
                 />
 
                 <InfoRow
                     icon="calendar-outline"
                     label="Member Since"
                     value={new Date(user?.createdAt).toLocaleDateString()}
-                    colors={colors}
                 />
             </View>
 
@@ -205,22 +187,6 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         padding: 18,
         borderWidth: 1,
-    },
-
-    infoRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 22,
-    },
-
-    label: {
-        fontSize: 13,
-        marginBottom: 3,
-    },
-
-    value: {
-        fontSize: 16,
-        fontWeight: '600',
     },
 
     button: {

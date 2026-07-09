@@ -1,5 +1,5 @@
 import { View, Text, ActivityIndicator, StyleSheet, TextInput, TouchableOpacity, FlatList, Modal } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setError, setEvents, setFilteredEvents, setLoading } from '../../store/slices/eventSlice'
 import { fetchEvents, filterByCategory, searchEvents } from '../../api/eventService'
@@ -22,7 +22,10 @@ export default function EventListScreen({ navigation }) {
     const [categoryModalVisible, setCategoryModalVisible] = useState(false)
     const debouncedSearch = useDebounce(search, 500)
     const { user } = useAuth()
-    const categoryItems = [{ id: 'ALL', name: 'ALL' }, ...categories]
+    const categoryItems = useMemo(
+        () => [{ id: "ALL", name: "ALL" }, ...categories],
+        [categories]
+    );
 
     useEffect(() => {
         loadCategories()

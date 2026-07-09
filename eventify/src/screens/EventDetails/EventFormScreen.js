@@ -16,6 +16,7 @@ import { pickImage } from '../../services/imagePickerService'
 import { useAuth } from '../../hooks/useAuth';
 import { uploadImage } from '../../utils/cloudinary';
 
+const statusItems = ["Completed", "Upcoming", "Cancelled"]
 export default function EventFormScreen({ route, navigation }) {
     const { mode, eventId } = route.params;
     const { colors } = useContext(ThemeContext)
@@ -25,7 +26,6 @@ export default function EventFormScreen({ route, navigation }) {
     const [statusModalVisible, setStatusModalVisible] = useState(false)
     const event = useSelector(state => state.events.events.find(e => e.id === eventId))
     const { user } = useAuth()
-    const statusItems = ["Completed", "Upcoming", "Cancelled"]
     const [coverImage, setCoverImage] = useState(event?.coverImage)
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
