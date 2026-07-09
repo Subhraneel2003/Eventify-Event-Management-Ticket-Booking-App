@@ -56,23 +56,15 @@ export default function MyBookingsScreen({ navigation }) {
     }, [fetchBookings])
   );
 
-  const handleBookingPress = useCallback(
-    (booking) => {
-      navigation.navigate('BookingDetails', { bookingId: booking.id });
-    },
-    [navigation]
-  );
+  const handleBookingPress = (booking) => {
+    navigation.navigate('BookingDetails', { bookingId: booking.id });
+  };
 
   const renderItem = useCallback(
     ({ item }) => (
       <BookingCard item={item} colors={colors} onPress={handleBookingPress} />
     ),
     [colors, handleBookingPress]
-  );
-
-  const keyExtractor = useCallback(
-    (item) => item.id?.toString(),
-    []
   );
 
   return (
@@ -93,7 +85,7 @@ export default function MyBookingsScreen({ navigation }) {
       ) : (
         <FlatList
           data={bookings}
-          keyExtractor={keyExtractor}
+          keyExtractor={(item) => item.id?.toString()}
           renderItem={renderItem}
           contentContainerStyle={[
             styles.listContent,
