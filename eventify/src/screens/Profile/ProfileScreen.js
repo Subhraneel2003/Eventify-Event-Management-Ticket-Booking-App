@@ -16,6 +16,7 @@ import { clearAsyncStorageData } from '../../services/storageService';
 import { clearBookings } from '../../store/slices/bookingSlice';
 import { useAuth } from '../../hooks/useAuth';
 import { InfoRow } from '../../components/InfoRow';
+import { formatDate } from '../../utils/date';
 
 export default function ProfileScreen({ navigation }) {
     const { colors, toggleTheme, isDark } = useContext(ThemeContext);
@@ -91,7 +92,7 @@ export default function ProfileScreen({ navigation }) {
                 <InfoRow
                     icon="calendar-outline"
                     label="Member Since"
-                    value={new Date(user?.createdAt).toLocaleDateString()}
+                    value={formatDate(user?.createdAt)}
                 />
             </View>
 
