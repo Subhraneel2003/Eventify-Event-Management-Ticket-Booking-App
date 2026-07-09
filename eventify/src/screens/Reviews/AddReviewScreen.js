@@ -32,6 +32,7 @@ export default function AddReviewScreen({ navigation, route }) {
   useEffect(() => {
     const checkExistingReview = async () => {
       try {
+        setCheckingDuplicate(true);
         const response = await api.get(
           `/reviews?userId=${user.id}&eventId=${eventId}`
         );
