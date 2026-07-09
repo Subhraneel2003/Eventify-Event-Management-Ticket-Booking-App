@@ -2,8 +2,8 @@
   "users": [
     {
       "id": "1",
-      "name": "Aarav Sharma",
-      "email": "aarav.sharma@example.com",
+      "name": "Aarav Sharmaa",
+      "email": "aarav.sharmaa@example.com",
       "password": "Password@123",
       "role": "user",
       "phone": "9876543210",
@@ -134,7 +134,7 @@
       "organizerId": "3",
       "status": "upcoming",
       "date": "2026-07-06",
-      "time": "17:00",
+      "time": "17:05",
       "venueName": "DY Patil Stadium",
       "address": "Sector 7, Nerul, Navi Mumbai, Maharashtra",
       "location": {
@@ -144,7 +144,7 @@
       "coverImage": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f",
       "price": 2499,
       "totalSeats": 5000,
-      "availableSeats": 1226,
+      "availableSeats": 1224,
       "createdAt": "2026-03-01T10:00:00.000Z"
     },
     {
@@ -547,7 +547,7 @@
       "ticketCount": 1,
       "totalAmount": 799,
       "bookingDate": "2026-07-09T10:21:42.201Z",
-      "status": "confirmed",
+      "status": "used",
       "qrCode": "e12baca7-b216-4b76-9dae-0cdf3bbdbfeb",
       "id": "WCQjZ1J"
     },
@@ -590,6 +590,26 @@
       "status": "confirmed",
       "qrCode": "cbc86c36-9497-4734-bf8f-9d9af146cde6",
       "id": "W6MaPV8"
+    },
+    {
+      "userId": "7",
+      "eventId": "1",
+      "ticketCount": 1,
+      "totalAmount": 2499,
+      "bookingDate": "2026-07-09T10:50:30.967Z",
+      "status": "confirmed",
+      "qrCode": "884ac6d0-5a3c-4bd5-9d00-a002d4f57719",
+      "id": "EzFt8CA"
+    },
+    {
+      "userId": "1",
+      "eventId": "1",
+      "ticketCount": 1,
+      "totalAmount": 2499,
+      "bookingDate": "2026-07-09T11:00:37.905Z",
+      "status": "confirmed",
+      "qrCode": "12605c96-6e91-4439-bad9-ce108b8ddbcc",
+      "id": "kDxLwqQ"
     }
   ],
   "reviews": [

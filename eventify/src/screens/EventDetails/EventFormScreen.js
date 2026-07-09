@@ -67,7 +67,10 @@ export default function EventFormScreen({ route, navigation }) {
                     payload.status !== event.status ||
                     payload.location.latitude !== event.location.latitude ||
                     payload.location.longitude !== event.location.longitude ||
-                    payload.coverImage !== event.coverImage
+                    payload.coverImage !== event.coverImage ||
+                    payload.category !== event.category ||
+                    payload.date !== event.date ||
+                    payload.time !== event.time
 
                 if (!hasChanged) {
                     Alert.alert("No Changes", "No changes were made.");
