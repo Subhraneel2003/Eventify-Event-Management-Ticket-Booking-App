@@ -76,16 +76,6 @@ const mockGoBack = jest.fn();
 const mockNavigate = jest.fn();
 const navigation = { goBack: mockGoBack, navigate: mockNavigate };
 
-const mockBooking = {
-  id: 'b1',
-  eventId: 'e1',
-  userId: 'u1',
-  ticketCount: 2,
-  totalAmount: 1000,
-  status: 'confirmed',
-  qrCode: 'qr123',
-};
-
 const mockEvent = {
   id: 'e1',
   title: 'Tech Conference 2025',
@@ -95,6 +85,17 @@ const mockEvent = {
   price: 500,
   location: { latitude: 28.6139, longitude: 77.209 },
   address: '123 Main St',
+};
+
+const mockBooking = {
+  id: 'b1',
+  eventId: 'e1',
+  userId: 'u1',
+  ticketCount: 2,
+  totalAmount: 1000,
+  status: 'confirmed',
+  qrCode: 'qr123',
+  event: mockEvent,
 };
 
 describe('BookingDetailsScreen', () => {
@@ -166,8 +167,8 @@ describe('BookingDetailsScreen', () => {
     expect(await renderResult.findByText('₹ 1000')).toBeTruthy();
     renderResult.unmount();
 
-    const freeBooking = { ...mockBooking, totalAmount: 0 };
     const freeEvent = { ...mockEvent, price: 0 };
+    const freeBooking = { ...mockBooking, totalAmount: 0, event: freeEvent };
     mockGet.mockResolvedValueOnce({ data: freeBooking });
     mockFetchEventById.mockResolvedValueOnce(freeEvent);
 
@@ -200,7 +201,7 @@ describe('BookingDetailsScreen', () => {
     expect(await renderResult.findByText(/Refund Status/)).toBeTruthy();
     renderResult.unmount();
 
-    mockGet.mockResolvedValueOnce({ data: { ...mockBooking, eventId: null } });
+    mockGet.mockResolvedValueOnce({ data: { ...mockBooking, eventId: null, event: null } });
 
     renderResult = render(
       <BookingDetailsScreen

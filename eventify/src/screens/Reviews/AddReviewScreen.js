@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   Platform,
   ScrollView,
   Keyboard,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import api from '../../api/apiClient';
@@ -26,6 +27,41 @@ export default function AddReviewScreen({ navigation, route }) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [checkingDuplicate, setCheckingDuplicate] = useState(true);
+
+  useEffect(() => {
+    const checkExistingReview = async () => {
+      try {
+        const response = await api.get(
+          `/reviews?userId=${user.id}&eventId=${eventId}`
+        );
+        if (response.data && response.data.length > 0) {
+          Alert.alert(
+            'Already Reviewed',
+            'You have already submitted a review for this event.',
+            [{ text: 'OK', onPress: () => navigation.goBack() }]
+          );
+        }
+      } catch (err) {
+      } finally {
+        setCheckingDuplicate(false);
+      }
+    };
+    checkExistingReview();
+  }, [eventId, user.id, navigation]);
+
+  if (checkingDuplicate) {
+    return (
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: colors.background }]}
+        edges={['top', 'left', 'right']}
+      >
+        <View style={styles.centered}>
+          <ActivityIndicator size="large" color={colors.primary} />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   const handleSubmit = async () => {
     Keyboard.dismiss();
@@ -89,6 +125,7 @@ export default function AddReviewScreen({ navigation, route }) {
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
         >
           <Text style={[styles.label, { color: colors.textSecondary }]}>
             HOW WAS YOUR EXPERIENCE?
@@ -151,6 +188,11 @@ export default function AddReviewScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
     flexDirection: 'row',
