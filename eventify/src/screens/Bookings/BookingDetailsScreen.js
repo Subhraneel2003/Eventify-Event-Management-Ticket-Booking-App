@@ -16,18 +16,16 @@ import QRCode from 'react-native-qrcode-svg';
 import MapView, { Marker } from 'react-native-maps';
 import { ThemeContext } from '../../context/ThemeContext';
 import { cancelBooking } from '../../store/slices/bookingSlice';
-import { fetchEventById, updateEventSeats } from '../../api/eventService';
+import { updateEventSeats } from '../../api/eventService';
 import { getQRData } from '../../utils/qrManager';
 import api from '../../api/apiClient';
 import Button from '../../components/Button';
 import { formatDate, formatTime } from '../../utils/date';
-import { formatStatus } from '../../utils/string';
-import { useAuth } from '../../hooks/useAuth';
+import { formatStatus, getStatusColor, getRefundStatusColor } from '../../utils/string';
 
 export default function BookingDetailsScreen({ route, navigation }) {
   const { colors } = useContext(ThemeContext);
   const dispatch = useDispatch();
-  const { user } = useAuth();
   const { bookingId } = route.params || {};
 
   const [booking, setBooking] = useState(null);
@@ -113,29 +111,8 @@ export default function BookingDetailsScreen({ route, navigation }) {
   const venueLatitude = booking.event?.location?.latitude;
   const venueLongitude = booking.event?.location?.longitude;
 
-  const statusColor =
-    status === 'confirmed'
-      ? '#4CAF50'
-      : status === 'cancelled' || status === 'cancelled_by_organizer'
-        ? colors.danger
-        : status === 'used'
-          ? colors.textSecondary
-          : colors.primary;
-
-  const getRefundStatusColor = (refStatus) => {
-    switch (refStatus) {
-      case 'completed':
-      case 'refunded':
-      case 'issued':
-        return '#4CAF50';
-      case 'pending':
-        return '#FF9800';
-      case 'failed':
-        return colors.danger;
-      default:
-        return colors.primary;
-    }
-  };
+  const statusColor = getStatusColor(status, colors);
+  const refundColor = getRefundStatusColor(booking.refundStatus, colors);
 
   const handleCancel = () => {
     setCancelModalVisible(true);
@@ -262,9 +239,8 @@ export default function BookingDetailsScreen({ route, navigation }) {
                     style={[
                       styles.statusBadge,
                       {
-                        backgroundColor:
-                          getRefundStatusColor(booking.refundStatus) + '20',
-                        borderColor: getRefundStatusColor(booking.refundStatus),
+                        backgroundColor: refundColor + '20',
+                        borderColor: refundColor,
                       },
                     ]}
                   >
@@ -272,16 +248,14 @@ export default function BookingDetailsScreen({ route, navigation }) {
                       style={[
                         styles.statusDot,
                         {
-                          backgroundColor: getRefundStatusColor(
-                            booking.refundStatus
-                          ),
+                          backgroundColor: refundColor,
                         },
                       ]}
                     />
                     <Text
                       style={[
                         styles.statusText,
-                        { color: getRefundStatusColor(booking.refundStatus) },
+                        { color: refundColor },
                       ]}
                     >
                       {formatStatus(booking.refundStatus)}
@@ -404,7 +378,7 @@ export default function BookingDetailsScreen({ route, navigation }) {
                         longitude: venueLongitude,
                       }}
                       title={venueName}
-                      description={event?.address}
+                      description={booking.event?.address}
                     />
                   </MapView>
                 </View>

@@ -21,7 +21,6 @@ import { formatDate, formatTime } from '../../utils/date';
 import {
   scheduleBookingConfirmation,
   scheduleEventReminder,
-  scheduleEventReminderDemo,
 } from '../../services/notificationService';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -94,6 +93,7 @@ export default function BookingScreen({ navigation, route }) {
   const handleConfirm = async () => {
     try {
       setConfirming(true);
+      const qrCode = Crypto.randomUUID();
       const booking = {
         userId: user.id,
         eventId: event.id,
@@ -101,25 +101,17 @@ export default function BookingScreen({ navigation, route }) {
         totalAmount: totalPrice,
         bookingDate: new Date().toISOString(),
         status: 'confirmed',
-        qrCode: '',
+        qrCode,
       };
 
       const response = await api.post('/bookings', booking);
       const createdBooking = response.data;
 
-      const updatedBooking = await api.patch(
-        `/bookings/${createdBooking.id}`,
-        {
-          qrCode: Crypto.randomUUID(),
-        }
-      );
-
       await updateEventSeats(event.id, ticketCount, 'confirmed');
 
-      const bookingWithQRCode = updatedBooking.data;
-      dispatch(addBooking(bookingWithQRCode));
+      dispatch(addBooking(createdBooking));
 
-      await saveBookings([...bookings, bookingWithQRCode]);
+      await saveBookings([...bookings, createdBooking]);
 
       try {
         await scheduleBookingConfirmation(event.title);
@@ -143,15 +135,8 @@ export default function BookingScreen({ navigation, route }) {
         console.log('Error scheduling event reminder notification:', err);
       }
 
-      // Schedule event reminder demo 10 seconds after booking (for Demo purposes)
-      // try {
-      //   await scheduleEventReminderDemo(event.title);
-      // } catch (err) {
-      //   console.log('Error scheduling event reminder demo notification:', err);
-      // }
-
       navigation.navigate('BookingDetails', {
-        bookingId: bookingWithQRCode.id,
+        bookingId: createdBooking.id,
       });
     } catch (error) {
       Alert.alert('Error', 'An error occured while Booking');
