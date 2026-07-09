@@ -101,7 +101,7 @@ export const cancelEvent = async (eventId, isFree) => {
       .map((b) =>
         api.patch(`/bookings/${b.id}`, {
           status: 'cancelled_by_organizer',
-          refundStatus: b.totalAmount > 0 ? 'pending' : 'not_applicable',
+          refundStatus: isFree ? 'not_applicable' : 'pending',
         })
       );
 
@@ -116,7 +116,10 @@ export const refundUsersForEventCancel = async (eventId) => {
     const { data: bookings } = await api.get(`/bookings?eventId=${eventId}`);
 
     const updates = bookings
-      .filter((b) => b.status === 'cancelled_by_organizer' && b.refundStatus === 'pending')
+      .filter(
+        (b) =>
+          b.status === 'cancelled_by_organizer' && b.refundStatus === 'pending'
+      )
       .map((b) =>
         api.patch(`/bookings/${b.id}`, {
           refundStatus: 'issued',
