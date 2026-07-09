@@ -68,15 +68,6 @@ jest.mock('@expo/vector-icons', () => ({
   Ionicons: () => null,
 }));
 
-jest.mock('react-native-maps', () => {
-  const React = require('react');
-  const { View } = require('react-native');
-  const MapView = (props) => <View {...props} testID="map-view" />;
-  const Marker = (props) => <View {...props} testID="marker" />;
-  MapView.Marker = Marker;
-  return { __esModule: true, default: MapView, Marker };
-});
-
 describe('QrCodeScreen', () => {
   const mockDispatch = jest.fn();
 
