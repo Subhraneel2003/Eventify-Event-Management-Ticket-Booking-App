@@ -5,6 +5,8 @@ import AdminScreen from '../../../../src/screens/Admin/AdminScreen';
 import { useSelector } from 'react-redux';
 import { fetchBookingsByEventId } from '../../../../src/api/bookingService';
 import { getAllUsers } from '../../../../src/api/userService';
+import { ThemeContext } from '../../../../src/context/ThemeContext';
+import { lightColors } from '../../../../src/styles/colors';
 
 jest.mock('react-redux', () => ({
     useSelector: jest.fn(),
@@ -53,10 +55,12 @@ describe('AdminScreen', () => {
 
     it('renders bookings after load', async () => {
         const { findByText } = render(
-            <AdminScreen
-                route={{ params: { eventId: '1', eventTitle: 'Event Title' } }}
-                navigation={{ goBack: jest.fn() }}
-            />
+            <ThemeContext.Provider value={{ colors: lightColors }}>
+                <AdminScreen
+                    route={{ params: { eventId: '1', eventTitle: 'Event Title' } }}
+                    navigation={{ goBack: jest.fn() }}
+                />
+            </ThemeContext.Provider>
         );
 
         expect(await findByText('Event Title')).toBeTruthy();
@@ -70,10 +74,12 @@ describe('AdminScreen', () => {
 
     it('calls booking and user services with the event id', async () => {
         const { findByText } = render(
-            <AdminScreen
-                route={{ params: { eventId: '1', eventTitle: 'Event Title' } }}
-                navigation={{ goBack: jest.fn() }}
-            />
+            <ThemeContext.Provider value={{ colors: lightColors }}>
+                <AdminScreen
+                    route={{ params: { eventId: '1', eventTitle: 'Event Title' } }}
+                    navigation={{ goBack: jest.fn() }}
+                />
+            </ThemeContext.Provider>
         );
 
         await findByText('Event Title');
@@ -95,10 +101,12 @@ describe('AdminScreen', () => {
         ]);
 
         const { findByText } = render(
-            <AdminScreen
-                route={{ params: { eventId: '1', eventTitle: 'Event Title' } }}
-                navigation={{ goBack: jest.fn() }}
-            />
+            <ThemeContext.Provider value={{ colors: lightColors }}>
+                <AdminScreen
+                    route={{ params: { eventId: '1', eventTitle: 'Event Title' } }}
+                    navigation={{ goBack: jest.fn() }}
+                />
+            </ThemeContext.Provider>
         );
 
         expect(await findByText('CANCELLED')).toBeTruthy();
