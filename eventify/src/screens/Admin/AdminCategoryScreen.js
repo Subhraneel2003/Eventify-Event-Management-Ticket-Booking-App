@@ -7,6 +7,7 @@ import {
     TextInput,
     ActivityIndicator,
     Alert,
+    TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,7 +18,7 @@ import {
     createCategory,
 } from '../../api/categoryService';
 
-export default function AdminCategoryScreen() {
+export default function AdminCategoryScreen({ navigation }) {
     const { colors } = useContext(ThemeContext);
 
     const [categories, setCategories] = useState([]);
@@ -110,6 +111,12 @@ export default function AdminCategoryScreen() {
                 { backgroundColor: colors.background },
             ]}
         >
+            <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => navigation.goBack()}
+            >
+                <Ionicons name="arrow-back" size={20} color="#fff" />
+            </TouchableOpacity>
             <Text
                 style={[
                     styles.heading,
@@ -177,6 +184,7 @@ const styles = StyleSheet.create({
         fontSize: 28,
         fontWeight: "700",
         marginBottom: 20,
+        textAlign: 'center'
     },
 
     input: {
@@ -186,6 +194,17 @@ const styles = StyleSheet.create({
         paddingVertical: 14,
         marginBottom: 16,
         fontSize: 16,
+    },
+    backButton: {
+        position: 'absolute',
+        top: 45,
+        left: 16,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        borderRadius: 20,
+        width: 36,
+        height: 36,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
     card: {
