@@ -343,7 +343,7 @@
       "category": "Technology",
       "organizerId": "7",
       "status": "upcoming",
-      "date": "2026-07-09",
+      "date": "2026-07-10",
       "time": "10:00",
       "venueName": "Biswa Bangla Convention Centre",
       "address": "New Town, Kolkata, West Bengal",
@@ -354,7 +354,7 @@
       "coverImage": "https://images.unsplash.com/photo-1540575467063-178a50c2df87",
       "price": 799,
       "totalSeats": 500,
-      "availableSeats": 497,
+      "availableSeats": 494,
       "createdAt": "2026-07-09T08:00:00.000Z"
     }
   ],
@@ -610,6 +610,16 @@
       "status": "confirmed",
       "qrCode": "12605c96-6e91-4439-bad9-ce108b8ddbcc",
       "id": "kDxLwqQ"
+    },
+    {
+      "userId": "1",
+      "eventId": "11",
+      "ticketCount": 3,
+      "totalAmount": 2397,
+      "bookingDate": "2026-07-10T04:13:02.357Z",
+      "status": "used",
+      "qrCode": "1e686bbf-e33e-4de6-9294-bf556a6aa5a9",
+      "id": "Ct4Gv98"
     }
   ],
   "reviews": [
