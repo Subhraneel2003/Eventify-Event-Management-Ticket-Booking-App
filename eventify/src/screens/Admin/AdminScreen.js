@@ -1,15 +1,17 @@
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, Image, Dimensions, } from "react-native";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useContext } from "react";
 import { fetchBookingsByEventId } from "../../api/bookingService";
 import { getAllUsers } from "../../api/userService";
 import { Ionicons } from "@expo/vector-icons";
 import { formatDate } from "../../utils/date";
 import { useSelector } from "react-redux";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const { width } = Dimensions.get('window');
 export default function EventBookingsScreen({ route, navigation }) {
     const { eventId, eventTitle } = route.params;
     const [loading, setLoading] = useState(true);
+    const { colors } = useContext(ThemeContext);
     const [bookingData, setBookingData] = useState([]);
     const events = useSelector(state => state.events.events);
     const event = useMemo(
@@ -39,11 +41,24 @@ export default function EventBookingsScreen({ route, navigation }) {
     };
 
     const renderItem = ({ item }) => {
-
         return (
-            <View style={styles.card}>
+            <View
+                style={[
+                    styles.card,
+                    {
+                        backgroundColor: colors.surface,
+                    },
+                ]}
+            >
                 <View style={styles.header}>
-                    <View style={styles.avatar}>
+                    <View
+                        style={[
+                            styles.avatar,
+                            {
+                                backgroundColor: colors.primary,
+                            },
+                        ]}
+                    >
                         <Ionicons
                             name="person"
                             size={22}
@@ -52,35 +67,89 @@ export default function EventBookingsScreen({ route, navigation }) {
                     </View>
 
                     <View style={{ flex: 1 }}>
-                        <Text style={styles.name}>
+                        <Text
+                            style={[
+                                styles.name,
+                                {
+                                    color: colors.text,
+                                },
+                            ]}
+                        >
                             {item.user.name}
                         </Text>
 
-                        <Text style={styles.email}>
+                        <Text
+                            style={[
+                                styles.email,
+                                {
+                                    color: colors.textSecondary,
+                                },
+                            ]}
+                        >
                             {item.user.email}
                         </Text>
                     </View>
                 </View>
 
-                <View style={styles.divider} />
+                <View
+                    style={[
+                        styles.divider,
+                        {
+                            backgroundColor: colors.border,
+                        },
+                    ]}
+                />
 
                 <View style={styles.row}>
-                    <Ionicons name="ticket-outline" size={18} color="#555" />
-                    <Text style={styles.value}>
+                    <Ionicons
+                        name="ticket-outline"
+                        size={18}
+                        color={colors.textSecondary}
+                    />
+                    <Text
+                        style={[
+                            styles.value,
+                            {
+                                color: colors.text,
+                            },
+                        ]}
+                    >
                         Tickets : {item.ticketCount}
                     </Text>
                 </View>
 
                 <View style={styles.row}>
-                    <Ionicons name="cash-outline" size={18} color="#555" />
-                    <Text style={styles.value}>
+                    <Ionicons
+                        name="cash-outline"
+                        size={18}
+                        color={colors.textSecondary}
+                    />
+                    <Text
+                        style={[
+                            styles.value,
+                            {
+                                color: colors.text,
+                            },
+                        ]}
+                    >
                         ₹ {item.totalAmount}
                     </Text>
                 </View>
 
                 <View style={styles.row}>
-                    <Ionicons name="calendar-outline" size={18} color="#555" />
-                    <Text style={styles.value}>
+                    <Ionicons
+                        name="calendar-outline"
+                        size={18}
+                        color={colors.textSecondary}
+                    />
+                    <Text
+                        style={[
+                            styles.value,
+                            {
+                                color: colors.text,
+                            },
+                        ]}
+                    >
                         {formatDate(item.bookingDate)}
                     </Text>
                 </View>
@@ -96,9 +165,10 @@ export default function EventBookingsScreen({ route, navigation }) {
                         color={
                             item.status === "confirmed"
                                 ? "#16A34A"
-                                : "#DC2626"
+                                : colors.danger
                         }
                     />
+
                     <Text
                         style={[
                             styles.status,
@@ -106,7 +176,7 @@ export default function EventBookingsScreen({ route, navigation }) {
                                 color:
                                     item.status === "confirmed"
                                         ? "#16A34A"
-                                        : "#DC2626",
+                                        : colors.danger,
                             },
                         ]}
                     >
@@ -119,22 +189,52 @@ export default function EventBookingsScreen({ route, navigation }) {
 
     if (loading) {
         return (
-            <View style={styles.center}>
-                <ActivityIndicator size="large" />
+            <View
+                style={[
+                    styles.center,
+                    {
+                        backgroundColor: colors.background,
+                    },
+                ]}
+            >
+                <ActivityIndicator
+                    size="large"
+                    color={colors.primary}
+                />
             </View>
         );
     }
 
     if (bookingData.length === 0) {
         return (
-            <View style={styles.center}>
-                <Text>No bookings found.</Text>
+            <View
+                style={[
+                    styles.center,
+                    {
+                        backgroundColor: colors.background,
+                    },
+                ]}
+            >
+                <Text
+                    style={{
+                        color: colors.text,
+                    }}
+                >
+                    No bookings found.
+                </Text>
             </View>
         );
     }
 
     return (
-        <View style={styles.container}>
+        <View
+            style={[
+                styles.container,
+                {
+                    backgroundColor: colors.background,
+                },
+            ]}
+        >
             <Image
                 source={{
                     uri: event.coverImage,
@@ -142,16 +242,27 @@ export default function EventBookingsScreen({ route, navigation }) {
                 style={styles.eventImage}
                 resizeMode="cover"
             />
+
             <TouchableOpacity
                 testID="admin-back-button"
                 style={styles.backButton}
                 onPress={() => navigation.goBack()}
             >
-                <Ionicons name="arrow-back" size={20} color="#fff" />
+                <Ionicons
+                    name="arrow-back"
+                    size={20}
+                    color="#fff"
+                />
             </TouchableOpacity>
 
-
-            <Text style={styles.heading}>
+            <Text
+                style={[
+                    styles.heading,
+                    {
+                        color: colors.text,
+                    },
+                ]}
+            >
                 {eventTitle}
             </Text>
 
@@ -193,20 +304,17 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         borderRadius: 25,
-        backgroundColor: "#2563EB",
         justifyContent: "center",
         alignItems: "center",
         marginRight: 12,
     },
 
     email: {
-        color: "#6B7280",
         marginTop: 2,
     },
 
     divider: {
         height: 1,
-        backgroundColor: "#E5E7EB",
         marginVertical: 14,
     },
 
@@ -219,7 +327,6 @@ const styles = StyleSheet.create({
     value: {
         marginLeft: 10,
         fontSize: 15,
-        color: "#374151",
     },
 
     status: {
@@ -228,7 +335,6 @@ const styles = StyleSheet.create({
     },
 
     card: {
-        backgroundColor: "#fff",
         borderRadius: 18,
         padding: 18,
         marginBottom: 16,
