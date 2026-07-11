@@ -91,10 +91,6 @@ cd eventify
 npm test
 ```
 
-## Environment Configuration
-
-If your app uses environment variables or a live backend, configure them before running it. Check the app constants and API client files for any required configuration values.
-
 ## Contributing
 
 Contributions are welcome. If you want to improve the project:
