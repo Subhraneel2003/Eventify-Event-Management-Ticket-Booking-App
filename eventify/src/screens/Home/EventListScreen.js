@@ -28,8 +28,17 @@ export default function EventListScreen({ navigation }) {
     );
 
     useEffect(() => {
-        loadCategories()
-    }, [])
+        const loadCategories = async () => {
+            try {
+                const data = await fetchCategories();
+                setCategories(data);
+            } catch (err) {
+                console.error('Failed to load categories:', err.message);
+            }
+        };
+
+        loadCategories();
+    }, []);
 
     useEffect(() => {
         handleSearch(debouncedSearch);
@@ -52,15 +61,15 @@ export default function EventListScreen({ navigation }) {
             dispatch(setLoading(false))
         }
     }
-    const loadCategories = async () => {
-        try {
-            const data = await fetchCategories()
-            setCategories(data)
-        }
-        catch (err) {
-            console.error('Failed to load categories:', err.message);
-        }
-    }
+    // const loadCategories = async () => {
+    //     try {
+    //         const data = await fetchCategories()
+    //         setCategories(data)
+    //     }
+    //     catch (err) {
+    //         console.error('Failed to load categories:', err.message);
+    //     }
+    // }
     const handleSearch = async (query) => {
 
         if (query.trim() === "") {
